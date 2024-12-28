@@ -1,0 +1,20 @@
+[run]
+source = src/
+omit =
+    */core/*
+    */__init__.py
+    */admin.py
+    */apps.py
+    */filters.py
+    */permissions.py
+    */serializers.py
+    */urls.py
+    */conftests.py
+    */tests.py
+    manage.py
+
+[report]
+exclude_lines =
+    def __str__
+    def __repr__
+    if __name__ == .__main__.:

@@ -16,8 +16,11 @@ type Config struct {
 	TPMDevicePath string
 
 	// Configurações do banco de dados
-	DatabaseURL  string
 	DatabaseName string
+	DatabasePort string
+	DatabaseHost string
+	DatabaseUser string
+	DatabasePass string
 
 	// Configurações de segurança
 	JWTSecret    string
@@ -35,8 +38,11 @@ func Load() (*Config, error) {
 		ServerAddress: getEnvDefault("SERVER_ADDRESS", "localhost"),
 		ServerPort:    getEnvDefault("SERVER_PORT", "8080"),
 		TPMDevicePath: getEnvDefault("TPM_DEVICE_PATH", "/dev/tpm0"),
-		DatabaseURL:   getEnvDefault("DATABASE_URL", "postgresql://localhost:5432"),
 		DatabaseName:  getEnvDefault("DATABASE_NAME", "tpmbunker"),
+		DatabasePort:  getEnvDefault("DATABASE_PORT", "5432"),
+		DatabaseHost:  getEnvDefault("DATABASE_HOST", "localhost"),
+		DatabaseUser:  getEnvDefault("DATABASE_USER", "postgres"),
+		DatabasePass:  getEnvDefault("DATABASE_PASS", "postgres"),
 		JWTSecret:     os.Getenv("JWT_SECRET"),
 		KeyDirectory:  getEnvDefault("KEY_DIRECTORY", "./keys"),
 	}, nil

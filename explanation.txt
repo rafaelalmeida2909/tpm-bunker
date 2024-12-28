@@ -1,0 +1,230 @@
+Vou adicionar esses detalhes à explicação completa:
+
+1. Identificação do Dispositivo:
+- Cada TPM possui um identificador único de fábrica (TPM Endorsement Key - EK)
+- Durante o primeiro uso, o TPM gera uma chave de identidade (AIK - Attestation Identity Key)
+- O dispositivo também gera um UUID único para identificação no sistema
+- Estes identificadores são vinculados ao par de chaves no registro do servidor
+
+2. Configuração Inicial:
+- O TPM gera um par de chaves (pública e privada)
+- A chave privada fica no TPM
+- A chave pública, junto com os identificadores do dispositivo (EK, AIK, UUID), é registrada no servidor
+- O servidor valida a autenticidade do TPM através do certificado EK
+- O servidor armazena esta associação (chave pública + identificadores)
+
+3. Processo de Assinatura Digital (quando o Agente envia dados):
+- Gera um hash dos dados originais
+- O TPM usa a chave privada para criptografar este hash
+- O resultado é a assinatura digital
+- Inclui também o identificador do dispositivo na mensagem
+
+4. Quando o Agente envia dados:
+- Gera uma chave simétrica temporária
+- Criptografa os dados com esta chave
+- Criptografa a chave simétrica usando o TPM
+- Cria a assinatura digital dos dados
+- Envia ao servidor: dados criptografados + chave simétrica criptografada + assinatura digital + identificador do dispositivo
+
+5. O Servidor ao receber:
+- Identifica o dispositivo pelos identificadores
+- Recupera a chave pública associada a este dispositivo
+- Gera o hash dos dados recebidos
+- Usa a chave pública para verificar a assinatura
+- Se válido, armazena os dados criptografados
+- Se inválido, rejeita a operação
+
+6. Recuperação de dados pelo Agente:
+- Solicita dados ao servidor usando seu identificador
+- Recebe o pacote criptografado
+- TPM descriptografa a chave simétrica
+- Usa a chave simétrica para descriptografar os dados
+
+Segurança do sistema:
+- Chave privada sempre protegida no TPM
+- Dados criptografados antes de sair do dispositivo
+- Servidor nunca acessa dados descriptografados
+- Assinatura digital garante autenticidade
+- Identificação única de cada dispositivo
+- Rastreabilidade completa das operações através dos identificadores
+
+Benefícios desta estrutura:
+- Proteção contra falsificação de dispositivos
+- Garantia de origem dos dados
+- Impossibilidade de repúdio das operações
+- Segurança mesmo com servidor comprometido
+- Identificação única e verificável de cada dispositivo
+- Possibilidade de revogar acesso de dispositivos específicos
+
+Esta arquitetura cria um sistema onde cada dispositivo é unicamente identificável e suas operações são criptograficamente verificáveis, mantendo os dados seguros em todo o processo de comunicação.
+
+
+Para enviar requisição:
+headers = {
+    'Authorization': 'Bearer seu-token-aqui',
+    'X-Device-UUID': 'uuid-do-dispositivo'
+}
+
+
+Vou explicar o fluxo passo a passo para um novo dispositivo:
+
+1. **Registro do Dispositivo** (`POST /api/devices/register/`):
+```json
+{
+    "uuid": "uuid-único-do-dispositivo",
+    "ek_certificate": "certificado-EK-do-TPM",
+    "aik": "chave-AIK-gerada",
+    "public_key": "chave-pública-gerada"
+}
+```
+- O dispositivo deve primeiro gerar seus identificadores e chaves
+- Envia estes dados para registro na API
+- API valida o certificado EK e registra o dispositivo
+
+2. **Autenticação** (`POST /api/auth/login/`):
+```json
+{
+    "uuid": "uuid-do-dispositivo",
+    "ek_certificate": "certificado-EK-do-TPM"
+}
+```
+- Após registro, o dispositivo precisa se autenticar
+- Recebe um token de acesso válido por 30 dias
+- Este token deve ser usado em todas as requisições subsequentes
+
+3. **Armazenamento de Dados** (`POST /api/operations/store_data/`):
+```json
+{
+    "encrypted_data": "dados-criptografados",
+    "encrypted_symmetric_key": "chave-simétrica-criptografada",
+    "digital_signature": "assinatura-digital",
+    "metadata": {
+        "timestamp": "2024-12-27T10:05:00Z",
+        "tipo": "dados-sensor"
+    }
+}
+```
+Headers necessários:
+```
+Authorization: Bearer <token-recebido-no-login>
+X-Device-UUID: <uuid-do-dispositivo>
+```
+
+4. **Recuperação de Dados** (`POST /api/operations/retrieve_data/`):
+```json
+{
+    "operation_id": "id-da-operação"
+}
+```
+Headers necessários:
+```
+Authorization: Bearer <token-recebido-no-login>
+X-Device-UUID: <uuid-do-dispositivo>
+```
+
+5. **Verificação do Token** (opcional, `POST /api/auth/verify_token/`):
+```json
+{
+    "token": "token-atual"
+}
+```
+- Pode ser usado para verificar se o token ainda é válido
+
+6. **Revogação do Token** (quando necessário, `POST /api/auth/revoke_token/`):
+```json
+{
+    "token": "token-a-ser-revogado"
+}
+```
+
+Pontos importantes:
+1. O token de acesso é válido por 30 dias
+2. Todas as operações após o registro requerem autenticação
+3. O UUID do dispositivo deve ser enviado em todas as requisições
+4. Os dados são sempre criptografados no dispositivo antes do envio
+5. A assinatura digital é verificada em cada operação de armazenamento
+
+Fluxo de segurança:
+1. Validação do TPM no registro
+2. Autenticação por token
+3. Criptografia de dados no cliente
+4. Assinatura digital para cada operação
+5. Verificação da assinatura no servidor
+
+Este fluxo garante:
+- Identificação única dos dispositivos
+- Segurança na comunicação
+- Proteção dos dados
+- Rastreabilidade das operações
+
+
+
+
+
+
+
+Vou criar um passo a passo completo e um diagrama de sequência.
+
+
+
+Primeiro, o passo a passo completo:
+
+1. **Registro do Dispositivo**:
+   - O TPM possui seus identificadores únicos (EK, AIK)
+   - Durante a primeira inicialização:
+     - O dispositivo gera um UUID único
+     - O TPM gera um par de chaves RSA (pública/privada)
+     - A chave privada fica segura no TPM
+     - O Agente coleta: UUID, EK, AIK e chave pública
+     - O Agente envia estes dados para API
+     - A API valida e registra o dispositivo
+
+2. **Armazenamento de Dados**:
+   - No Cliente:
+     - O Agente recebe dados para armazenar
+     - Gera uma chave AES aleatória
+     - Gera um IV (Vetor de Inicialização) aleatório
+     - Encripta os dados com AES-CBC usando a chave e IV
+     - Encripta a chave AES com a chave pública RSA
+     - O TPM gera uma assinatura digital dos dados encriptados
+     - O Agente envia para API: dados encriptados, chave AES encriptada, assinatura digital
+
+   - Na API:
+     - Recebe o pacote de dados
+     - Identifica o dispositivo pelo UUID
+     - Verifica a assinatura digital usando a chave pública registrada
+     - Se válido, armazena os dados encriptados
+     - Se inválido, rejeita a operação
+
+3. **Recuperação de Dados**:
+   - O Cliente solicita dados usando seu UUID
+   - A API retorna o pacote encriptado
+   - O TPM descriptografa a chave AES
+   - O Agente usa a chave AES para descriptografar os dados
+   - Os dados originais são recuperados
+
+Agora o diagrama de sequência:
+
+Algumas observações importantes sobre o processo:
+
+1. **Segurança**:
+   - A chave privada RSA nunca sai do TPM
+   - Os dados são duplamente protegidos: AES para o conteúdo e RSA para a chave AES
+   - A assinatura digital garante autenticidade e integridade
+
+2. **Validações**:
+   - A API verifica a autenticidade do dispositivo pelo UUID
+   - A assinatura digital é verificada em cada operação
+   - O TPM valida todas as operações criptográficas
+
+3. **Performance**:
+   - AES é usado para os dados por ser mais eficiente para grandes volumes
+   - RSA é usado apenas para a chave AES e assinaturas
+   - O IV garante que mesmos dados geram diferentes criptogramas
+
+4. **Recuperação**:
+   - Apenas o dispositivo original pode recuperar os dados
+   - A chave privada no TPM é necessária para descriptografar
+   - O processo é transparente para o cliente
+
+Este design fornece um alto nível de segurança enquanto mantém boa performance e usabilidade. Os dados nunca trafegam ou são armazenados em texto claro fora do Cliente, e o TPM garante que as chaves privadas estejam seguras.

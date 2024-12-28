@@ -1,0 +1,72 @@
+[
+    {
+        "model": "Operation",
+        "fields": {
+            "device": {
+                "$oid": "64bba2df5f1b2a3b2c2b1234" 
+            },
+            "operation_type": "STORE",
+            "status": "COMPLETED",
+            "error_message": null,
+            "created_at": { "$date": "2025-01-01T10:00:00Z" },
+            "updated_at": { "$date": "2025-01-01T10:30:00Z" }
+        }
+    },
+    {
+        "model": "Operation",
+        "fields": {
+            "device": {
+                "$oid": "64bba2df5f1b2a3b2c2b5678" 
+            },
+            "operation_type": "UPDATE",
+            "status": "PENDING",
+            "error_message": "Error during operation",
+            "created_at": { "$date": "2025-01-02T10:00:00Z" },
+            "updated_at": { "$date": "2025-01-02T10:30:00Z" }
+        }
+    },
+    {
+        "model": "EncryptedPackage",
+        "fields": {
+            "operation": { "$oid": "64cba3df6f1b2a3b2c2b7890" },
+            "encrypted_data": { "$binary": { "base64": "VGhpcyBpcyBhIHNhbXBsZSBkYXRhLg==", "subType": "00" } },
+            "encrypted_symmetric_key": { "$binary": { "base64": "U2FtcGxlIHN5bW1ldHJpYyBrZXku", "subType": "00" } },
+            "digital_signature": "SampleDigitalSignature123",
+            "hash_original": "abcdef1234567890",
+            "metadata": { "key": "value" },
+            "created_at": { "$date": "2025-01-01T10:30:00Z" }
+        }
+    },
+    {
+        "model": "EncryptedPackage",
+        "fields": {
+            "operation": { "$oid": "64cba3df6f1b2a3b2c2b9012" },
+            "encrypted_data": { "$binary": { "base64": "QW5vdGhlciBzYW1wbGUgZGF0YS4=", "subType": "00" } },
+            "encrypted_symmetric_key": { "$binary": { "base64": "QW5vdGhlciBzeW1tZXRyaWMga2V5Lg==", "subType": "00" } },
+            "digital_signature": "AnotherSampleDigitalSignature456",
+            "hash_original": "1234567890abcdef",
+            "metadata": { "additional_info": "example" },
+            "created_at": { "$date": "2025-01-02T10:30:00Z" }
+        }
+    },
+    {
+        "model": "OperationLog",
+        "fields": {
+            "operation": { "$oid": "64cba3df6f1b2a3b2c2b7890" },
+            "action": "STORE_COMPLETED",
+            "details": { "package_id": "64cba3df6f1b2a3b2c2b4567" },
+            "timestamp": { "$date": "2025-01-01T10:30:00Z" }
+        }
+    },
+    {
+        "model": "OperationLog",
+        "fields": {
+            "operation": { "$oid": "64cba3df6f1b2a3b2c2b9012" },
+            "action": "UPDATE_FAILED",
+            "details": {
+                "error": "Validation failed during update"
+            },
+            "timestamp": { "$date": "2025-01-02T10:30:00Z" }
+        }
+    }
+]

@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: tpmbunker_mongodb
+    command: ["mongod", "--quiet", "--logpath", "/dev/null"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME} 
+    volumes:
+      - mongo_data:/data/db
+      - mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: [ "CMD", "mongosh", "-u", "${MONGO_INITDB_ROOT_USERNAME}", "-p", "${MONGO_INITDB_ROOT_PASSWORD}", "--authenticationDatabase", "admin", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - internal_network
+
+  tpm_bunker_api:
+    container_name: tpmbunker_mongodb
+    depends_on:
+      tpmbunker_mongodb:
+        condition: service_healthy
+    build: .
+    env_file:
+      - ./src/.env.docker
+    links:
+      - tpmbunker_mongodb
+    ports:
+      - 8000:8000
+    environment:
+      DEBUG: 1
+      TZ: "America/Sao_Paulo"
+      PGTZ: "America/Sao_Paulo"
+    networks:
+      - internal_network
+
+volumes:
+  mongo_data:
+
+networks:
+  internal_network:
+    driver: bridge
+
+    

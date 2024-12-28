@@ -1,0 +1,38 @@
+[
+    {
+        "model": "DeviceToken",
+        "fields": {
+            "device": {
+                "$oid": "64bba2df5f1b2a3b2c2b1234"  
+            },
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.exampleToken1",
+            "is_revoked": false,
+            "created_at": { "$date": "2025-01-01T10:00:00Z" },
+            "expires_at": { "$date": "2025-05-31T10:00:00Z" }
+        }
+    },
+    {
+        "model": "DeviceToken",
+        "fields": {
+            "device": {
+                "$oid": "64bba2df5f1b2a3b2c2b5678"  
+            },
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.exampleToken2",
+            "is_revoked": true,
+            "created_at": { "$date": "2025-01-01T10:00:00Z" },
+            "expires_at": { "$date": "2025-01-15T10:00:00Z" }
+        }
+    },
+    {
+        "model": "DeviceToken",
+        "fields": {
+            "device": {
+                "$oid": "64bba2df5f1b2a3b2c2b1234"  
+            },
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.exampleToken3",
+            "is_revoked": false,
+            "created_at": { "$date": "2025-01-02T10:00:00Z" },
+            "expires_at": { "$date": "2025-10-30T10:00:00Z" }
+        }
+    }
+]

@@ -1,0 +1,2 @@
+python manage.py loaddata auth_group.json priority.json state.json city.json healthcare_unit.json specialty.json patient.json mocks/user.json support_call_type.json
+
