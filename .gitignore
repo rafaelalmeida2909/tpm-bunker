@@ -1,11 +1,11 @@
-.env
-.env.docker
-# explanation.txt
-# imgs
-__pycache__/*
+build/bin
+node_modules
+frontend/dist
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
 *.py[cod]
 *$py.class
-
 
 # C extensions
 *.so
@@ -15,7 +15,6 @@ __pycache__/*
 build/
 develop-eggs/
 dist/
-downloads/
 eggs/
 .eggs/
 lib/
@@ -125,8 +124,9 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
-.env.docker
+.env*
+!.env*.example
+
 .venv
 env/
 venv/
@@ -165,7 +165,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
+# Certificates
+*.crt
+*.key
 
-drop_create_db.bat
-pull.bat
-run_docker.bat

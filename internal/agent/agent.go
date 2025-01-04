@@ -1,32 +1,40 @@
 package agent
 
 import (
-	"fmt"
-	"io"
+	"context"
+	"tpm-bunker/internal/tpm"
+	"tpm-bunker/internal/types" // ajuste o import
 
-	"github.com/google/go-tpm/tpm2"
-	"github.com/rafaelalmeida2909/tpm-bunker/pkg/config"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type Agent struct {
-	tpm        io.ReadWriteCloser
-	clientAPI  *ClientAPI
-	tpmService *TPMService
+	ctx    context.Context
+	tpmMgr *tpm.Manager
 }
 
-func Start(cfg *config.Config) error {
-	// Initialize TPM connection
-	tpmHandle, err := tpm2.OpenTPM()
+func NewAgent(ctx context.Context, tpmMgr *tpm.Manager) *Agent {
+	return &Agent{
+		ctx:    ctx,
+		tpmMgr: tpmMgr,
+	}
+}
+
+func (a *Agent) Initialize() error {
+	status, err := a.tpmMgr.GetStatus()
 	if err != nil {
-		return fmt.Errorf("failed to open TPM: %v", err)
-	}
-	defer tpmHandle.Close()
-
-	agent := &Agent{
-		tpm:        rwc,
-		tpmService: NewTPMService(rwc),
-		clientAPI:  NewClientAPI(nil),
+		return err
 	}
 
-	return agent.Run()
+	runtime.EventsEmit(a.ctx, "system:status", status)
+	return nil
+}
+
+func (a *Agent) ExecuteOperation(op types.UserOperation) (*types.APIResponse, error) {
+	// Orquestrar operação entre TPM e API
+	// 1. Preparar TPM
+	// 2. Fazer request para API
+	// 3. Processar resposta
+	// 4. Atualizar TPM se necessário
+	return a.tpmMgr.HandleOperation(op)
 }
