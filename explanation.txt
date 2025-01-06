@@ -160,13 +160,6 @@ Este fluxo garante:
 
 
 
-
-
-
-Vou criar um passo a passo completo e um diagrama de sequência.
-
-
-
 Primeiro, o passo a passo completo:
 
 1. **Registro do Dispositivo**:

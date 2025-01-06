@@ -34,7 +34,7 @@
   {/if}
 
   <div class="input-box">
-    <button class="btn" on:click={checkTPMStatus}>Check TPM Status</button>
+    <button class="btn" on:click={checkTPMStatus}>Check</button>
   </div>
 </main>
 
