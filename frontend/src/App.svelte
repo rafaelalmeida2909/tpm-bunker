@@ -1,6 +1,10 @@
 <script>
   import { GetTPMStatus } from '../wailsjs/go/main/App.js';
   import logo from './assets/images/logo-universal.png';
+  import FallingLocks from './FallingLocks.svelte';
+  import lock from './assets/images/lock.png'
+  
+  const lockImageUrl = lock;
 
   let status = null;
   let error = null;
@@ -17,6 +21,7 @@
 </script>
 
 <main>
+  <FallingLocks imageUrl={lockImageUrl} />
   <img alt="Wails logo" id="logo" src="{logo}">
   
   {#if error}
@@ -39,7 +44,13 @@
 </main>
 
 <style>
+  /* Para garantir que o conteúdo fique sobre a animação */
+  main {
+    position: relative;
+    z-index: 1;
+  }
 
+  /* Resto dos seus estilos permanecem iguais */
   #logo {
     display: block;
     width: 50%;
@@ -67,5 +78,4 @@
     background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
     color: #333333;
   }
-
 </style>
