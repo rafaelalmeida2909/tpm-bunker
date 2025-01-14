@@ -16,7 +16,7 @@ func NewOrchestrator(agent *Agent) *Orchestrator {
 	}
 }
 
-func (o *Orchestrator) HandleOperation(op types.UserOperation) (*types.APIResponse, error) {
+func (o *Orchestrator) HandleOperation(op types.UserOperation) string {
 	// Coordena operações entre TPM e API
-	return o.agent.ExecuteOperation(op)
+	return ""
 }

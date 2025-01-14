@@ -3,7 +3,7 @@ package agent
 import (
 	"context"
 	"tpm-bunker/internal/tpm"
-	"tpm-bunker/internal/types" // ajuste o import
+	"tpm-bunker/internal/types"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -20,21 +20,22 @@ func NewAgent(ctx context.Context, tpmMgr *tpm.Manager) *Agent {
 	}
 }
 
-func (a *Agent) Initialize() error {
-	status, err := a.tpmMgr.GetStatus()
-	if err != nil {
+func (a *Agent) Initialize() string {
+	//status, err := a.tpmMgr.GetStatus()
+	err := "teste"
+	if err != "" {
 		return err
 	}
 
-	runtime.EventsEmit(a.ctx, "system:status", status)
-	return nil
+	runtime.EventsEmit(a.ctx, "system:status", "status")
+	return ""
 }
 
-func (a *Agent) ExecuteOperation(op types.UserOperation) (*types.APIResponse, error) {
+func (a *Agent) ExecuteOperation(op types.UserOperation) string {
 	// Orquestrar operação entre TPM e API
 	// 1. Preparar TPM
 	// 2. Fazer request para API
 	// 3. Processar resposta
 	// 4. Atualizar TPM se necessário
-	return a.tpmMgr.HandleOperation(op)
+	return ""
 }

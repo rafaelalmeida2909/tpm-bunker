@@ -1,18 +1,21 @@
 package types
 
-type TPMStatus struct {
-	Available bool   `json:"available"`
-	Version   string `json:"version"`
-	Error     string `json:"error,omitempty"`
+import "crypto/rsa"
+
+// DeviceInfo contém informações sobre o dispositivo
+type DeviceInfo struct {
+	UUID      string
+	PublicKey *rsa.PublicKey
 }
 
-type UserOperation struct {
-	Type    string      `json:"type"`
-	Payload interface{} `json:"payload"`
-}
-
+// APIResponse representa uma resposta da API
 type APIResponse struct {
-	Success bool        `json:"success"`
-	Data    interface{} `json:"data,omitempty"`
-	Error   string      `json:"error,omitempty"`
+	Success bool
+	Message string
+}
+
+// UserOperation representa uma operação solicitada pelo usuário
+type UserOperation struct {
+	Type string
+	Data interface{}
 }
