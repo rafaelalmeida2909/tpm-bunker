@@ -2,9 +2,9 @@ package tpm
 
 import (
 	"context"
-	"crypto/rsa"
 	"fmt"
 	"sync"
+	"tpm-bunker/internal/types"
 )
 
 // Manager gerencia as operações do TPM e mantém o estado
@@ -15,7 +15,9 @@ type Manager struct {
 
 	// Estado do dispositivo
 	deviceUUID string
-	publicKey  *rsa.PublicKey
+	publicKey  string
+	EK         []byte
+	AIK        []byte
 }
 
 // NewManager cria uma nova instância do gerenciador TPM
@@ -60,6 +62,8 @@ func (m *Manager) InitializeDevice() error {
 	// Armazena as credenciais relevantes
 	m.deviceUUID = creds.UUID
 	m.publicKey = creds.PublicKey
+	m.EK = creds.EK
+	m.AIK = creds.AIK
 
 	return nil
 }
@@ -79,11 +83,11 @@ func (m *Manager) GetDeviceUUID() string {
 }
 
 // GetStatus retorna o status atual do TPM
-func (m *Manager) GetStatus() (*TPMStatus, error) {
+func (m *Manager) GetStatus() (*types.TPMStatus, error) {
 	m.mutex.RLock()
 	defer m.mutex.RUnlock()
 
-	status := &TPMStatus{
+	status := &types.TPMStatus{
 		Available:   m.client != nil,
 		Initialized: m.deviceUUID != "",
 	}
@@ -92,14 +96,8 @@ func (m *Manager) GetStatus() (*TPMStatus, error) {
 }
 
 // GetPublicKey retorna a chave pública RSA do dispositivo
-func (m *Manager) GetPublicKey() *rsa.PublicKey {
+func (m *Manager) GetPublicKey() string {
 	m.mutex.RLock()
 	defer m.mutex.RUnlock()
 	return m.publicKey
-}
-
-// TPMStatus representa o status do TPM
-type TPMStatus struct {
-	Available   bool `json:"available"`
-	Initialized bool `json:"initialized"`
 }

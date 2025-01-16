@@ -1,11 +1,11 @@
 package types
 
-import "crypto/rsa"
-
 // DeviceInfo contém informações sobre o dispositivo
 type DeviceInfo struct {
 	UUID      string
-	PublicKey *rsa.PublicKey
+	PublicKey string
+	EK        []byte
+	AIK       []byte
 }
 
 // APIResponse representa uma resposta da API
@@ -18,4 +18,10 @@ type APIResponse struct {
 type UserOperation struct {
 	Type string
 	Data interface{}
+}
+
+// TPMStatus representa o status do TPM
+type TPMStatus struct {
+	Available   bool `json:"available"`
+	Initialized bool `json:"initialized"`
 }

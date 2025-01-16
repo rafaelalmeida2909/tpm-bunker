@@ -37,7 +37,7 @@ func (a *App) startup(ctx context.Context) {
 }
 
 // GetTPMStatus retorna o status atual do TPM
-func (a *App) GetTPMStatus() (*tpm.TPMStatus, error) {
+func (a *App) GetTPMStatus() (*types.TPMStatus, error) {
 	return a.tpmMgr.GetStatus()
 }
 
@@ -56,6 +56,8 @@ func (a *App) InitializeDevice() (*types.DeviceInfo, error) {
 	return &types.DeviceInfo{
 		UUID:      a.tpmMgr.GetDeviceUUID(),
 		PublicKey: a.tpmMgr.GetPublicKey(),
+		AIK:       a.tpmMgr.AIK,
+		EK:        a.tpmMgr.EK,
 	}, nil
 }
 

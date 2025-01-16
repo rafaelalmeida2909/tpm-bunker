@@ -2,10 +2,14 @@ package tpm
 
 import (
 	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"runtime"
+	"tpm-bunker/internal/types"
 
 	"github.com/google/go-tpm/legacy/tpm2"
 	"github.com/google/go-tpm/tpmutil"
@@ -21,6 +25,18 @@ type TPMClient struct {
 	ekHandle  tpmutil.Handle
 	aikHandle tpmutil.Handle
 	rsaHandle tpmutil.Handle
+}
+
+func getPublicKeyPEM(pubKey *rsa.PublicKey) string {
+	pubASN1, err := x509.MarshalPKIXPublicKey(pubKey)
+	if err != nil {
+		log.Fatalf("Falha ao serializar chave pública: %v", err)
+	}
+	pubPEM := pem.EncodeToMemory(&pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: pubASN1,
+	})
+	return string(pubPEM)
 }
 
 // CheckTPMPresence verifica se o TPM está presente e acessível
@@ -65,7 +81,7 @@ func NewTPMClient() (*TPMClient, error) {
 }
 
 // InitializeDevice configura o dispositivo pela primeira vez
-func (c *TPMClient) InitializeDevice() (*DeviceCredentials, error) {
+func (c *TPMClient) InitializeDevice() (*types.DeviceInfo, error) {
 	// Recupera EK
 	ek, err := c.getEndorsementKey()
 	if err != nil {
@@ -87,10 +103,12 @@ func (c *TPMClient) InitializeDevice() (*DeviceCredentials, error) {
 	}
 	c.keyPair = keyPair
 
-	return &DeviceCredentials{
+	pubKeyPEM := getPublicKeyPEM(pubKey)
+
+	return &types.DeviceInfo{
 		EK:        ek,
 		AIK:       aik,
-		PublicKey: pubKey,
+		PublicKey: pubKeyPEM,
 	}, nil
 }
 
@@ -223,13 +241,6 @@ func (c *TPMClient) generateRSAKeyPair() (*rsa.PrivateKey, *rsa.PublicKey, error
 }
 
 // DeviceCredentials contém as credenciais geradas durante a inicialização
-
-type DeviceCredentials struct {
-	UUID      string
-	EK        []byte         // Chave de Endosso em formato bytes
-	AIK       []byte         // Chave de Atestação em formato bytes
-	PublicKey *rsa.PublicKey // Chave pública RSA
-}
 
 // Close fecha a conexão com o TPM
 func (c *TPMClient) Close() error {

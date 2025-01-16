@@ -132,7 +132,9 @@
       <div class="device-box">
         <h3>Informações do Dispositivo</h3>
         <p>UUID: {deviceInfo.UUID}</p>
-        <p>Chave Pública: {deviceInfo.PublicKey ? "Presente" : "Ausente"}</p>
+        <p>Chave Pública: {deviceInfo.PublicKey}</p>
+        <p>EK: {deviceInfo.EK}</p>
+        <p>AIK: {deviceInfo.AIK}</p>
       </div>
     {/if}
   </div>
