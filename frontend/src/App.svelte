@@ -1,221 +1,213 @@
 <script>
-// @ts-nocheck
+  import { onMount } from 'svelte';
+  import Download from 'svelte-icons/fa/FaDownload.svelte';
+  import Lock from 'svelte-icons/fa/FaLock.svelte';
 
-  import logo from "./assets/images/logo-universal.png";
-  import FallingLocks from "./FallingLocks.svelte";
-  import lock from "./assets/images/lock.png";
-  import {
-    InitializeDevice,
-    IsDeviceInitialized,
-    GetTPMStatus,
-    GetDeviceInfo,
-  } from "../wailsjs/go/main/App";
+  import ShieldCheck from 'svelte-icons/fa/FaShieldAlt.svelte';
+  import Sync from 'svelte-icons/fa/FaSync.svelte';
+  import Upload from 'svelte-icons/fa/FaUpload.svelte';
+  import Shield from 'svelte-icons/fa/FaUserShield.svelte';
 
-  let deviceInfo = null;
-  let initialized = false;
-  let status = null;
-  let error = null;
-  let loading = false;
+  // Estado do sistema
+  let systemState = {
+    tpmAvailable: false,
+    deviceInitialized: false,
+    apiConnected: false,
+    authenticated: false,
+    checking: true
+  };
 
-  async function initializeTPM() {
-    if (loading) return;
-    loading = true;
-    error = null;
+  // Lista de arquivos
+  let files = [
+    { id: 1, name: "documento.pdf", date: "2024-01-16", size: "2.4 MB" },
+    { id: 2, name: "contrato.docx", date: "2024-01-15", size: "1.1 MB" }
+  ];
 
-    try {
-      deviceInfo = await InitializeDevice();
-      console.log("Device initialized:", deviceInfo);
-    } catch (err) {
-      error = `Falha na inicialização: ${err.message || err}`;
-      console.error("Initialization error:", err);
-    } finally {
-      loading = false;
-    }
+  // Simulação da verificação inicial
+  onMount(() => {
+    setTimeout(() => {
+      systemState = {
+        tpmAvailable: true,
+        deviceInitialized: true,
+        apiConnected: true,
+        authenticated: true,
+        checking: false
+      };
+    }, 2000);
+  });
+
+  // Funções de ação
+  function encryptFile() {
+    // Implementar lógica de criptografia
+    console.log('Encriptando arquivo...');
   }
 
-  async function checkInitialization() {
-    if (loading) return;
-    loading = true;
-    error = null;
-
-    try {
-      initialized = await IsDeviceInitialized();
-      console.log("Is initialized:", initialized);
-    } catch (err) {
-      error = `Falha ao verificar inicialização: ${err.message || err}`;
-      console.error("Check initialization error:", err);
-      initialized = false;
-    } finally {
-      loading = false;
-    }
-  }
-
-  async function checkTPMStatus() {
-    if (loading) return;
-    loading = true;
-    error = null;
-
-    try {
-      status = await GetTPMStatus();
-      console.log("TPM Status:", status);
-    } catch (err) {
-      error = `Falha ao verificar status: ${err.message || err}`;
-      console.error("Status check error:", err);
-      status = null;
-    } finally {
-      loading = false;
-    }
-  }
-
-  async function getDeviceDetails() {
-    if (loading) return;
-    loading = true;
-    error = null;
-
-    try {
-      deviceInfo = await GetDeviceInfo();
-      console.log("Device Info:", deviceInfo);
-    } catch (err) {
-      error = `Falha ao obter informações: ${err.message || err}`;
-      console.error("Get info error:", err);
-      deviceInfo = null;
-    } finally {
-      loading = false;
-    }
-  }
-
-  async function runAllTests() {
-    if (loading) return;
-    error = null;
-
-    try {
-      await checkTPMStatus();
-      await checkInitialization();
-
-      if (!initialized) {
-        await initializeTPM();
-        await checkInitialization();
-      }
-
-      if (initialized) {
-        await getDeviceDetails();
-      }
-    } catch (err) {
-      error = `Erro nos testes: ${err.message || err}`;
-      console.error("Test error:", err);
-    }
+  function decryptFile(id) {
+    // Implementar lógica de descriptografia
+    console.log('Descriptografando arquivo...', id);
   }
 </script>
 
-<main>
-  <FallingLocks imageUrl={lock} />
-  <img alt="Wails logo" id="logo" src={logo} />
-
-  {#if error}
-    <div class="error-box">
-      <p>Error: {error}</p>
-    </div>
-  {/if}
-
-  <div class="status-container">
-    {#if status}
-      <div class="status-box">
-        <h3>TPM Status</h3>
-        <p>Inicializado: {status.IsInitialized ? "Sim" : "Não"}</p>
-        {#if status.HasError}
-          <p class="error">Erro: {status.ErrorMessage}</p>
-        {/if}
-      </div>
-    {/if}
-
-    {#if deviceInfo}
-      <div class="device-box">
-        <h3>Informações do Dispositivo</h3>
-        <p>UUID: {deviceInfo.UUID}</p>
-        <p>Chave Pública: {deviceInfo.PublicKey}</p>
-        <p>EK: {deviceInfo.EK}</p>
-        <p>AIK: {deviceInfo.AIK}</p>
-      </div>
-    {/if}
-  </div>
-
-  <div class="button-container">
-    <button class="btn" on:click={runAllTests}> Testar TPM </button>
-
-    <button class="btn" on:click={initializeTPM} disabled={initialized}>
-      Inicializar
-    </button>
-
-    <button class="btn" on:click={checkTPMStatus}> Verificar Status </button>
-  </div>
-</main>
-
-<style>
-  /* Para garantir que o conteúdo fique sobre a animação */
-  main {
-    position: relative;
-    z-index: 1;
+<style lang="postcss">
+  .system-status {
+    @apply bg-white rounded-lg shadow-md p-6 mb-6;
   }
 
-  /* Resto dos seus estilos permanecem iguais */
-  #logo {
-    display: block;
-    width: 50%;
-    height: 50%;
-    margin: auto;
-    padding: 10% 0 0;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-origin: content-box;
+  .status-grid {
+    @apply grid grid-cols-2 gap-4;
   }
 
-  .error-box {
-    background-color: #382e2e;
-    border: 1px solid #ef5350;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 4px;
+  .status-item {
+    @apply flex items-center space-x-2;
   }
 
-  .status-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin: 20px 0;
+  .icon {
+    @apply w-5 h-5;
   }
 
-  .status-box,
-  .device-box {
-    background-color: #382e2e;
-    padding: 15px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  .icon-green {
+    @apply text-green-500;
   }
 
-  .button-container {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin: 20px 0;
+  .icon-red {
+    @apply text-red-500;
+  }
+
+  .file-manager {
+    @apply bg-white rounded-lg shadow-md p-6;
+  }
+
+  .file-header {
+    @apply grid grid-cols-4 gap-4 p-4 bg-gray-50 border-b;
+  }
+
+  .file-row {
+    @apply grid grid-cols-4 gap-4 p-4 border-b last:border-b-0;
   }
 
   .btn {
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    background-color: #2196f3;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    @apply px-4 py-2 rounded-md flex items-center gap-2;
   }
 
-  .btn:disabled {
-    background-color: #bdbdbd;
-    cursor: not-allowed;
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700;
   }
 
-  .btn:hover:not(:disabled) {
-    background-color: #1976d2;
+  .btn-outline {
+    @apply border border-gray-300 hover:bg-gray-50;
+  }
+
+  .alert {
+    @apply p-4 rounded-md mb-4;
+  }
+
+  .alert-info {
+    @apply bg-blue-50 text-blue-700;
+  }
+
+  .alert-error {
+    @apply bg-red-50 text-red-700;
   }
 </style>
+
+{#if systemState.checking}
+  <div class="p-6">
+    <div class="alert alert-info">
+      <h3 class="font-bold">Verificando estado do sistema...</h3>
+      <p>Aguarde enquanto verificamos a disponibilidade do TPM e a conexão com a API.</p>
+    </div>
+  </div>
+{:else if !systemState.tpmAvailable || !systemState.apiConnected}
+  <div class="p-6">
+    <div class="alert alert-error">
+      <h3 class="font-bold">Erro de Inicialização</h3>
+      <p>
+        {#if !systemState.tpmAvailable}
+          TPM não está disponível. Verifique se seu dispositivo possui TPM e se está ativado no BIOS.
+        {:else}
+          Não foi possível conectar à API. Verifique sua conexão com a internet.
+        {/if}
+      </p>
+    </div>
+  </div>
+{:else}
+  <div class="p-6 space-y-6">
+    <!-- Status do Sistema -->
+    <div class="system-status">
+      <h2 class="text-xl font-bold mb-4">Status do Sistema</h2>
+      <p class="text-gray-600 mb-4">Estado atual dos componentes do sistema</p>
+      
+      <div class="status-grid">
+        <div class="status-item">
+          <div class="icon" class:icon-green={systemState.tpmAvailable} class:icon-red={!systemState.tpmAvailable}>
+            <Shield />
+          </div>
+          <span>TPM: {systemState.tpmAvailable ? 'Disponível' : 'Indisponível'}</span>
+        </div>
+
+        <div class="status-item">
+          <div class="icon" class:icon-green={systemState.deviceInitialized} class:icon-red={!systemState.deviceInitialized}>
+            <ShieldCheck />
+          </div>
+          <span>Dispositivo: {systemState.deviceInitialized ? 'Inicializado' : 'Não Inicializado'}</span>
+        </div>
+
+        <div class="status-item">
+          <div class="icon" class:icon-green={systemState.apiConnected} class:icon-red={!systemState.apiConnected}>
+            <Sync />
+          </div>
+          <span>API: {systemState.apiConnected ? 'Conectada' : 'Desconectada'}</span>
+        </div>
+
+        <div class="status-item">
+          <div class="icon" class:icon-green={systemState.authenticated} class:icon-red={!systemState.authenticated}>
+            <Lock />
+          </div>
+          <span>Autenticação: {systemState.authenticated ? 'Autenticado' : 'Não Autenticado'}</span>
+        </div>
+      </div>
+    </div>
+
+    {#if systemState.authenticated}
+      <!-- Gerenciador de Arquivos -->
+      <div class="file-manager">
+        <h2 class="text-xl font-bold mb-4">Arquivos Criptografados</h2>
+        <p class="text-gray-600 mb-4">Gerencie seus arquivos protegidos pelo TPM</p>
+
+        <div class="mb-6">
+          <button class="btn btn-primary" on:click={encryptFile}>
+            <div class="icon">
+              <Upload />
+            </div>
+            Criptografar Arquivo
+          </button>
+        </div>
+
+        <div class="border rounded-lg">
+          <div class="file-header">
+            <div>Nome</div>
+            <div>Data</div>
+            <div>Tamanho</div>
+            <div>Ações</div>
+          </div>
+
+          {#each files as file (file.id)}
+            <div class="file-row">
+              <div>{file.name}</div>
+              <div>{file.date}</div>
+              <div>{file.size}</div>
+              <div>
+                <button class="btn btn-outline" on:click={() => decryptFile(file.id)}>
+                  <div class="icon">
+                    <Download />
+                  </div>
+                  Descriptografar
+                </button>
+              </div>
+            </div>
+          {/each}
+        </div>
+      </div>
+    {/if}
+  </div>
+{/if}
