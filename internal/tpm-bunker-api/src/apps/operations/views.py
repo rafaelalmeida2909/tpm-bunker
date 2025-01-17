@@ -75,7 +75,6 @@ from .services import OperationService
     ),
 )
 class OperationViewSet(viewsets.GenericViewSet):
-    queryset = Operation.objects.all()
     serializer_class = OperationSerializer
     permission_classes = [IsAuthenticated]
     service_class = OperationService()
