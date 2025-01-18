@@ -1,11 +1,4 @@
-from uuid import UUID
-
-from drf_spectacular.utils import (
-    OpenApiParameter,
-    OpenApiTypes,
-    extend_schema,
-    extend_schema_view,
-)
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -45,7 +38,6 @@ from .services import DevicesService
     ),
 )
 class DeviceViewSet(viewsets.ModelViewSet):
-    queryset = Device.objects()
     permission_classes = [IsAuthenticated]
     serializer_class = DeviceSerializer
     service_class = DevicesService()
@@ -54,7 +46,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):
             return Device.objects().none()
-        return Device.objects()
+        return Device.objects
 
     def get_serializer_class(self):
         if self.action == "create":
@@ -62,7 +54,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
         return super().get_serializer_class()
 
     def get_permissions(self):
-        if self.action == "create":
+        if self.action == "create" or self.action == "retrieve":
             self.permission_classes = [AllowAny]
         else:
             self.permission_classes = [IsAuthenticated]

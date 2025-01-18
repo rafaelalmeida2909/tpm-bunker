@@ -1,52 +1,282 @@
 <script>
-  import { onMount } from 'svelte';
-  import Download from 'svelte-icons/fa/FaDownload.svelte';
-  import Lock from 'svelte-icons/fa/FaLock.svelte';
+  import { onDestroy, onMount } from "svelte";
 
-  import ShieldCheck from 'svelte-icons/fa/FaShieldAlt.svelte';
-  import Sync from 'svelte-icons/fa/FaSync.svelte';
-  import Upload from 'svelte-icons/fa/FaUpload.svelte';
-  import Shield from 'svelte-icons/fa/FaUserShield.svelte';
+  import Download from "svelte-icons/fa/FaDownload.svelte";
+  import Lock from "svelte-icons/fa/FaLock.svelte";
+  import ShieldCheck from "svelte-icons/fa/FaShieldAlt.svelte";
+  import Sync from "svelte-icons/fa/FaSync.svelte";
+  import Upload from "svelte-icons/fa/FaUpload.svelte";
+  import Shield from "svelte-icons/fa/FaUserShield.svelte";
+  import {
+      AuthLogin,
+      CheckConnection,
+      CheckTPMPresence,
+      InitializeDevice,
+      IsDeviceInitialized
+  } from "../wailsjs/go/main/App";
 
   // Estado do sistema
   let systemState = {
     tpmAvailable: false,
     deviceInitialized: false,
-    apiConnected: false,
+    apiConnected: true,
     authenticated: false,
-    checking: true
+    checking: true,
+    initializationFailed: false,
   };
-
-  // Lista de arquivos
   let files = [
     { id: 1, name: "documento.pdf", date: "2024-01-16", size: "2.4 MB" },
-    { id: 2, name: "contrato.docx", date: "2024-01-15", size: "1.1 MB" }
+    { id: 2, name: "contrato.docx", date: "2024-01-15", size: "1.1 MB" },
   ];
 
-  // Simulação da verificação inicial
-  onMount(() => {
-    setTimeout(() => {
+  let connectionCheckInterval;
+
+  // Função para verificar conexão com a API
+  async function checkAPIConnection() {
+    try {
+      systemState.apiConnected = await CheckConnection();
+    } catch (error) {
+      console.error("Erro ao verificar conexão:", error);
+      systemState.apiConnected = false;
+    }
+  }
+
+  // Função para inicializar o dispositivo
+  async function initializeDeviceIfNeeded() {
+    if (systemState.tpmAvailable && !systemState.deviceInitialized) {
+      try {
+        const deviceInfo = await InitializeDevice();
+        if (deviceInfo) {
+          // Tenta fazer login após inicialização bem-sucedida
+          const isAuthenticated = await AuthLogin();
+          systemState = {
+            ...systemState,
+            deviceInitialized: true,
+            initializationFailed: false,
+            authenticated: isAuthenticated,
+          };
+          console.log("Device initialized successfully:", deviceInfo);
+        }
+      } catch (error) {
+        console.error("Error initializing device:", error);
+        systemState = {
+          ...systemState,
+          initializationFailed: true,
+        };
+      }
+    }
+  }
+
+  // Verificação inicial do sistema
+  async function checkSystemState() {
+    try {
+      const [tpmAvailable, deviceInitialized] = await Promise.all([
+        CheckTPMPresence(),
+        IsDeviceInitialized(),
+      ]);
+
       systemState = {
-        tpmAvailable: true,
-        deviceInitialized: true,
-        apiConnected: true,
-        authenticated: true,
-        checking: false
+        ...systemState,
+        tpmAvailable,
+        deviceInitialized,
+        checking: false,
       };
+      // Se TPM está disponível mas não inicializado, tenta inicializar
+      if (tpmAvailable && !deviceInitialized) {
+        await initializeDeviceIfNeeded();
+      }
+
+      // Primeira verificação de conexão
+      await checkAPIConnection();
+    } catch (error) {
+      console.error("Error checking system state:", error);
+      systemState.checking = false;
+    }
+  }
+
+  onMount(() => {
+    // Inicia verificação do sistema após 2 segundos
+    setTimeout(() => {
+      checkSystemState();
     }, 2000);
+
+    // Inicia verificação periódica da conexão API (a cada 2 minutos)
+    connectionCheckInterval = setInterval(checkAPIConnection, 2 * 60 * 1000);
+  });
+
+  onDestroy(() => {
+    // Limpa o intervalo quando o componente é destruído
+    if (connectionCheckInterval) {
+      clearInterval(connectionCheckInterval);
+    }
   });
 
   // Funções de ação
   function encryptFile() {
-    // Implementar lógica de criptografia
-    console.log('Encriptando arquivo...');
+    console.log("Encriptando arquivo...");
   }
 
   function decryptFile(id) {
-    // Implementar lógica de descriptografia
-    console.log('Descriptografando arquivo...', id);
+    console.log("Descriptografando arquivo...", id);
   }
 </script>
+
+{#if systemState.checking}
+  <div class="p-6">
+    <div class="alert alert-info">
+      <h3 class="font-bold">Verificando estado do sistema...</h3>
+      <p>
+        Aguarde enquanto verificamos a disponibilidade do TPM e a conexão com a
+        API.
+      </p>
+    </div>
+  </div>
+{:else if !systemState.tpmAvailable || !systemState.apiConnected}
+  <div class="p-6">
+    <div class="alert alert-error">
+      <h3 class="font-bold">Erro de Inicialização</h3>
+      <p>
+        {#if !systemState.tpmAvailable}
+          TPM não está disponível. Verifique se seu dispositivo possui TPM e se
+          está ativado no BIOS.
+        {:else}
+          Não foi possível conectar à API. Verifique sua conexão com a internet.
+        {/if}
+      </p>
+    </div>
+  </div>
+{:else}
+  <div class="p-6 space-y-6">
+    <!-- Status do Sistema -->
+    <div class="system-status">
+      <h2 class="text-xl font-bold mb-4">Status do Sistema</h2>
+      <p class="text-gray-600 mb-4">Estado atual dos componentes do sistema</p>
+
+      <div class="status-grid">
+        <div class="status-item">
+          <div
+            class="icon"
+            class:icon-green={systemState.tpmAvailable}
+            class:icon-red={!systemState.tpmAvailable}
+          >
+            <Shield />
+          </div>
+          <span
+            >TPM: {systemState.tpmAvailable
+              ? "Disponível"
+              : "Indisponível"}</span
+          >
+        </div>
+
+        <div class="status-item">
+          <div
+            class="icon"
+            class:icon-green={systemState.deviceInitialized}
+            class:icon-red={!systemState.deviceInitialized &&
+              systemState.initializationFailed}
+            class:icon-blue={!systemState.deviceInitialized &&
+              !systemState.initializationFailed}
+          >
+            {#if !systemState.deviceInitialized && !systemState.initializationFailed}
+              <div class="icon-spin">
+                <Sync />
+              </div>
+            {:else}
+              <ShieldCheck />
+            {/if}
+          </div>
+          <span>
+            Dispositivo:
+            {#if !systemState.deviceInitialized && !systemState.initializationFailed}
+              Inicializando...
+            {:else if systemState.deviceInitialized}
+              Inicializado
+            {:else}
+              Falha na Inicialização
+            {/if}
+          </span>
+        </div>
+
+        <div class="status-item">
+          <div
+            class="icon"
+            class:icon-green={systemState.apiConnected}
+            class:icon-red={!systemState.apiConnected}
+          >
+            <Sync />
+          </div>
+          <span
+            >API: {systemState.apiConnected
+              ? "Conectada"
+              : "Desconectada"}</span
+          >
+        </div>
+
+        <div class="status-item">
+          <div
+            class="icon"
+            class:icon-green={systemState.authenticated}
+            class:icon-red={!systemState.authenticated}
+          >
+            <Lock />
+          </div>
+          <span
+            >Autenticação: {systemState.authenticated
+              ? "Autenticado"
+              : "Não Autenticado"}</span
+          >
+        </div>
+      </div>
+    </div>
+
+    {#if systemState.authenticated}
+      <!-- Gerenciador de Arquivos -->
+      <div class="file-manager">
+        <h2 class="text-xl font-bold mb-4">Arquivos Criptografados</h2>
+        <p class="text-gray-600 mb-4">
+          Gerencie seus arquivos protegidos pelo TPM
+        </p>
+
+        <div class="mb-6">
+          <button class="btn btn-primary" on:click={encryptFile}>
+            <div class="icon">
+              <Upload />
+            </div>
+            Criptografar Arquivo
+          </button>
+        </div>
+
+        <div class="border rounded-lg">
+          <div class="file-header">
+            <div>Nome</div>
+            <div>Data</div>
+            <div>Tamanho</div>
+            <div>Ações</div>
+          </div>
+
+          {#each files as file (file.id)}
+            <div class="file-row">
+              <div>{file.name}</div>
+              <div>{file.date}</div>
+              <div>{file.size}</div>
+              <div>
+                <button
+                  class="btn btn-outline"
+                  on:click={() => decryptFile(file.id)}
+                >
+                  <div class="icon">
+                    <Download />
+                  </div>
+                  Descriptografar
+                </button>
+              </div>
+            </div>
+          {/each}
+        </div>
+      </div>
+    {/if}
+  </div>
+{/if}
 
 <style lang="postcss">
   .system-status {
@@ -108,106 +338,25 @@
   .alert-error {
     @apply bg-red-50 text-red-700;
   }
+
+  .icon-blue {
+    @apply text-blue-500;
+  }
+
+  .icon-spin {
+    @apply animate-spin;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
 </style>
-
-{#if systemState.checking}
-  <div class="p-6">
-    <div class="alert alert-info">
-      <h3 class="font-bold">Verificando estado do sistema...</h3>
-      <p>Aguarde enquanto verificamos a disponibilidade do TPM e a conexão com a API.</p>
-    </div>
-  </div>
-{:else if !systemState.tpmAvailable || !systemState.apiConnected}
-  <div class="p-6">
-    <div class="alert alert-error">
-      <h3 class="font-bold">Erro de Inicialização</h3>
-      <p>
-        {#if !systemState.tpmAvailable}
-          TPM não está disponível. Verifique se seu dispositivo possui TPM e se está ativado no BIOS.
-        {:else}
-          Não foi possível conectar à API. Verifique sua conexão com a internet.
-        {/if}
-      </p>
-    </div>
-  </div>
-{:else}
-  <div class="p-6 space-y-6">
-    <!-- Status do Sistema -->
-    <div class="system-status">
-      <h2 class="text-xl font-bold mb-4">Status do Sistema</h2>
-      <p class="text-gray-600 mb-4">Estado atual dos componentes do sistema</p>
-      
-      <div class="status-grid">
-        <div class="status-item">
-          <div class="icon" class:icon-green={systemState.tpmAvailable} class:icon-red={!systemState.tpmAvailable}>
-            <Shield />
-          </div>
-          <span>TPM: {systemState.tpmAvailable ? 'Disponível' : 'Indisponível'}</span>
-        </div>
-
-        <div class="status-item">
-          <div class="icon" class:icon-green={systemState.deviceInitialized} class:icon-red={!systemState.deviceInitialized}>
-            <ShieldCheck />
-          </div>
-          <span>Dispositivo: {systemState.deviceInitialized ? 'Inicializado' : 'Não Inicializado'}</span>
-        </div>
-
-        <div class="status-item">
-          <div class="icon" class:icon-green={systemState.apiConnected} class:icon-red={!systemState.apiConnected}>
-            <Sync />
-          </div>
-          <span>API: {systemState.apiConnected ? 'Conectada' : 'Desconectada'}</span>
-        </div>
-
-        <div class="status-item">
-          <div class="icon" class:icon-green={systemState.authenticated} class:icon-red={!systemState.authenticated}>
-            <Lock />
-          </div>
-          <span>Autenticação: {systemState.authenticated ? 'Autenticado' : 'Não Autenticado'}</span>
-        </div>
-      </div>
-    </div>
-
-    {#if systemState.authenticated}
-      <!-- Gerenciador de Arquivos -->
-      <div class="file-manager">
-        <h2 class="text-xl font-bold mb-4">Arquivos Criptografados</h2>
-        <p class="text-gray-600 mb-4">Gerencie seus arquivos protegidos pelo TPM</p>
-
-        <div class="mb-6">
-          <button class="btn btn-primary" on:click={encryptFile}>
-            <div class="icon">
-              <Upload />
-            </div>
-            Criptografar Arquivo
-          </button>
-        </div>
-
-        <div class="border rounded-lg">
-          <div class="file-header">
-            <div>Nome</div>
-            <div>Data</div>
-            <div>Tamanho</div>
-            <div>Ações</div>
-          </div>
-
-          {#each files as file (file.id)}
-            <div class="file-row">
-              <div>{file.name}</div>
-              <div>{file.date}</div>
-              <div>{file.size}</div>
-              <div>
-                <button class="btn btn-outline" on:click={() => decryptFile(file.id)}>
-                  <div class="icon">
-                    <Download />
-                  </div>
-                  Descriptografar
-                </button>
-              </div>
-            </div>
-          {/each}
-        </div>
-      </div>
-    {/if}
-  </div>
-{/if}

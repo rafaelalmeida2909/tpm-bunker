@@ -2,6 +2,7 @@ package tpm
 
 import (
 	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/google/go-tpm/legacy/tpm2"
 	"github.com/google/go-tpm/tpmutil"
+	"github.com/google/uuid"
 )
 
 type TPMClient struct {
@@ -39,49 +41,83 @@ func getPublicKeyPEM(pubKey *rsa.PublicKey) string {
 	return string(pubPEM)
 }
 
-// CheckTPMPresence verifica se o TPM está presente e acessível
-func CheckTPMPresence() error {
-	// Verifica se estamos no Windows
+// checkTPMDevice verifica apenas a existência do arquivo de dispositivo TPM
+func checkTPMDevice() bool {
 	if runtime.GOOS == "windows" {
-		// Verifica se o arquivo do device existe
-		if _, err := os.Stat("\\\\.\\TPM"); err != nil {
-			if os.IsNotExist(err) {
-				return fmt.Errorf("TPM device não encontrado no Windows")
+		// No Windows, primeiro tentamos abrir o device para ter certeza que temos acesso
+		handle, err := os.OpenFile("\\\\.\\TPM", os.O_RDWR, 0)
+		if err != nil {
+			if os.IsPermission(err) {
+				log.Printf("Sem permissão para acessar o TPM no Windows. Execute como administrador.")
+				return false
+			} else if os.IsNotExist(err) {
+				log.Printf("TPM device não encontrado no Windows")
+				return false
 			}
-			return fmt.Errorf("erro ao verificar TPM no Windows: %v", err)
+			log.Printf("Erro ao acessar TPM no Windows: %v", err)
+			return false
 		}
-	} else {
-		// Para Linux
-		if _, err := os.Stat("/dev/tpm0"); err != nil {
-			if os.IsNotExist(err) {
-				// Tenta o tpmrm0
-				if _, err := os.Stat("/dev/tpmrm0"); err != nil {
-					return fmt.Errorf("nenhum device TPM encontrado no Linux (/dev/tpm0 ou /dev/tpmrm0)")
-				}
-			}
-			return fmt.Errorf("erro ao verificar TPM no Linux: %v", err)
-		}
+		handle.Close()
+		return true
 	}
-	return nil
+
+	// Para Linux
+	if _, err := os.Stat("/dev/tpm0"); err != nil {
+		if os.IsNotExist(err) {
+			// Tenta o tpmrm0
+			if _, err := os.Stat("/dev/tpmrm0"); err != nil {
+				log.Printf("Nenhum device TPM encontrado no Linux (/dev/tpm0 ou /dev/tpmrm0)")
+				return false
+			}
+			return true // tpmrm0 exists
+		}
+		log.Printf("Erro ao verificar TPM no Linux: %v", err)
+		return false
+	}
+
+	return true // tpm0 exists
 }
 
-// NewTPMClient inicializa uma nova conexão com o TPM
+// NewTPMClient verifica a presença do TPM e inicializa uma nova conexão
 func NewTPMClient() (*TPMClient, error) {
+	// Primeiro verifica se o device existe
+	if !checkTPMDevice() {
+		return nil, fmt.Errorf("TPM device não encontrado no sistema")
+	}
+
+	// Tenta estabelecer a conexão
 	rwc, err := tpm2.OpenTPM()
 	if err != nil {
-		return nil, fmt.Errorf("falha ao abrir TPM: %v", err)
+		return nil, fmt.Errorf("falha ao inicializar TPM: %v", err)
 	}
 
 	return &TPMClient{
 		rwc:       rwc,
-		ekHandle:  tpmutil.Handle(0x81010001), // Handle padrão para EK
-		aikHandle: tpmutil.Handle(0x81010002), // Handle padrão para AIK
-		rsaHandle: tpmutil.Handle(0x81010003), // Handle padrão para chave RSA
+		ekHandle:  tpmutil.Handle(0x81000001),
+		aikHandle: tpmutil.Handle(0x81000002),
+		rsaHandle: tpmutil.Handle(0x81000003),
 	}, nil
+}
+
+// CheckTPMPresence é um wrapper para verificação rápida de disponibilidade
+func CheckTPMPresence() bool {
+	if !checkTPMDevice() {
+		return false
+	}
+
+	// Tenta uma conexão rápida para verificar se o TPM está funcional
+	rwc, err := tpm2.OpenTPM()
+	if err != nil {
+		log.Printf("TPM device existe mas não pode ser inicializado: %v", err)
+		return false
+	}
+	rwc.Close()
+	return true
 }
 
 // InitializeDevice configura o dispositivo pela primeira vez
 func (c *TPMClient) InitializeDevice() (*types.DeviceInfo, error) {
+
 	// Recupera EK
 	ek, err := c.getEndorsementKey()
 	if err != nil {
@@ -105,11 +141,33 @@ func (c *TPMClient) InitializeDevice() (*types.DeviceInfo, error) {
 
 	pubKeyPEM := getPublicKeyPEM(pubKey)
 
+	// Gera UUID baseado no EK
+	deviceUUID, err := generateTPMBasedUUID(ek)
+	if err != nil {
+		return nil, fmt.Errorf("falha ao gerar UUID: %v", err)
+	}
+
 	return &types.DeviceInfo{
+		UUID:      deviceUUID,
 		EK:        ek,
 		AIK:       aik,
 		PublicKey: pubKeyPEM,
 	}, nil
+}
+
+// generateTPMBasedUUID gera um UUID v5 usando o EK como namespace
+func generateTPMBasedUUID(ek []byte) (string, error) {
+	// Cria um hash do EK para usar como namespace
+	hash := sha256.Sum256(ek)
+	namespace, err := uuid.FromBytes(hash[:16]) // Usa os primeiros 16 bytes do hash
+	if err != nil {
+		return "", fmt.Errorf("falha ao criar namespace do UUID: %v", err)
+	}
+
+	// Gera UUID v5 usando o namespace e o EK completo como nome
+	deviceUUID := uuid.NewSHA1(namespace, ek)
+
+	return deviceUUID.String(), nil
 }
 
 // getEndorsementKey recupera a chave de endosso do TPM
@@ -239,8 +297,6 @@ func (c *TPMClient) generateRSAKeyPair() (*rsa.PrivateKey, *rsa.PublicKey, error
 
 	return privateKey, publicKey, nil
 }
-
-// DeviceCredentials contém as credenciais geradas durante a inicialização
 
 // Close fecha a conexão com o TPM
 func (c *TPMClient) Close() error {

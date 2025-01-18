@@ -1,0 +1,6 @@
+# Mantenha CRLF para a maioria dos arquivos
+* text=auto
+
+# Force LF para scripts shell e Makefiles
+*.sh text eol=lf
+Makefile text eol=lf

@@ -1,19 +1,5 @@
 export namespace types {
 	
-	export class APIResponse {
-	    Success: boolean;
-	    Message: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new APIResponse(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.Success = source["Success"];
-	        this.Message = source["Message"];
-	    }
-	}
 	export class DeviceInfo {
 	    UUID: string;
 	    PublicKey: string;
@@ -44,20 +30,6 @@ export namespace types {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.available = source["available"];
 	        this.initialized = source["initialized"];
-	    }
-	}
-	export class UserOperation {
-	    Type: string;
-	    Data: any;
-	
-	    static createFrom(source: any = {}) {
-	        return new UserOperation(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.Type = source["Type"];
-	        this.Data = source["Data"];
 	    }
 	}
 
