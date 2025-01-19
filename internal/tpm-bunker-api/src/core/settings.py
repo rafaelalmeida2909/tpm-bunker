@@ -4,7 +4,6 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from mongoengine import connect
-
 from utils.no_migrations import DisableMigrations
 
 load_dotenv()
@@ -85,6 +84,7 @@ MONGO_HOST = environ.get("MONGO_HOST", "localhost")
 MONGO_PORT = int(environ.get("MONGO_PORT", 27017))
 MONGO_USERNAME = environ.get("MONGO_USERNAME", "admin")
 MONGO_PASSWORD = environ.get("MONGO_PASSWORD", "admin")
+MONGO_AUTH_SOURCE = environ.get("MONGO_AUTH_SOURCE", "admin")
 
 connect(
     db=MONGO_DB_NAME,
@@ -92,7 +92,7 @@ connect(
     port=MONGO_PORT,
     username=MONGO_USERNAME,
     password=MONGO_PASSWORD,
-    authentication_source="admin",  # ou outro db, se necessário
+    authentication_source=MONGO_AUTH_SOURCE,  # ou outro db, se necessário
 )
 
 # Internationalization

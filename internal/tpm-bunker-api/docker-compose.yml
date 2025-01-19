@@ -17,7 +17,7 @@ services:
     ports:
       - "27017:27017"
     healthcheck:
-      test: [ "CMD", "mongosh", "-u", "${MONGO_USERNAME}", "-p", "${MONGO_PASSWORD}", "--authenticationDatabase", "admin", "--eval", "db.adminCommand('ping')" ]
+      test: mongosh --eval "db.adminCommand('ping')"
       interval: 10s
       timeout: 5s
       retries: 5
