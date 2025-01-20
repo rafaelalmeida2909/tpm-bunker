@@ -2,10 +2,13 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"tpm-bunker/internal/agent"
 	"tpm-bunker/internal/api"
 	"tpm-bunker/internal/tpm"
 	"tpm-bunker/internal/types"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -57,9 +60,46 @@ func (a *App) CheckConnection() bool {
 	return a.agent.CheckConnection()
 }
 
-// CheckConnection tenta realizar login na API
+// AuthLogin tenta realizar login na API
 func (a *App) AuthLogin() bool {
 	return a.agent.AuthLogin()
+}
+
+// EncryptFile encripta o arquivo, envia para a API
+func (a *App) EncryptFile(filePath string) error {
+	if a.agent == nil {
+		return fmt.Errorf("agent não inicializado")
+	}
+
+	// Verifica se o device está inicializado
+	initialized := a.agent.IsDeviceInitialized()
+	if !initialized {
+		return fmt.Errorf("device não inicializado. Aguarde a inicialização ser concluída")
+	}
+
+	// Tenta encriptar
+	_, err := a.agent.Encrypt(filePath)
+	if err != nil {
+		return fmt.Errorf("erro ao encriptar: %w", err)
+	}
+
+	return nil
+}
+
+func (a *App) SelectFile() (string, error) {
+	// Cria as opções do dialog
+	options := runtime.OpenDialogOptions{
+		Title: "Selecione um arquivo para criptografar",
+		Filters: []runtime.FileFilter{
+			{
+				DisplayName: "Todos os arquivos",
+				Pattern:     "*.*",
+			},
+		},
+	}
+
+	// Abre o dialog e retorna o caminho do arquivo selecionado
+	return runtime.OpenFileDialog(a.ctx, options)
 }
 
 // shutdown é chamado quando o app é fechado

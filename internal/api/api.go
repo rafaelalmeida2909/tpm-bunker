@@ -26,6 +26,19 @@ type DeviceRegistration struct {
 	PublicKey string `json:"public_key"`
 }
 
+type EncryptionRequest struct {
+	EncryptedData    string            `json:"encrypted_data"`
+	EncryptedKey     string            `json:"encrypted_symmetric_key "`
+	DigitalSignature string            `json:"digital_signature"`
+	Metadata         map[string]string `json:"metadata"`
+}
+
+type EncryptionResponse struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
+	FileID  string `json:"file_id"`
+}
+
 func NewAPIClient() *APIClient {
 	return &APIClient{
 		client: &http.Client{
@@ -67,7 +80,7 @@ func (c *APIClient) CheckConnection() bool {
 
 func (c *APIClient) IsDeviceRegistered(uuid string) (bool, error) {
 	// Tenta obter o dispositivo pelo UUID
-	response, err := c.SendRequest(http.MethodGet, fmt.Sprintf("devices/%s/", uuid), nil)
+	response, err := c.SendRequest(http.MethodGet, fmt.Sprintf("devices/%s/", uuid), nil, nil)
 	if err != nil {
 		// Se retornar 404, significa que o dispositivo não está registrado
 		if strings.Contains(err.Error(), "404") {
@@ -89,7 +102,7 @@ func (c *APIClient) RegisterDevice(deviceInfo *types.DeviceInfo) error {
 	}
 
 	// Envia a requisição para registrar o dispositivo
-	_, err := c.SendRequest(http.MethodPost, "devices/", registration)
+	_, err := c.SendRequest(http.MethodPost, "devices/", nil, registration)
 	if err != nil {
 		return fmt.Errorf("falha ao registrar dispositivo: %w", err)
 	}
@@ -116,7 +129,7 @@ func (c *APIClient) Login(uuid string, ekCert []byte) error {
 	}
 
 	// Faz a requisição de login
-	response, err := c.SendRequest(http.MethodPost, "auth/login/", loginData)
+	response, err := c.SendRequest(http.MethodPost, "auth/login/", nil, loginData)
 	if err != nil {
 		return fmt.Errorf("falha ao realizar login: %w", err)
 	}
@@ -139,8 +152,7 @@ func (c *APIClient) setAuthToken(token string) {
 	c.authToken = token
 }
 
-// Modifica SendRequest para incluir o token quando disponível
-func (c *APIClient) SendRequest(method string, endpoint string, data interface{}) ([]byte, error) {
+func (c *APIClient) SendRequest(method string, endpoint string, headers map[string]string, data interface{}) ([]byte, error) {
 	url := c.baseURL + endpoint
 
 	var body *bytes.Reader
@@ -159,10 +171,17 @@ func (c *APIClient) SendRequest(method string, endpoint string, data interface{}
 		return nil, fmt.Errorf("erro ao criar requisição: %w", err)
 	}
 
+	// Define o Content-Type padrão
 	req.Header.Set("Content-Type", "application/json")
+
 	// Adiciona o token de autenticação se disponível
 	if c.authToken != "" {
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.authToken))
+	}
+
+	// Adiciona os headers customizados
+	for key, value := range headers {
+		req.Header.Set(key, value)
 	}
 
 	resp, err := c.client.Do(req)

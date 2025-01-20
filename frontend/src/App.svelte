@@ -12,8 +12,9 @@
       CheckConnection,
       CheckTPMPresence,
       InitializeDevice,
-      IsDeviceInitialized
+      IsDeviceInitialized,
   } from "../wailsjs/go/main/App";
+  import FileEncryptionModal from "./components/FileEncryptionModal.svelte";
 
   // Estado do sistema
   let systemState = {
@@ -24,6 +25,9 @@
     checking: true,
     initializationFailed: false,
   };
+
+  let showEncryptionModal = false;
+
   let files = [
     { id: 1, name: "documento.pdf", date: "2024-01-16", size: "2.4 MB" },
     { id: 2, name: "contrato.docx", date: "2024-01-15", size: "1.1 MB" },
@@ -111,9 +115,8 @@
     }
   });
 
-  // Funções de ação
   function encryptFile() {
-    console.log("Encriptando arquivo...");
+    showEncryptionModal = true;
   }
 
   function decryptFile(id) {
@@ -244,6 +247,17 @@
             </div>
             Criptografar Arquivo
           </button>
+
+          {#if showEncryptionModal}
+            <FileEncryptionModal
+            on:close={() => showEncryptionModal = false}
+            isDeviceInitialized={systemState.deviceInitialized}
+              on:success={(event) => {
+                files = [...files, event.detail];
+                showEncryptionModal = false;
+              }}
+            />
+          {/if}
         </div>
 
         <div class="border rounded-lg">
@@ -354,9 +368,5 @@
     to {
       transform: rotate(360deg);
     }
-  }
-
-  .animate-spin {
-    animation: spin 1s linear infinite;
   }
 </style>

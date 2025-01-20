@@ -9,13 +9,13 @@ import (
 
 // Manager gerencia as operações do TPM e mantém o estado
 type Manager struct {
-	client *TPMClient
+	Client *TPMClient
 	mutex  sync.RWMutex
 	ctx    context.Context
 
 	// Estado do dispositivo
-	deviceUUID string
-	publicKey  string
+	DeviceUUID string
+	PublicKey  string
 	EK         []byte
 	AIK        []byte
 }
@@ -34,7 +34,7 @@ func NewManager(ctx context.Context) *Manager {
 		return m
 	}
 
-	m.client = client
+	m.Client = client
 	return m
 }
 
@@ -44,42 +44,35 @@ func (m *Manager) InitializeDevice() error {
 	defer m.mutex.Unlock()
 
 	// Verifica se o TPM está disponível
-	if m.client == nil {
+	if m.Client == nil {
 		return fmt.Errorf("TPM não está disponível neste dispositivo")
 	}
 
 	// Verifica se já foi inicializado
-	if m.deviceUUID != "" {
+	if m.DeviceUUID != "" {
 		return fmt.Errorf("dispositivo já inicializado")
 	}
 
 	// Inicializa o dispositivo através do client
-	creds, err := m.client.InitializeDevice()
+	creds, err := m.Client.InitializeDevice()
 	if err != nil {
 		return fmt.Errorf("falha na inicialização do dispositivo: %v", err)
 	}
 
 	// Armazena as credenciais relevantes
-	m.deviceUUID = creds.UUID
-	m.publicKey = creds.PublicKey
+	m.DeviceUUID = creds.UUID
+	m.PublicKey = creds.PublicKey
 	m.EK = creds.EK
 	m.AIK = creds.AIK
 
 	return nil
 }
 
-// IsInitialized verifica se o dispositivo está inicializado
-func (m *Manager) IsInitialized() bool {
-	m.mutex.RLock()
-	defer m.mutex.RUnlock()
-	return m.deviceUUID != ""
-}
-
 // GetDeviceUUID retorna o UUID do dispositivo
 func (m *Manager) GetDeviceUUID() string {
 	m.mutex.RLock()
 	defer m.mutex.RUnlock()
-	return m.deviceUUID
+	return m.DeviceUUID
 }
 
 // GetStatus retorna o status atual do TPM
@@ -88,8 +81,8 @@ func (m *Manager) GetStatus() (*types.TPMStatus, error) {
 	defer m.mutex.RUnlock()
 
 	status := &types.TPMStatus{
-		Available:   m.client != nil,
-		Initialized: m.deviceUUID != "",
+		Available:   m.Client != nil,
+		Initialized: m.DeviceUUID != "",
 	}
 
 	return status, nil
@@ -99,5 +92,5 @@ func (m *Manager) GetStatus() (*types.TPMStatus, error) {
 func (m *Manager) GetPublicKey() string {
 	m.mutex.RLock()
 	defer m.mutex.RUnlock()
-	return m.publicKey
+	return m.PublicKey
 }

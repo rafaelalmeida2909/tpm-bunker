@@ -2,7 +2,10 @@ package agent
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
+	"net/http"
+	"os"
 	"tpm-bunker/internal/api"
 	"tpm-bunker/internal/tpm"
 	"tpm-bunker/internal/types"
@@ -146,10 +149,45 @@ func (a *Agent) CheckConnection() bool {
 	return hasConnection
 }
 
-// Incrypt encripta um arquivo e o envia para a API
-func (a *Agent) Incrypt() []byte {
-	// implementar
-	return nil
+// Encrypt encripta um arquivo e o envia para a API
+func (a *Agent) Encrypt(filePath string) ([]byte, error) {
+	// Obtém o keyPair do TPM Manager
+	keyPair := a.tpmMgr.Client.KeyPair
+	if keyPair == nil {
+		return nil, fmt.Errorf("chave RSA não inicializada")
+	}
+
+	// Encripta o arquivo
+	result, err := EncryptFile(filePath, keyPair)
+	if err != nil {
+		return nil, fmt.Errorf("erro na encriptação: %w", err)
+	}
+
+	// Lê o arquivo encriptado
+	encryptedData, err := os.ReadFile(result.EncryptedFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao ler arquivo encriptado: %w", err)
+	}
+
+	// Prepara o payload para a API
+	payload := &api.EncryptionRequest{
+		EncryptedData:    base64.StdEncoding.EncodeToString(encryptedData),
+		EncryptedKey:     result.EncryptedSymmetricKey,
+		DigitalSignature: result.DigitalSignature,
+		Metadata:         result.Metadata,
+	}
+
+	header := map[string]string{
+		"X-Device-UUID": a.tpmMgr.DeviceUUID,
+	}
+
+	// Envia para a API
+	response, err := a.client.SendRequest(http.MethodPost, "operations/store_data/", header, payload)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao enviar arquivo para API: %w", err)
+	}
+
+	return response, nil
 }
 
 // Decrypt Recupera um arquivo através da API com um operation_id e o descriptografa

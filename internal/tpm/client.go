@@ -21,7 +21,7 @@ type TPMClient struct {
 	rwc     io.ReadWriteCloser
 	ek      []byte
 	aik     []byte
-	keyPair *rsa.PrivateKey
+	KeyPair *rsa.PrivateKey
 
 	// Handles persistentes
 	ekHandle  tpmutil.Handle
@@ -137,7 +137,7 @@ func (c *TPMClient) InitializeDevice() (*types.DeviceInfo, error) {
 	if err != nil {
 		return nil, fmt.Errorf("falha ao gerar par de chaves RSA: %v", err)
 	}
-	c.keyPair = keyPair
+	c.KeyPair = keyPair
 
 	pubKeyPEM := getPublicKeyPEM(pubKey)
 

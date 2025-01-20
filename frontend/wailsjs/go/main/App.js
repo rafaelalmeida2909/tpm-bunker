@@ -14,6 +14,10 @@ export function CheckTPMPresence() {
   return window['go']['main']['App']['CheckTPMPresence']();
 }
 
+export function EncryptFile(arg1) {
+  return window['go']['main']['App']['EncryptFile'](arg1);
+}
+
 export function GetDeviceInfo() {
   return window['go']['main']['App']['GetDeviceInfo']();
 }
@@ -28,4 +32,8 @@ export function InitializeDevice() {
 
 export function IsDeviceInitialized() {
   return window['go']['main']['App']['IsDeviceInitialized']();
+}
+
+export function SelectFile() {
+  return window['go']['main']['App']['SelectFile']();
 }
