@@ -9,5 +9,13 @@
   "author": {
     "name": "Rafael",
     "email": "rafaelalmeida2909@gmail.com"
+  },
+  "wails": {
+    "configurationVersion": "2",
+    "platform": {
+      "linux": {
+        "windowDecorations": false
+      }
+    }
   }
 }
