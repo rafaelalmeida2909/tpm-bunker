@@ -3,16 +3,17 @@ package agent
 import (
 	"bytes"
 	"context"
-	"crypto"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
+	"crypto/x509"
 	"encoding/base64"
+	"encoding/pem"
 	"fmt"
 	"io"
-	"math/big"
+	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -29,91 +30,38 @@ type EncryptionResult struct {
 	Metadata              map[string]string `json:"metadata"`
 }
 
-func signDataSafe(ctx context.Context, privateKey *rsa.PrivateKey, data []byte) ([]byte, error) {
-	runtime.LogInfo(ctx, "Iniciando assinatura segura")
-
-	// Verifica a chave
-	if privateKey == nil || privateKey.D == nil || privateKey.PublicKey.N == nil {
-		return nil, fmt.Errorf("chave privada inválida")
+func parsePEMToPublicKey(pemData string) (*rsa.PublicKey, error) {
+	block, _ := pem.Decode([]byte(pemData))
+	if block == nil {
+		return nil, fmt.Errorf("falha ao decodificar PEM")
 	}
 
-	// Cria um novo hash dos dados
-	hash := sha256.Sum256(data)
-	runtime.LogInfo(ctx, fmt.Sprintf("Hash calculado, tamanho: %d bytes", len(hash)))
-
-	// Canal para resultado com buffer
-	resultChan := make(chan struct {
-		signature []byte
-		err       error
-	}, 1)
-
-	// Executa a assinatura em uma goroutine isolada
-	go func() {
-		// Copia a chave privada para evitar acesso concorrente
-		privKeyClone := &rsa.PrivateKey{
-			PublicKey: rsa.PublicKey{
-				N: new(big.Int).Set(privateKey.PublicKey.N),
-				E: privateKey.PublicKey.E,
-			},
-			D:      new(big.Int).Set(privateKey.D),
-			Primes: make([]*big.Int, len(privateKey.Primes)),
-		}
-		for i, prime := range privateKey.Primes {
-			privKeyClone.Primes[i] = new(big.Int).Set(prime)
-		}
-
-		// Tenta a assinatura em memória
-		sig, err := func() ([]byte, error) {
-			defer func() {
-				if r := recover(); r != nil {
-					runtime.LogError(ctx, fmt.Sprintf("Recuperado de panic durante assinatura: %v", r))
-				}
-			}()
-
-			opts := &rsa.PSSOptions{
-				SaltLength: 32, // Usando um valor fixo
-				Hash:       crypto.SHA256,
-			}
-
-			return rsa.SignPSS(rand.Reader, privKeyClone, crypto.SHA256, hash[:], opts)
-		}()
-
-		resultChan <- struct {
-			signature []byte
-			err       error
-		}{sig, err}
-	}()
-
-	// Aguarda com timeout
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	case result := <-resultChan:
-		if result.err != nil {
-			return nil, fmt.Errorf("erro na assinatura: %w", result.err)
-		}
-		runtime.LogInfo(ctx, fmt.Sprintf("Assinatura concluída, tamanho: %d bytes", len(result.signature)))
-		return result.signature, nil
-	case <-time.After(5 * time.Second):
-		return nil, fmt.Errorf("timeout durante assinatura")
+	pub, err := x509.ParsePKIXPublicKey(block.Bytes)
+	if err != nil {
+		return nil, fmt.Errorf("falha ao analisar chave pública: %w", err)
 	}
+
+	rsaPub, ok := pub.(*rsa.PublicKey)
+	if !ok {
+		return nil, fmt.Errorf("chave pública não é do tipo RSA")
+	}
+
+	// Verifica se o exponente é válido
+	if rsaPub.E <= 0 {
+		return nil, fmt.Errorf("exponente inválido na chave pública RSA")
+	}
+
+	return rsaPub, nil
 }
 
-func EncryptFile(ctx context.Context, inputFilePath string, privateKey *rsa.PrivateKey) (*EncryptionResult, error) {
-	if privateKey == nil {
-		return nil, fmt.Errorf("chave privada não inicializada")
-	}
-
-	if privateKey.PublicKey.N == nil {
-		return nil, fmt.Errorf("chave privada inválida (módulo nulo)")
-	}
-
-	// Verifica cancelamento antes de começar
+func EncryptFile(ctx context.Context, inputFilePath string, privateKey *rsa.PrivateKey, tpmMgr *tpm.Manager) (*EncryptionResult, error) {
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	default:
 	}
+
+	log.Printf("Iniciando processo de encriptação para o arquivo: %s", inputFilePath)
 
 	// Lê o arquivo original
 	fileData, err := os.ReadFile(inputFilePath)
@@ -121,125 +69,72 @@ func EncryptFile(ctx context.Context, inputFilePath string, privateKey *rsa.Priv
 		return nil, fmt.Errorf("erro ao ler arquivo: %w", err)
 	}
 
-	runtime.LogInfo(ctx, fmt.Sprintf("File Data... %v", fileData))
-
-	// Gera chave AES aleatória
-	symmetricKey := make([]byte, 32) // AES-256
+	// Gera chave AES aleatória (256 bits)
+	symmetricKey := make([]byte, 32)
 	if _, err := io.ReadFull(rand.Reader, symmetricKey); err != nil {
 		return nil, fmt.Errorf("erro ao gerar chave simétrica: %w", err)
 	}
 
-	runtime.LogInfo(ctx, fmt.Sprint("symmetricKey... %s", symmetricKey))
-
-	// Gera IV aleatório
+	// Gera IV aleatório (16 bytes)
 	iv := make([]byte, aes.BlockSize)
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
 		return nil, fmt.Errorf("erro ao gerar IV: %w", err)
 	}
 
-	runtime.LogInfo(ctx, fmt.Sprint("IV... %s", iv))
+	// Padding PKCS7
+	paddedData := padPKCS7(fileData, aes.BlockSize)
 
-	// Verifica cancelamento antes da encriptação
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	default:
-	}
-
-	// Cria cipher AES
+	// Cria cipher AES-CBC
 	block, err := aes.NewCipher(symmetricKey)
 	if err != nil {
 		return nil, fmt.Errorf("erro ao criar cipher AES: %w", err)
 	}
 
-	runtime.LogInfo(ctx, fmt.Sprint("Block... %s", block))
-
-	// Padding PKCS7
-	paddedData := padPKCS7(fileData, aes.BlockSize)
-
-	runtime.LogInfo(ctx, fmt.Sprint("paddedData... %s", paddedData))
-
-	// Encripta dados com AES-CBC
+	// Encripta dados
 	mode := cipher.NewCBCEncrypter(block, iv)
 	encryptedContent := make([]byte, len(paddedData))
 	mode.CryptBlocks(encryptedContent, paddedData)
 
-	runtime.LogInfo(ctx, fmt.Sprint("encryptedContent... %s", encryptedContent))
+	// Combina IV e dados encriptados em um novo slice
+	encryptedData := make([]byte, len(iv)+len(encryptedContent))
+	copy(encryptedData[0:aes.BlockSize], iv)
+	copy(encryptedData[aes.BlockSize:], encryptedContent)
 
-	// Combina IV com conteúdo encriptado
-	encryptedData := append(iv, encryptedContent...)
-
-	runtime.LogInfo(ctx, fmt.Sprint("encryptedData... %s", encryptedData))
-
-	// Verifica cancelamento antes da encriptação RSA
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	default:
+	// Recupera a chave pública do TPM
+	pubKey, err := tpmMgr.Client.RetrieveRSAKey(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao recuperar chave pública: %w", err)
 	}
 
-	// Encripta a chave simétrica com RSA
-	publicKey := &privateKey.PublicKey
+	runtime.LogInfo(ctx, fmt.Sprintf("PublicKeyPEM: %s", tpm.GetPublicKeyPEM(pubKey)))
+
+	// Encripta a chave simétrica com RSA-OAEP
 	encryptedSymmetricKey, err := rsa.EncryptOAEP(
 		sha256.New(),
 		rand.Reader,
-		publicKey,
+		pubKey,
 		symmetricKey,
-		nil,
+		nil, // label
 	)
-	runtime.LogInfo(ctx, fmt.Sprint("publicKey... %s", tpm.GetPublicKeyPEM(publicKey)))
 	if err != nil {
 		return nil, fmt.Errorf("erro ao encriptar chave simétrica: %w", err)
 	}
 
-	// Verifica cancelamento antes da assinatura
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	default:
-	}
-
-	// Gera assinatura digital
-	runtime.LogInfo(ctx, "Iniciando processo de assinatura")
-	signature, err := signDataSafe(ctx, privateKey, encryptedData)
+	// Gera o hash para assinatura
+	hash := sha256.Sum256(encryptedData)
+	log.Printf("Hash calculado no cliente (hex): %x", hash[:])
+	// Assina usando o TPM
+	signature, err := tpmMgr.Client.SignData(ctx, hash[:])
 	if err != nil {
-		runtime.LogError(ctx, fmt.Sprintf("Erro na assinatura: %v", err))
 		return nil, fmt.Errorf("falha na assinatura: %w", err)
 	}
 
-	runtime.LogInfo(ctx, "Verificando assinatura")
-	hashedData := sha256.Sum256(encryptedData)
-	err = rsa.VerifyPSS(
-		&privateKey.PublicKey,
-		crypto.SHA256,
-		hashedData[:],
-		signature,
-		&rsa.PSSOptions{
-			SaltLength: 32,
-			Hash:       crypto.SHA256,
-		},
-	)
-	if err != nil {
-		runtime.LogError(ctx, fmt.Sprintf("Erro na verificação: %v", err))
-		return nil, fmt.Errorf("falha na verificação: %w", err)
-	}
-
-	runtime.LogInfo(ctx, "Assinatura verificada com sucesso")
-
-	// Verifica cancelamento antes de salvar o arquivo
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	default:
-	}
-
 	// Gera nome do arquivo encriptado
-	ext := filepath.Ext(inputFilePath)
-	runtime.LogInfo(ctx, fmt.Sprint("ext... %s", ext))
+	ext := ".bin"
 	filename := inputFilePath[:len(inputFilePath)-len(ext)]
-	runtime.LogInfo(ctx, fmt.Sprint("filename... %s", filename))
 	encryptedFilePath := filename + "_encrypted" + ext
-	runtime.LogInfo(ctx, fmt.Sprint("encryptedFilePath... %s", encryptedFilePath))
+	runtime.LogInfo(ctx, fmt.Sprintf("filename... %s", filename))
+	runtime.LogInfo(ctx, fmt.Sprintf("FilePath %s", encryptedFilePath))
 
 	// Salva arquivo encriptado
 	if err := os.WriteFile(encryptedFilePath, encryptedData, 0644); err != nil {
@@ -247,15 +142,17 @@ func EncryptFile(ctx context.Context, inputFilePath string, privateKey *rsa.Priv
 	}
 
 	// Calcula o hash original
-	hashOriginal := base64.StdEncoding.EncodeToString(hashedData[:])
 
 	return &EncryptionResult{
 		EncryptedFilePath:     encryptedFilePath,
 		EncryptedSymmetricKey: base64.StdEncoding.EncodeToString(encryptedSymmetricKey),
 		DigitalSignature:      base64.StdEncoding.EncodeToString(signature),
-		HashOriginal:          hashOriginal,
+		HashOriginal:          base64.StdEncoding.EncodeToString(hash[:]),
 		Metadata: map[string]string{
-			"filename": filepath.Base(inputFilePath),
+			"filename":  filepath.Base(inputFilePath),
+			"version":   "1.0",
+			"timestamp": time.Now().UTC().Format(time.RFC3339),
+			"algorithm": "AES-256-CBC",
 		},
 	}, nil
 }

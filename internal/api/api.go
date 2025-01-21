@@ -91,6 +91,7 @@ func (c *APIClient) IsDeviceRegistered(ctx context.Context, uuid string) (bool, 
 }
 
 func (c *APIClient) RegisterDevice(ctx context.Context, deviceInfo *types.DeviceInfo) error {
+	log.Printf("PublicKey (Device Registration): %s")
 	registration := DeviceRegistration{
 		UUID:      deviceInfo.UUID,
 		EKCert:    base64.StdEncoding.EncodeToString(deviceInfo.EK),

@@ -27,13 +27,13 @@
   };
 
   let showEncryptionModal = false;
+  let connectionCheckInterval;
+  let initializationRetryInterval;
 
   let files = [
     { id: 1, name: "documento.pdf", date: "2024-01-16", size: "2.4 MB" },
     { id: 2, name: "contrato.docx", date: "2024-01-15", size: "1.1 MB" },
   ];
-
-  let connectionCheckInterval;
 
   // Função para verificar conexão com a API
   async function checkAPIConnection() {
@@ -60,6 +60,12 @@
             authenticated: isAuthenticated,
           };
           console.log("Device initialized successfully:", deviceInfo);
+
+          // Limpa o intervalo de retry se a inicialização foi bem-sucedida
+          if (initializationRetryInterval) {
+            clearInterval(initializationRetryInterval);
+            initializationRetryInterval = null;
+          }
         }
       } catch (error) {
         console.error("Error initializing device:", error);
@@ -67,6 +73,15 @@
           ...systemState,
           initializationFailed: true,
         };
+
+        // Configura o retry se ainda não estiver configurado
+        if (!initializationRetryInterval) {
+          console.log("Setting up initialization retry interval");
+          initializationRetryInterval = setInterval(
+            initializeDeviceIfNeeded,
+            10000,
+          );
+        }
       }
     }
   }
@@ -85,6 +100,7 @@
         deviceInitialized,
         checking: false,
       };
+
       // Se TPM está disponível mas não inicializado, tenta inicializar
       if (tpmAvailable && !deviceInitialized) {
         await initializeDeviceIfNeeded();
@@ -109,9 +125,12 @@
   });
 
   onDestroy(() => {
-    // Limpa o intervalo quando o componente é destruído
+    // Limpa os intervalos quando o componente é destruído
     if (connectionCheckInterval) {
       clearInterval(connectionCheckInterval);
+    }
+    if (initializationRetryInterval) {
+      clearInterval(initializationRetryInterval);
     }
   });
 
@@ -250,8 +269,8 @@
 
           {#if showEncryptionModal}
             <FileEncryptionModal
-            on:close={() => showEncryptionModal = false}
-            isDeviceInitialized={systemState.deviceInitialized}
+              on:close={() => (showEncryptionModal = false)}
+              isDeviceInitialized={systemState.deviceInitialized}
               on:success={(event) => {
                 files = [...files, event.detail];
                 showEncryptionModal = false;

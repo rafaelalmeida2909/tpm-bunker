@@ -1,50 +1,65 @@
+import hashlib
 from base64 import b64decode
+import traceback
 
 from bson.objectid import ObjectId
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from rest_framework.serializers import ValidationError
-
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives.asymmetric import utils
 from .enums import OperationTypes, StatusChoices
 from .models import EncryptedPackage, Operation, OperationLog
 
-
 def _verify_signature(device, encrypted_data, signature):
     try:
-        # Get the public key
+        # Preparação dos dados
+        hashed_data = hashlib.sha256(encrypted_data).digest()
+        decoded_signature = b64decode(signature)
+        
+        print(f"Hash para verificação (hex): {hashed_data.hex()}")
+        print(f"Tamanho do hash: {len(hashed_data)}")
+        print(f"Tamanho da assinatura: {len(decoded_signature)}")
+        
+        # Carregar a chave pública
         public_key = serialization.load_pem_public_key(
-            device.public_key.encode(), backend=None
+            device.public_key.encode(), 
+            backend=None
         )
-
-        # If encrypted_data is an InMemoryUploadedFile, read it
-        if hasattr(encrypted_data, "read"):
-            # Save current position
-            pos = encrypted_data.tell()
-            # Read the data
-            data = encrypted_data.read()
-            # Reset position for later use
-            encrypted_data.seek(pos)
-        else:
-            data = encrypted_data
-
-        # Verify signature diretamente sobre os dados, sem gerar hash
-        public_key.verify(
-            b64decode(signature),
-            data,  # Aqui mudou - usa os dados diretos
-            padding.PSS(
-                mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH
-            ),
-            hashes.SHA256(),
-        )
-        return True
+        
+        try:
+            # Verificar a assinatura usando PKCS1v15
+            public_key.verify(
+                decoded_signature,
+                hashed_data,
+                padding.PKCS1v15(),
+                hashes.SHA256()
+            )
+            return True
+        except InvalidSignature as e:
+            print(f"Erro específico na verificação: {e}")
+            # Tente verificar usando diferentes esquemas de padding
+            try:
+                public_key.verify(
+                    decoded_signature,
+                    hashed_data,
+                    padding.PKCS1v15(),  # RSASSA-PKCS1-v1_5
+                    utils.Prehashed(hashes.SHA256())  # Indica que o hash já foi calculado
+                )
+                print("Verificação bem sucedida com hash pré-calculado!")
+                return True
+            except Exception as e2:
+                print(f"Tentativa alternativa também falhou: {e2}")
+                return False
+                
     except Exception as e:
-        print(f"Erro na verificação da assinatura: {e}")  # Adicionar log para debug
+        print(f"Erro na verificação da assinatura: {str(e)}")
+        traceback.print_exc()  # Imprime o stack trace completo
         return False
-
 
 class OperationService:
     def store_data(self, device, serializer_data):
-        # Criar nova operação
+        # Inicializa a operação
         operation = Operation(
             device=device,
             operation_type=OperationTypes.STORE,
@@ -52,12 +67,14 @@ class OperationService:
         ).save()
 
         try:
-
-            try:
+            # Ler o conteúdo do arquivo criptografado
+            if hasattr(serializer_data["encrypted_data"], "read"):
                 encrypted_data = serializer_data["encrypted_data"].read()
-            except AttributeError:
+
+            else:
                 raise ValidationError({"error": "Invalid file format"})
 
+            # Decodificar a chave simétrica
             try:
                 encrypted_symmetric_key = b64decode(
                     serializer_data["encrypted_symmetric_key"]
@@ -72,8 +89,8 @@ class OperationService:
                 device, encrypted_data, serializer_data["digital_signature"]
             ):
                 raise ValidationError("Assinatura digital inválida")
-            # Criar pacote criptografado
 
+            # Criar o pacote criptografado
             encrypted_package = EncryptedPackage(
                 operation=operation,
                 encrypted_data=encrypted_data,  # bytes
@@ -93,16 +110,13 @@ class OperationService:
             ).save()
 
             return {"operation_id": str(operation.id), "status": "success"}
-
         except Exception as e:
             operation.update(
                 set__status=StatusChoices.FAILED, set__error_message=str(e)
             )
-
             OperationLog(
                 operation=operation, action="STORE_FAILED", details={"error": str(e)}
             ).save()
-
             raise ValidationError({"error": str(e)})
 
     def retrieve_data(self, device, operation_id):

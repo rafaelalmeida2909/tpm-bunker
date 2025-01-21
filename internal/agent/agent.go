@@ -2,7 +2,9 @@ package agent
 
 import (
 	"context"
+	"crypto/rsa"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 	"tpm-bunker/internal/api"
@@ -182,14 +184,24 @@ func (a *Agent) Encrypt(ctx context.Context, filePath string) ([]byte, error) {
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	default:
-		keyPair := a.tpmMgr.Client.KeyPair
-		if keyPair == nil {
-			return nil, fmt.Errorf("chave RSA não inicializada")
+		// Verifica se a chave RSA foi inicializada
+		if a.tpmMgr.Client.KeyPair == nil || a.tpmMgr.Client.KeyPair.PublicKey.N == nil {
+			log.Printf("Chave RSA não inicializada ou inválida. Tentando recuperar...")
+			pubKey, err := a.tpmMgr.Client.RetrieveRSAKey(ctx)
+			if err != nil {
+				return nil, fmt.Errorf("falha ao recuperar chave RSA: %w", err)
+			}
+			a.tpmMgr.Client.KeyPair = &rsa.PrivateKey{
+				PublicKey: *pubKey,
+			}
+			log.Printf("Chave RSA recuperada com sucesso.")
 		}
 
-		runtime.LogInfo(a.ctx, fmt.Sprint("KeyPair... %b", keyPair))
+		// Continua com a encriptação
+		keyPair := a.tpmMgr.Client.KeyPair
+		log.Printf("Usando chave RSA: %+v", keyPair.PublicKey)
 
-		result, err := EncryptFile(ctx, filePath, keyPair)
+		result, err := EncryptFile(ctx, filePath, keyPair, a.tpmMgr)
 		if err != nil {
 			return nil, fmt.Errorf("erro na encriptação: %w", err)
 		}
