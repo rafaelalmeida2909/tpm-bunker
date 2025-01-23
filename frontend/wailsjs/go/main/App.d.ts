@@ -8,10 +8,16 @@ export function CheckConnection():Promise<boolean>;
 
 export function CheckTPMPresence():Promise<boolean>;
 
+export function EncryptFile(arg1:string):Promise<void>;
+
 export function GetDeviceInfo():Promise<types.DeviceInfo>;
+
+export function GetOperations():Promise<Array<number>>;
 
 export function GetTPMStatus():Promise<types.TPMStatus>;
 
 export function InitializeDevice():Promise<types.DeviceInfo>;
 
 export function IsDeviceInitialized():Promise<boolean>;
+
+export function SelectFile():Promise<string>;

@@ -5,6 +5,7 @@ from mongoengine import (
     DateTimeField,
     DictField,
     Document,
+    FloatField,
     ReferenceField,
     StringField,
 )
@@ -30,6 +31,8 @@ class Operation(Document):
 class EncryptedPackage(Document):
     operation = ReferenceField("Operation", unique=True, required=True)
 
+    file_name = StringField(required=True)
+    file_size = FloatField(required=True)
     encrypted_data = BinaryField(required=True)
     encrypted_symmetric_key = BinaryField(required=True)
     digital_signature = StringField(required=True)

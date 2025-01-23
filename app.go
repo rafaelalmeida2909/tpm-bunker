@@ -2,67 +2,170 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"log"
+	"time"
 	"tpm-bunker/internal/agent"
 	"tpm-bunker/internal/api"
 	"tpm-bunker/internal/tpm"
 	"tpm-bunker/internal/types"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-// App struct
 type App struct {
-	ctx   context.Context
-	agent *agent.Agent
+	ctx    context.Context
+	cancel context.CancelFunc
+	agent  *agent.Agent
 }
 
-// NewApp creates a new App application struct
 func NewApp() *App {
 	return &App{}
 }
 
-// startup é chamado quando o app inicia
 func (a *App) startup(ctx context.Context) {
+	ctx, cancel := context.WithCancel(ctx)
 	a.ctx = ctx
-	tpmMgr := tpm.NewManager(ctx)
-	client := api.NewAPIClient()
+	a.cancel = cancel
+
+	initCtx, initCancel := context.WithTimeout(ctx, 30*time.Second)
+	defer initCancel()
+
+	tpmMgr := tpm.NewManager(initCtx)
+	client := api.NewAPIClient(initCtx)
 	a.agent = agent.NewAgent(ctx, tpmMgr, client)
 }
 
-// GetTPMStatus retorna o status atual do TPM
+// GetTPMStatus - chamado pelo frontend
 func (a *App) GetTPMStatus() (*types.TPMStatus, error) {
-	return a.agent.GetTPMStatus()
+	ctx, cancel := context.WithTimeout(a.ctx, 10*time.Second)
+	defer cancel()
+	return a.agent.GetTPMStatus(ctx)
 }
 
-// InitializeDevice inicializa o dispositivo com TPM
+// InitializeDevice - chamado pelo frontend
 func (a *App) InitializeDevice() (*types.DeviceInfo, error) {
-	return a.agent.InitializeDevice()
+	ctx, cancel := context.WithTimeout(a.ctx, 5*time.Minute)
+	defer cancel()
+	return a.agent.InitializeDevice(ctx)
 }
 
-// IsDeviceInitialized verifica se o dispositivo está inicializado
+// IsDeviceInitialized - chamado pelo frontend
 func (a *App) IsDeviceInitialized() bool {
-	return a.agent.IsDeviceInitialized()
+	ctx, cancel := context.WithTimeout(a.ctx, 10*time.Second)
+	defer cancel()
+	return a.agent.IsDeviceInitialized(ctx)
 }
 
-// GetDeviceInfo retorna as informações do dispositivo
+// GetDeviceInfo - chamado pelo frontend
 func (a *App) GetDeviceInfo() (*types.DeviceInfo, error) {
-	return a.agent.GetDeviceInfo()
+	ctx, cancel := context.WithTimeout(a.ctx, 10*time.Second)
+	defer cancel()
+	return a.agent.GetDeviceInfo(ctx)
 }
 
-// CheckTPMPresence verifica se o TPM está presente
+// CheckTPMPresence - chamado pelo frontend
 func (a *App) CheckTPMPresence() bool {
-	return a.agent.CheckTPMPresence()
+	ctx, cancel := context.WithTimeout(a.ctx, 10*time.Second)
+	defer cancel()
+	return a.agent.CheckTPMPresence(ctx)
 }
 
-// CheckConnection verifica a conexão com a API
+// CheckConnection - chamado pelo frontend
 func (a *App) CheckConnection() bool {
-	return a.agent.CheckConnection()
+	ctx, cancel := context.WithTimeout(a.ctx, 10*time.Second)
+	defer cancel()
+	return a.agent.CheckConnection(ctx)
 }
 
-// CheckConnection tenta realizar login na API
+// AuthLogin - chamado pelo frontend
 func (a *App) AuthLogin() bool {
-	return a.agent.AuthLogin()
+	ctx, cancel := context.WithTimeout(a.ctx, 30*time.Second)
+	defer cancel()
+	return a.agent.AuthLogin(ctx)
 }
 
-// shutdown é chamado quando o app é fechado
+// GetOperations - chamado pelo frontend
+func (a *App) GetOperations() ([]byte, error) {
+	ctx, cancel := context.WithTimeout(a.ctx, 30*time.Second)
+	defer cancel()
+
+	// Adicione logs
+	response, err := a.agent.GetOperations(ctx)
+	if err != nil {
+		log.Printf("Erro em GetOperations: %v", err)
+		return nil, err
+	}
+
+	return response, nil
+}
+
+// EncryptFile - chamado pelo frontend
+func (a *App) EncryptFile(filePath string) error {
+	ctx, cancel := context.WithTimeout(a.ctx, 10*time.Minute)
+	defer cancel()
+
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("Recovered from panic in EncryptFile: %v", r)
+		}
+	}()
+
+	if a.agent == nil {
+		return fmt.Errorf("agent não inicializado")
+	}
+
+	initialized := a.agent.IsDeviceInitialized(ctx)
+	if !initialized {
+		return fmt.Errorf("device não inicializado. Aguarde a inicialização")
+	}
+
+	done := make(chan error, 1)
+	go func() {
+		defer close(done)
+		encryptCtx, encryptCancel := context.WithTimeout(ctx, 9*time.Minute)
+		defer encryptCancel()
+
+		_, err := a.agent.Encrypt(encryptCtx, filePath)
+		if err != nil {
+			done <- fmt.Errorf("erro ao encriptar: %w", err)
+			return
+		}
+		done <- nil
+	}()
+
+	select {
+	case err := <-done:
+		return err
+	case <-ctx.Done():
+		return ctx.Err()
+	}
+}
+
+// SelectFile - chamado pelo frontend
+func (a *App) SelectFile() (string, error) {
+	if a.ctx == nil {
+		return "", fmt.Errorf("contexto da aplicação não inicializado")
+	}
+
+	ctx, cancel := context.WithTimeout(a.ctx, 5*time.Minute)
+	defer cancel()
+
+	options := runtime.OpenDialogOptions{
+		Title: "Selecione um arquivo para criptografar",
+		Filters: []runtime.FileFilter{
+			{
+				DisplayName: "Todos os arquivos",
+				Pattern:     "*.*",
+			},
+		},
+	}
+
+	return runtime.OpenFileDialog(ctx, options)
+}
+
 func (a *App) shutdown(ctx context.Context) {
-	// Cleanup é feito automaticamente pela linguagem
+	if a.cancel != nil {
+		a.cancel()
+	}
 }

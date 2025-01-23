@@ -2,10 +2,13 @@ from rest_framework.serializers import (
     CharField,
     DateTimeField,
     FileField,
+    FloatField,
     JSONField,
     Serializer,
     UUIDField,
 )
+
+from .models import EncryptedPackage
 
 
 class OperationSerializer(Serializer):
@@ -20,6 +23,28 @@ class OperationSerializer(Serializer):
     updated_at = DateTimeField(
         read_only=True, help_text="Última atualização da operação"
     )
+
+    file_name = CharField(
+        read_only=True, help_text="Nome do arquivo criptografado", required=False
+    )
+    file_size = FloatField(
+        read_only=True, help_text="Tamanho do arquivo criptografado", required=False
+    )
+
+    def to_representation(self, instance):
+        # Representação padrão do serializer
+        representation = super().to_representation(instance)
+
+        # Tenta buscar o pacote criptografado relacionado
+        encrypted_package = EncryptedPackage.objects(operation=instance).first()
+        if encrypted_package:
+            representation["file_name"] = encrypted_package.file_name
+            representation["file_size"] = encrypted_package.file_size
+        else:
+            representation["file_name"] = None
+            representation["file_size"] = None
+
+        return representation
 
 
 class EncryptedPackageSerializer(Serializer):

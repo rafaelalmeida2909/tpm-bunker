@@ -4,100 +4,138 @@ import (
 	"context"
 	"fmt"
 	"sync"
+	"time"
 	"tpm-bunker/internal/types"
 )
 
-// Manager gerencia as operações do TPM e mantém o estado
 type Manager struct {
-	client *TPMClient
+	Client *TPMClient
 	mutex  sync.RWMutex
 	ctx    context.Context
+	cancel context.CancelFunc // Adicionado para controle de cancelamento
 
 	// Estado do dispositivo
-	deviceUUID string
-	publicKey  string
+	DeviceUUID string
+	PublicKey  string
 	EK         []byte
 	AIK        []byte
 }
 
-// NewManager cria uma nova instância do gerenciador TPM
 func NewManager(ctx context.Context) *Manager {
+	// Cria um contexto cancelável
+	ctx, cancel := context.WithCancel(ctx)
+
 	m := &Manager{
-		ctx: ctx,
+		ctx:    ctx,
+		cancel: cancel,
 	}
 
-	// Tenta inicializar o cliente TPM
-	client, err := NewTPMClient()
+	// Tenta inicializar o cliente TPM com timeout
+	initCtx, initCancel := context.WithTimeout(ctx, 30*time.Second)
+	defer initCancel()
+
+	client, err := NewTPMClient(initCtx)
 	if err != nil {
-		// Apenas loga o erro e continua com client nulo
 		fmt.Printf("Aviso: TPM não disponível: %v\n", err)
 		return m
 	}
 
-	m.client = client
+	m.Client = client
 	return m
 }
 
-// InitializeDevice realiza a configuração inicial do dispositivo
-func (m *Manager) InitializeDevice() error {
+func (m *Manager) InitializeDevice(ctx context.Context) error {
+	// Verifica se o contexto foi cancelado
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	default:
+	}
+
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
-	// Verifica se o TPM está disponível
-	if m.client == nil {
+	if m.Client == nil {
 		return fmt.Errorf("TPM não está disponível neste dispositivo")
 	}
 
-	// Verifica se já foi inicializado
-	if m.deviceUUID != "" {
+	if m.DeviceUUID != "" {
 		return fmt.Errorf("dispositivo já inicializado")
 	}
 
-	// Inicializa o dispositivo através do client
-	creds, err := m.client.InitializeDevice()
+	// Cria um timeout específico para inicialização
+	initCtx, cancel := context.WithTimeout(ctx, 2*time.Minute)
+	defer cancel()
+
+	// Inicializa o dispositivo com context
+	creds, err := m.Client.InitializeDevice(initCtx)
 	if err != nil {
 		return fmt.Errorf("falha na inicialização do dispositivo: %v", err)
 	}
 
-	// Armazena as credenciais relevantes
-	m.deviceUUID = creds.UUID
-	m.publicKey = creds.PublicKey
-	m.EK = creds.EK
-	m.AIK = creds.AIK
-
-	return nil
+	// Verifica novamente o cancelamento antes de atualizar o estado
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	default:
+		m.DeviceUUID = creds.UUID
+		m.PublicKey = creds.PublicKey
+		m.EK = creds.EK
+		m.AIK = creds.AIK
+		return nil
+	}
 }
 
-// IsInitialized verifica se o dispositivo está inicializado
-func (m *Manager) IsInitialized() bool {
-	m.mutex.RLock()
-	defer m.mutex.RUnlock()
-	return m.deviceUUID != ""
+func (m *Manager) GetDeviceUUID(ctx context.Context) (string, error) {
+	select {
+	case <-ctx.Done():
+		return "", ctx.Err()
+	default:
+		m.mutex.RLock()
+		defer m.mutex.RUnlock()
+		return m.DeviceUUID, nil
+	}
 }
 
-// GetDeviceUUID retorna o UUID do dispositivo
-func (m *Manager) GetDeviceUUID() string {
-	m.mutex.RLock()
-	defer m.mutex.RUnlock()
-	return m.deviceUUID
+func (m *Manager) GetStatus(ctx context.Context) (*types.TPMStatus, error) {
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
+		m.mutex.RLock()
+		defer m.mutex.RUnlock()
+
+		status := &types.TPMStatus{
+			Available:   m.Client != nil,
+			Initialized: m.DeviceUUID != "",
+		}
+
+		return status, nil
+	}
 }
 
-// GetStatus retorna o status atual do TPM
-func (m *Manager) GetStatus() (*types.TPMStatus, error) {
-	m.mutex.RLock()
-	defer m.mutex.RUnlock()
+func (m *Manager) GetPublicKey(ctx context.Context) (string, error) {
+	select {
+	case <-ctx.Done():
+		return "", ctx.Err()
+	default:
+		m.mutex.RLock()
+		defer m.mutex.RUnlock()
+		return m.PublicKey, nil
+	}
+}
 
-	status := &types.TPMStatus{
-		Available:   m.client != nil,
-		Initialized: m.deviceUUID != "",
+// Método para limpar recursos quando não mais necessários
+func (m *Manager) Close() {
+	if m.cancel != nil {
+		m.cancel()
 	}
 
-	return status, nil
-}
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
 
-// GetPublicKey retorna a chave pública RSA do dispositivo
-func (m *Manager) GetPublicKey() string {
-	m.mutex.RLock()
-	defer m.mutex.RUnlock()
-	return m.publicKey
+	if m.Client != nil {
+		m.Client.Close()
+		m.Client = nil
+	}
 }
