@@ -229,7 +229,7 @@ func (a *Agent) Encrypt(ctx context.Context, filePath string) ([]byte, error) {
 		}
 
 		payload := &api.EncryptionRequest{
-			EncryptedData:    result.EncryptedFilePath,
+			EncryptedData:    result.EncryptedData,
 			EncryptedKey:     result.EncryptedSymmetricKey,
 			DigitalSignature: result.DigitalSignature,
 			HashOriginal:     result.HashOriginal,

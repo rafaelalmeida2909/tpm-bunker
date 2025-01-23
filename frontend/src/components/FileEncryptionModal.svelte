@@ -3,9 +3,9 @@
   import Sync from "svelte-icons/fa/FaSync.svelte";
   import { fade } from "svelte/transition";
   import {
-      EncryptFile,
-      IsDeviceInitialized,
-      SelectFile,
+    EncryptFile,
+    IsDeviceInitialized,
+    SelectFile,
   } from "../../wailsjs/go/main/App";
   export let isDeviceInitialized = false;
   const dispatch = createEventDispatcher();
@@ -26,7 +26,6 @@
       isUploading = true;
       uploadProgress = 0;
 
-      // Simula o progresso
       const progressInterval = setInterval(() => {
         if (uploadProgress < 90) {
           uploadProgress += 10;
@@ -34,13 +33,14 @@
       }, 500);
 
       // Chama a função EncryptFile do backend
-      await EncryptFile(selectedFile.path);
+      const result = await EncryptFile(selectedFile.path);
 
       uploadProgress = 100;
       clearInterval(progressInterval);
 
       showToastMessage("Arquivo criptografado com sucesso!");
-      dispatch("close"); // Fecha o modal após sucesso
+      dispatch("fileEncrypted"); // Novo evento disparado após sucesso
+      dispatch("close");
     } catch (error) {
       console.error("Erro ao criptografar arquivo:", error);
       showToastMessage(

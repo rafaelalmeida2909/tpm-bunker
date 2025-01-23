@@ -10,8 +10,6 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strings"
 	"time"
 	"tpm-bunker/internal/types"
@@ -31,7 +29,7 @@ type DeviceRegistration struct {
 }
 
 type EncryptionRequest struct {
-	EncryptedData    string            `json:"encrypted_data"`
+	EncryptedData    []byte            `json:"encrypted_data"`
 	EncryptedKey     string            `json:"encrypted_symmetric_key "`
 	DigitalSignature string            `json:"digital_signature"`
 	HashOriginal     string            `json:"hash_original"`
@@ -214,24 +212,16 @@ func (c *APIClient) EncryptRequest(ctx context.Context, method string, endpoint 
 		return nil, fmt.Errorf("dados inválidos: esperado *api.EncryptionRequest")
 	}
 
-	// Create a new multipart writer
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
-	// Add encrypted file
-	encryptedFile, err := os.Open(payload.EncryptedData)
-	if err != nil {
-		return nil, fmt.Errorf("erro ao abrir arquivo criptografado: %w", err)
-	}
-	defer encryptedFile.Close()
-
-	part, err := writer.CreateFormFile("encrypted_data", filepath.Base(payload.EncryptedData))
+	part, err := writer.CreateFormFile("encrypted_data", payload.Metadata["filename"])
 	if err != nil {
 		return nil, fmt.Errorf("erro ao criar parte do formulário: %w", err)
 	}
-	_, err = io.Copy(part, encryptedFile)
-	if err != nil {
-		return nil, fmt.Errorf("erro ao copiar arquivo: %w", err)
+
+	if _, err = io.Copy(part, bytes.NewReader(payload.EncryptedData)); err != nil {
+		return nil, fmt.Errorf("erro ao copiar dados: %w", err)
 	}
 
 	// Add other form fields
