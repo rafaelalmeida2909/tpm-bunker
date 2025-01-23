@@ -39,13 +39,6 @@
       uploadProgress = 100;
       clearInterval(progressInterval);
 
-      dispatch("success", {
-        id: Date.now(),
-        name: selectedFile.name,
-        date: new Date().toISOString().split("T")[0],
-        size: `${(selectedFile.size / (1024 * 1024)).toFixed(1)} MB`,
-      });
-
       showToastMessage("Arquivo criptografado com sucesso!");
       dispatch("close"); // Fecha o modal após sucesso
     } catch (error) {

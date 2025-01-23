@@ -11,6 +11,7 @@
       AuthLogin,
       CheckConnection,
       CheckTPMPresence,
+      GetOperations,
       InitializeDevice,
       IsDeviceInitialized,
   } from "../wailsjs/go/main/App";
@@ -30,10 +31,29 @@
   let connectionCheckInterval;
   let initializationRetryInterval;
 
-  let files = [
-    { id: 1, name: "documento.pdf", date: "2024-01-16", size: "2.4 MB" },
-    { id: 2, name: "contrato.docx", date: "2024-01-15", size: "1.1 MB" },
-  ];
+  let files = [];
+
+  async function getOperations() {
+    if (!systemState.authenticated) return;
+
+    try {
+      const response = await GetOperations();
+      if (response) {
+        // @ts-ignore
+        const decodedStr = atob(response);
+        files = JSON.parse(decodedStr);
+      }
+    } catch (error) {
+      console.error("Erro ao obter operações:", error);
+    }
+  }
+
+  function formatFileSize(size) {
+    if (!size) return "0 B";
+    const kb = size * 1024;
+    if (kb < 1024) return `${kb.toFixed(2)} KB`;
+    return `${size.toFixed(2)} MB`;
+  }
 
   // Função para verificar conexão com a API
   async function checkAPIConnection() {
@@ -51,7 +71,6 @@
       try {
         const deviceInfo = await InitializeDevice();
         if (deviceInfo) {
-          // Tenta fazer login após inicialização bem-sucedida
           const isAuthenticated = await AuthLogin();
           systemState = {
             ...systemState,
@@ -59,9 +78,10 @@
             initializationFailed: false,
             authenticated: isAuthenticated,
           };
+          if (isAuthenticated) {
+            await getOperations(); // Adicionado aqui
+          }
           console.log("Device initialized successfully:", deviceInfo);
-
-          // Limpa o intervalo de retry se a inicialização foi bem-sucedida
           if (initializationRetryInterval) {
             clearInterval(initializationRetryInterval);
             initializationRetryInterval = null;
@@ -73,8 +93,6 @@
           ...systemState,
           initializationFailed: true,
         };
-
-        // Configura o retry se ainda não estiver configurado
         if (!initializationRetryInterval) {
           console.log("Setting up initialization retry interval");
           initializationRetryInterval = setInterval(
@@ -136,6 +154,7 @@
 
   function encryptFile() {
     showEncryptionModal = true;
+    getOperations();
   }
 
   function decryptFile(id) {
@@ -289,17 +308,15 @@
 
           {#each files as file (file.id)}
             <div class="file-row">
-              <div>{file.name}</div>
-              <div>{file.date}</div>
-              <div>{file.size}</div>
+              <div>{file.file_name}</div>
+              <div>{new Date(file.created_at).toLocaleString()}</div>
+              <div>{formatFileSize(file.file_size)}</div>
               <div>
                 <button
                   class="btn btn-outline"
                   on:click={() => decryptFile(file.id)}
                 >
-                  <div class="icon">
-                    <Download />
-                  </div>
+                  <div class="icon"><Download /></div>
                   Descriptografar
                 </button>
               </div>

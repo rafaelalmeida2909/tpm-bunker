@@ -8,9 +8,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
-	"crypto/x509"
 	"encoding/base64"
-	"encoding/pem"
 	"fmt"
 	"io"
 	"log"
@@ -28,30 +26,6 @@ type EncryptionResult struct {
 	DigitalSignature      string            `json:"digital_signature"`
 	HashOriginal          string            `json:"hash_original"`
 	Metadata              map[string]string `json:"metadata"`
-}
-
-func parsePEMToPublicKey(pemData string) (*rsa.PublicKey, error) {
-	block, _ := pem.Decode([]byte(pemData))
-	if block == nil {
-		return nil, fmt.Errorf("falha ao decodificar PEM")
-	}
-
-	pub, err := x509.ParsePKIXPublicKey(block.Bytes)
-	if err != nil {
-		return nil, fmt.Errorf("falha ao analisar chave pública: %w", err)
-	}
-
-	rsaPub, ok := pub.(*rsa.PublicKey)
-	if !ok {
-		return nil, fmt.Errorf("chave pública não é do tipo RSA")
-	}
-
-	// Verifica se o exponente é válido
-	if rsaPub.E <= 0 {
-		return nil, fmt.Errorf("exponente inválido na chave pública RSA")
-	}
-
-	return rsaPub, nil
 }
 
 func EncryptFile(ctx context.Context, inputFilePath string, privateKey *rsa.PrivateKey, tpmMgr *tpm.Manager) (*EncryptionResult, error) {

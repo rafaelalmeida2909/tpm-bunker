@@ -162,7 +162,7 @@ func (a *Agent) CheckTPMPresence(ctx context.Context) bool {
 	}
 }
 
-// CheckTPMPresence verifica se o TPM está presente e acessível
+// CheckConnection verifica conexão com API
 func (a *Agent) CheckConnection(ctx context.Context) bool {
 	hasConnection := a.client.CheckConnection(ctx)
 	if hasConnection {
@@ -171,6 +171,28 @@ func (a *Agent) CheckConnection(ctx context.Context) bool {
 		runtime.LogInfo(a.ctx, "API connection failed")
 	}
 	return hasConnection
+}
+
+// GetOperations recupera as operações entre Agente e API
+func (a *Agent) GetOperations(ctx context.Context) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Minute)
+	defer cancel()
+
+	// Verifica cancelamento
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
+		header := map[string]string{
+			"X-Device-UUID": a.tpmMgr.DeviceUUID,
+		}
+
+		// Envia para API com timeout específico
+		apiCtx, apiCancel := context.WithTimeout(ctx, 2*time.Minute)
+		defer apiCancel()
+		log.Printf("Realizando get de operações")
+		return a.client.SendRequest(apiCtx, http.MethodGet, "operations/", header, nil)
+	}
 }
 
 // Encrypt encripta um arquivo e o envia para a API

@@ -85,6 +85,21 @@ func (a *App) AuthLogin() bool {
 	return a.agent.AuthLogin(ctx)
 }
 
+// GetOperations - chamado pelo frontend
+func (a *App) GetOperations() ([]byte, error) {
+	ctx, cancel := context.WithTimeout(a.ctx, 30*time.Second)
+	defer cancel()
+
+	// Adicione logs
+	response, err := a.agent.GetOperations(ctx)
+	if err != nil {
+		log.Printf("Erro em GetOperations: %v", err)
+		return nil, err
+	}
+
+	return response, nil
+}
+
 // EncryptFile - chamado pelo frontend
 func (a *App) EncryptFile(filePath string) error {
 	ctx, cancel := context.WithTimeout(a.ctx, 10*time.Minute)

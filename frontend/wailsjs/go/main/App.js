@@ -22,6 +22,10 @@ export function GetDeviceInfo() {
   return window['go']['main']['App']['GetDeviceInfo']();
 }
 
+export function GetOperations() {
+  return window['go']['main']['App']['GetOperations']();
+}
+
 export function GetTPMStatus() {
   return window['go']['main']['App']['GetTPMStatus']();
 }
