@@ -16,10 +16,10 @@
     try {
       const isInitialized = await IsDeviceInitialized();
       if (!isInitialized) {
-        showToastMessage(
-          "Aguarde a inicialização do dispositivo ser concluída",
-          "error",
-        );
+        dispatch("showToast", {
+          message: "Aguarde a inicialização do dispositivo ser concluída.",
+          type: "error",
+        });
         return;
       }
 
@@ -38,15 +38,19 @@
       uploadProgress = 100;
       clearInterval(progressInterval);
 
-      showToastMessage("Arquivo criptografado com sucesso!");
-      dispatch("fileEncrypted"); // Novo evento disparado após sucesso
+      dispatch("showToast", {
+        message: "Arquivo criptografado com sucesso!",
+        type: "success",
+      });
+      dispatch("handleStartLockAnimation"); // Add this line
+      dispatch("fileEncrypted");
       dispatch("close");
     } catch (error) {
       console.error("Erro ao criptografar arquivo:", error);
-      showToastMessage(
-        "Erro ao criptografar arquivo. Tente novamente.",
-        "error",
-      );
+      dispatch("showToast", {
+        message: "Erro ao criptografar arquivo. Tente novamente.",
+        type: "error",
+      });
     } finally {
       isUploading = false;
       uploadProgress = 0;
@@ -59,18 +63,7 @@
   let showToast = false;
   let toastMessage = "";
   let toastType = "success";
-  let toastTimeout;
 
-  function showToastMessage(message, type = "success") {
-    toastMessage = message;
-    toastType = type;
-    showToast = true;
-
-    if (toastTimeout) clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => {
-      showToast = false;
-    }, 3000);
-  }
 
   async function handleFileSelect() {
     try {
@@ -85,7 +78,10 @@
       }
     } catch (error) {
       console.error("Erro ao selecionar arquivo:", error);
-      showToastMessage("Erro ao selecionar arquivo. Tente novamente.", "error");
+      dispatch("showToast", {
+        message: "Erro ao selecionar arquivo. Tente novamente.",
+        type: "error",
+      });
     }
   }
 </script>

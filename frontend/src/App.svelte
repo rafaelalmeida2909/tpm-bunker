@@ -1,6 +1,8 @@
 <script>
-  import { onDestroy, onMount } from "svelte";
+// @ts-nocheck
 
+  import { onDestroy, onMount } from "svelte";
+  import { fade } from "svelte/transition";
   import Download from "svelte-icons/fa/FaDownload.svelte";
   import Lock from "svelte-icons/fa/FaLock.svelte";
   import ShieldCheck from "svelte-icons/fa/FaShieldAlt.svelte";
@@ -16,6 +18,7 @@
     IsDeviceInitialized,
   } from "../wailsjs/go/main/App";
   import FileEncryptionModal from "./components/FileEncryptionModal.svelte";
+  import FallingLocks from './components/FallingLocks.svelte';
 
   // Estado do sistema
   let systemState = {
@@ -30,35 +33,36 @@
   let showEncryptionModal = false;
   let connectionCheckInterval;
   let initializationRetryInterval;
+  let lockCount = 0;
 
   let files = [];
 
   async function getOperations() {
-  if (!systemState.authenticated) return;
+    if (!systemState.authenticated) return;
 
-  try {
-    const response = await GetOperations();
-    if (!response) {
+    try {
+      const response = await GetOperations();
+      if (!response) {
+        files = [];
+        return;
+      }
+
+      // @ts-ignore
+      const decodedStr = atob(response);
+      const parsedData = JSON.parse(decodedStr);
+
+      if (!Array.isArray(parsedData)) {
+        console.error("Parsed data is not an array:", parsedData);
+        files = [];
+        return;
+      }
+
+      files = parsedData.filter((file) => file && file.file_name);
+    } catch (error) {
+      console.error("Error in getOperations:", error);
       files = [];
-      return;
     }
-
-    // @ts-ignore
-    const decodedStr = atob(response);
-    const parsedData = JSON.parse(decodedStr);
-    
-    if (!Array.isArray(parsedData)) {
-      console.error("Parsed data is not an array:", parsedData);
-      files = [];
-      return;
-    }
-
-    files = parsedData.filter(file => file && file.file_name);
-  } catch (error) {
-    console.error("Error in getOperations:", error);
-    files = [];
   }
-}
 
   function formatFileSize(size) {
     if (!size) return "0 B";
@@ -144,6 +148,30 @@
     }
   }
 
+  let showToast = false;
+  let toastMessage = "";
+  let toastType = "success";
+  let toastTimeout;
+
+  function handleToast(event) {
+    const { message, type } = event.detail;
+    showToast = true;
+    toastMessage = message;
+    toastType = type;
+
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      showToast = false;
+    }, 3000);
+  }
+
+  function handleStartLockAnimation() {
+    lockCount = 15;
+    setTimeout(() => {
+      lockCount = 0;
+    }, 5000);
+  }
+
   onMount(() => {
     // Inicia verificação do sistema após 2 segundos
     setTimeout(() => {
@@ -166,13 +194,16 @@
 
   function encryptFile() {
     showEncryptionModal = true;
-    getOperations();
   }
 
   function decryptFile(id) {
     console.log("Descriptografando arquivo...", id);
   }
 </script>
+
+{#if lockCount > 0}
+  <FallingLocks count={lockCount} />
+{/if}
 
 <div class="app-container">
   {#if systemState.checking}
@@ -306,8 +337,22 @@
               <FileEncryptionModal
                 on:close={() => (showEncryptionModal = false)}
                 on:fileEncrypted={() => getOperations()}
+                on:showToast={handleToast}
+                on:handleStartLockAnimation={handleStartLockAnimation}
                 isDeviceInitialized={systemState.deviceInitialized}
               />
+            {/if}
+
+            {#if showToast}
+              <div
+                class="fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white {toastType ===
+                'success'
+                  ? 'bg-green-500'
+                  : 'bg-red-500'}"
+                transition:fade={{ duration: 200 }}
+              >
+                <p>{toastMessage}</p>
+              </div>
             {/if}
           </div>
 
