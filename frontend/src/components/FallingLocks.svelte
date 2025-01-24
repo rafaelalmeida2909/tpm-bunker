@@ -1,22 +1,25 @@
 <script>
-  import Lock from "svelte-icons/fa/FaLock.svelte";
   import { onDestroy } from "svelte";
+  import Lock from "svelte-icons/fa/FaLock.svelte";
   export let count = 15;
-  
+
   let locks = [];
   let animationFrame;
-  
+
   function createLocks() {
-    locks = Array(count).fill(0).map((_, i) => ({
-      id: i,
-      left: Math.random() * 90 + 5, // Keep locks within viewport
-      delay: Math.random() * 0.3,
-      duration: 0.8 + Math.random() * 0.4
-    }));
+    locks = Array(count)
+      .fill(0)
+      .map((_, i) => ({
+        id: i,
+        left: Math.random() * 100, 
+        delay: Math.random() * 0.3, 
+        duration: 1 + Math.random() * 1.5,
+        size: Math.random() * 10 + 15,
+      }));
   }
 
   createLocks();
-  
+
   onDestroy(() => {
     if (animationFrame) {
       cancelAnimationFrame(animationFrame);
@@ -30,7 +33,7 @@
       class="absolute text-blue-500 opacity-50 animate-fall will-change-transform"
       style="left: {lock.left}%; animation-delay: {lock.delay}s; animation-duration: {lock.duration}s"
     >
-      <div class="w-4 h-4">
+      <div class="w-4 h-4" style="width: {lock.size}px; height: {lock.size}px">
         <Lock />
       </div>
     </div>

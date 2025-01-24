@@ -1,34 +1,91 @@
 <script>
-// @ts-nocheck
+  // @ts-nocheck
 
   import { onDestroy, onMount } from "svelte";
-  import { fade } from "svelte/transition";
+  import APIConnected from "svelte-icons/fa/FaCheckCircle.svelte";
   import Download from "svelte-icons/fa/FaDownload.svelte";
   import Lock from "svelte-icons/fa/FaLock.svelte";
   import ShieldCheck from "svelte-icons/fa/FaShieldAlt.svelte";
   import Sync from "svelte-icons/fa/FaSync.svelte";
+  import APIDesconnected from "svelte-icons/fa/FaTimesCircle.svelte";
   import Upload from "svelte-icons/fa/FaUpload.svelte";
   import Shield from "svelte-icons/fa/FaUserShield.svelte";
+  import { fade } from "svelte/transition";
   import {
-    AuthLogin,
-    CheckConnection,
-    CheckTPMPresence,
-    GetOperations,
-    InitializeDevice,
-    IsDeviceInitialized,
+      AuthLogin,
+      CheckConnection,
+      CheckTPMPresence,
+      GetOperations,
+      InitializeDevice,
+      IsDeviceInitialized,
   } from "../wailsjs/go/main/App";
+  import FallingLocks from "./components/FallingLocks.svelte";
   import FileEncryptionModal from "./components/FileEncryptionModal.svelte";
-  import FallingLocks from './components/FallingLocks.svelte';
 
   // Estado do sistema
   let systemState = {
     tpmAvailable: false,
     deviceInitialized: false,
-    apiConnected: true,
+    apiConnected: false,
     authenticated: false,
     checking: true,
+    connecting: true, // Novo estado
     initializationFailed: false,
   };
+
+  let retryInterval;
+
+  async function retrySystemInitialization() {
+    try {
+      console.log("Verificando conexão com a API...");
+      systemState.apiConnected = await CheckConnection();
+      if (!systemState.apiConnected) {
+        console.warn("API ainda não está conectada.");
+        return;
+      }
+
+      if (systemState.tpmAvailable && !systemState.deviceInitialized) {
+        console.log("Tentando inicializar o dispositivo...");
+        await initializeDeviceIfNeeded();
+        if (!systemState.deviceInitialized) {
+          console.warn("Dispositivo ainda não foi inicializado.");
+          return;
+        }
+      }
+
+      // 3. Autentique o usuário, se necessário
+      if (!systemState.authenticated) {
+        console.log("Tentando autenticar...");
+        const isAuthenticated = await AuthLogin();
+        if (isAuthenticated) {
+          systemState.authenticated = true;
+          console.log("Usuário autenticado com sucesso.");
+          await getOperations(); // Obtenha operações
+        } else {
+          console.warn("Autenticação falhou.");
+        }
+      }
+
+      // 4. Se tudo estiver operacional, pare as tentativas
+      if (
+        systemState.apiConnected &&
+        systemState.deviceInitialized &&
+        systemState.authenticated
+      ) {
+        console.log("Parando tentativas de inicialização.");
+        clearInterval(retryInterval);
+        retryInterval = null;
+      }
+    } catch (error) {
+      console.error("Erro durante a tentativa de inicialização:", error);
+    }
+  }
+
+  // Inicie a verificação em intervalos de tempo
+  function startRetryInterval() {
+    if (retryInterval) return; // Evite múltiplos intervalos simultâneos
+    retryInterval = setInterval(retrySystemInitialization, 10000); // Verifique a cada 10 segundos
+  }
 
   let showEncryptionModal = false;
   let connectionCheckInterval;
@@ -69,6 +126,22 @@
     const kb = size * 1024;
     if (kb < 1024) return `${kb.toFixed(2)} KB`;
     return `${size.toFixed(2)} MB`;
+  }
+
+  function formatDateTime(dateStr) {
+    const date = new Date(dateStr);
+    return new Date(date.getTime() + 3 * 60 * 60 * 1000).toLocaleString(
+      "pt-BR",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      },
+    );
   }
 
   // Função para verificar conexão com a API
@@ -135,16 +208,25 @@
         checking: false,
       };
 
-      // Se TPM está disponível mas não inicializado, tenta inicializar
+      // Tenta conectar algumas vezes antes de mostrar erro
+      let attempts = 0;
+      while (attempts < 3 && !systemState.apiConnected) {
+        systemState.apiConnected = await CheckConnection();
+        if (!systemState.apiConnected) {
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
+        attempts++;
+      }
+
+      systemState.connecting = false;
+
       if (tpmAvailable && !deviceInitialized) {
         await initializeDeviceIfNeeded();
       }
-
-      // Primeira verificação de conexão
-      await checkAPIConnection();
     } catch (error) {
       console.error("Error checking system state:", error);
       systemState.checking = false;
+      systemState.connecting = false;
     }
   }
 
@@ -173,6 +255,8 @@
   }
 
   onMount(() => {
+    checkSystemState();
+    startRetryInterval(); // Inicia as tentativas de inicialização
     // Inicia verificação do sistema após 2 segundos
     setTimeout(() => {
       checkSystemState();
@@ -190,6 +274,7 @@
     if (initializationRetryInterval) {
       clearInterval(initializationRetryInterval);
     }
+    if (retryInterval) clearInterval(retryInterval);
   });
 
   function encryptFile() {
@@ -219,7 +304,7 @@
   {:else if !systemState.tpmAvailable || !systemState.apiConnected}
     <div class="p-6">
       <div class="alert alert-error">
-        <h3 class="font-bold">Erro de Inicialização</h3>
+        <h3 class="font-bold">Erro de Verificação</h3>
         <p>
           {#if !systemState.tpmAvailable}
             TPM não está disponível. Verifique se seu dispositivo possui TPM e
@@ -291,7 +376,11 @@
               class:icon-green={systemState.apiConnected}
               class:icon-red={!systemState.apiConnected}
             >
-              <Sync />
+              {#if systemState.apiConnected}
+                <APIConnected />
+              {:else}
+                <APIDesconnected />
+              {/if}
             </div>
             <span
               >API: {systemState.apiConnected
@@ -366,8 +455,8 @@
 
             {#each files as file (file.id)}
               <div class="file-row">
-                <div>{file.file_name}</div>
-                <div>{new Date(file.created_at).toLocaleString()}</div>
+                <div>{decodeURIComponent(escape(file.file_name))}</div>
+                <div>{formatDateTime(file.created_at)}</div>
                 <div>{formatFileSize(file.file_size)}</div>
                 <div>
                   <button
