@@ -3,9 +3,9 @@
   import Sync from "svelte-icons/fa/FaSync.svelte";
   import { fade } from "svelte/transition";
   import {
-    EncryptFile,
-    IsDeviceInitialized,
-    SelectFile,
+      EncryptFile,
+      IsDeviceInitialized,
+      SelectFile,
   } from "../../wailsjs/go/main/App";
   export let isDeviceInitialized = false;
   const dispatch = createEventDispatcher();
@@ -51,6 +51,7 @@
         message: "Erro ao criptografar arquivo. Tente novamente.",
         type: "error",
       });
+      dispatch("close");
     } finally {
       isUploading = false;
       uploadProgress = 0;
