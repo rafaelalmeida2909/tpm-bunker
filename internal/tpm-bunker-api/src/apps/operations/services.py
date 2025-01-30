@@ -124,7 +124,7 @@ class OperationService:
             if not encrypted_package:
                 raise EncryptedPackage.DoesNotExist()
 
-            return encrypted_package.encrypted_data
+            return encrypted_package
 
         except Operation.DoesNotExist:
             raise ValidationError({"error": "Operação não encontrada"}, code=404)

@@ -1,10 +1,14 @@
-from django.http import HttpResponse
+from django.http import StreamingHttpResponse, HttpResponse
+import json
 from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes,
     extend_schema,
     extend_schema_view,
+
 )
+from io import BytesIO
+import base64
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser
@@ -116,14 +120,26 @@ class OperationViewSet(viewsets.GenericViewSet):
                 {"error": "OperationID is required"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        file = self.service_class.retrieve_data(
+
+        encrypted_package = self.service_class.retrieve_data(
             device=request.device,
             operation_id=operation_id,
         )
 
-        response = HttpResponse(file, content_type="application/octet-stream")
-        response["Content-Disposition"] = f"attachment; filename=encrypted_data.bin"
+        response = HttpResponse(
+            encrypted_package.encrypted_data,
+            content_type="application/octet-stream"
+        )
+
+        
+        metadata = {
+            "content_type": "application/octet-stream",
+            "encrypted_symmetric_key": base64.b64encode(encrypted_package.encrypted_symmetric_key).decode('utf-8'),
+            "digital_signature": encrypted_package.digital_signature,
+        }
+
+        response["Content-Disposition"] = f"attachment; filename={encrypted_package.file_name}"
         response["Content-Transfer-Encoding"] = "binary"
-        response["Accept-Ranges"] = "bytes"
+        response["X-Operation-Metadata"] = json.dumps(metadata)
 
         return response
