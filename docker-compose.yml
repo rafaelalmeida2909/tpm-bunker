@@ -6,7 +6,7 @@ services:
     container_name: tpm_bunker_mongodb
     env_file:
       - ./internal/tpm-bunker-api/src/.env.docker
-    command: ["mongod", "--quiet", "--logpath", "/dev/null"]
+    command: ["mongod", "--auth", "--quiet", "--logpath", "/dev/null"]
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
@@ -45,22 +45,43 @@ services:
       - ./internal/tpm-bunker-api:/django-app
     networks:
       - internal_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/api/v1/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   wails_app:
     build:
       context: .
       dockerfile: Dockerfile.wails
     container_name: wails_app
-    ports:
-      - "3000:3000"  # Porta para o frontend Svelte
-      - "8080:8080"  # Porta para o backend Go
-    volumes:
-      - ./frontend:/app/frontend
-      - ./wails:/app/wails
+    depends_on:
+      django_api:
+        condition: service_healthy
     environment:
-      - NODE_ENV=development
-    networks:
-      - internal_network
+      - DISPLAY=${DISPLAY:-:0}
+      - XAUTHORITY=/tmp/.docker.xauth
+      - TPM2TOOLS_TCTI=device:/dev/tpm0
+      - TPM2_PKCS11_STORE=/var/run/tpm
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
+      - /dev/tpm0:/dev/tpm0:rw
+      - /dev/tpmrm0:/dev/tpmrm0:rw
+      - /var/run/tpm:/var/run/tpm:rw
+      - /var/lib/tpm:/var/lib/tpm:rw
+    devices:
+      - /dev/tpm0
+      - /dev/tpmrm0
+    privileged: true
+    network_mode: "host"
+    cap_add:
+      - SYS_ADMIN
+      - IPC_LOCK
+    security_opt:
+      - seccomp:unconfined
 
 volumes:
   mongo_data:

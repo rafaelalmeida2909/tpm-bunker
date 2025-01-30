@@ -85,7 +85,12 @@ MONGO_PORT = int(environ.get("MONGO_PORT", 27017))
 MONGO_USERNAME = environ.get("MONGO_USERNAME", "admin")
 MONGO_PASSWORD = environ.get("MONGO_PASSWORD", "admin")
 MONGO_AUTH_SOURCE = environ.get("MONGO_AUTH_SOURCE", "admin")
-
+print(MONGO_DB_NAME,
+MONGO_HOST,
+MONGO_PORT,
+MONGO_USERNAME,
+MONGO_PASSWORD,
+MONGO_AUTH_SOURCE)
 connect(
     db=MONGO_DB_NAME,
     host=MONGO_HOST,
