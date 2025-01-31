@@ -142,6 +142,63 @@ func (a *App) EncryptFile(filePath string) error {
 	}
 }
 
+// DecryptFile - chamado pelo frontend
+func (a *App) DecryptFile(operationID string) error {
+	ctx, cancel := context.WithTimeout(a.ctx, 10*time.Minute)
+	defer cancel()
+
+	// Recuperação de pânico
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("Recovered from panic in DecryptFile: %v", r)
+		}
+	}()
+
+	// Verifica se o agent está inicializado
+	if a.agent == nil {
+		return fmt.Errorf("agent não inicializado")
+	}
+
+	// Verifica se o dispositivo está inicializado
+	initialized := a.agent.IsDeviceInitialized(ctx)
+	if !initialized {
+		return fmt.Errorf("device não inicializado. Aguarde a inicialização")
+	}
+
+	// Canal para resultado da operação assíncrona
+	done := make(chan error, 1)
+	go func() {
+		defer close(done)
+
+		// Contexto específico para decriptação
+		decryptCtx, decryptCancel := context.WithTimeout(ctx, 9*time.Minute)
+		defer decryptCancel()
+
+		// Chama a função de decriptação do agent
+		filePath, err := a.agent.Decrypt(decryptCtx, operationID)
+		if err != nil {
+			done <- fmt.Errorf("erro ao decriptar: %w", err)
+			return
+		}
+
+		// Notifica o frontend sobre o sucesso e o caminho do arquivo
+		runtime.EventsEmit(a.ctx, "decryption_complete", map[string]string{
+			"status": "success",
+			"path":   filePath,
+		})
+
+		done <- nil
+	}()
+
+	// Aguarda conclusão ou timeout
+	select {
+	case err := <-done:
+		return err
+	case <-ctx.Done():
+		return ctx.Err()
+	}
+}
+
 // SelectFile - chamado pelo frontend
 func (a *App) SelectFile() (string, error) {
 	if a.ctx == nil {

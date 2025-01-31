@@ -8,6 +8,8 @@ export function CheckConnection():Promise<boolean>;
 
 export function CheckTPMPresence():Promise<boolean>;
 
+export function DecryptFile(arg1:string):Promise<void>;
+
 export function EncryptFile(arg1:string):Promise<void>;
 
 export function GetDeviceInfo():Promise<types.DeviceInfo>;

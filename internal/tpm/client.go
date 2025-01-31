@@ -432,6 +432,46 @@ func (c *TPMClient) RetrieveRSAKey(ctx context.Context) (*rsa.PublicKey, error) 
 	}
 }
 
+// RSADecrypt decrypts data using the TPM's RSA key
+func (c *TPMClient) RSADecrypt(ctx context.Context, ciphertext []byte) ([]byte, error) {
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
+		// Primeiro verifica se a chave existe
+		_, _, _, err := tpm2.ReadPublic(c.rwc, c.rsaHandle)
+		if err != nil {
+			return nil, fmt.Errorf("chave RSA não encontrada: %w", err)
+		}
+
+		// Configura o esquema de decriptação para OAEP com SHA256
+		scheme := &tpm2.AsymScheme{
+			Alg:  tpm2.AlgOAEP,
+			Hash: tpm2.AlgSHA256,
+		}
+
+		// Log para debug
+		log.Printf("Tentando decriptar com handle: %x", c.rsaHandle)
+		log.Printf("Tamanho do ciphertext: %d bytes", len(ciphertext))
+
+		// Decripta usando OAEP com SHA256
+		decrypted, err := tpm2.RSADecrypt(
+			c.rwc,
+			c.rsaHandle,
+			"", // Sem senha
+			ciphertext,
+			scheme,
+			nil, // Label vazio para OAEP
+		)
+		if err != nil {
+			log.Printf("Erro na decriptação TPM. Handle: %x, Erro: %v", c.rsaHandle, err)
+			return nil, fmt.Errorf("TPM RSA decryption failed: handle %x, error code %v", c.rsaHandle, err)
+		}
+
+		return decrypted, nil
+	}
+}
+
 // Close fecha a conexão com o TPM
 func (c *TPMClient) Close() error {
 	if c.rwc != nil {

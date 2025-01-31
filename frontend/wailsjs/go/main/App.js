@@ -14,6 +14,10 @@ export function CheckTPMPresence() {
   return window['go']['main']['App']['CheckTPMPresence']();
 }
 
+export function DecryptFile(arg1) {
+  return window['go']['main']['App']['DecryptFile'](arg1);
+}
+
 export function EncryptFile(arg1) {
   return window['go']['main']['App']['EncryptFile'](arg1);
 }

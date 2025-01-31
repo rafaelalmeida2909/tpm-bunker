@@ -91,6 +91,7 @@
   let connectionCheckInterval;
   let initializationRetryInterval;
   let lockCount = 0;
+  let decryptingFiles = new Set();
 
   let files = [];
 
@@ -281,8 +282,37 @@
     showEncryptionModal = true;
   }
 
-  function decryptFile(id) {
-    console.log("Descriptografando arquivo...", id);
+  async function decryptFile(id) {
+    if (decryptingFiles.has(id)) return; // Previne múltiplos cliques
+
+    try {
+      decryptingFiles.add(id);
+      showToast = true;
+      toastMessage = "Iniciando descriptografia do arquivo...";
+      toastType = "info";
+
+      await window.go.main.App.DecryptFile(id);
+      await getOperations();
+
+      showToast = true;
+      toastMessage =
+        "Arquivo descriptografado com sucesso! Salvo na pasta Downloads.";
+      toastType = "success";
+
+      handleStartLockAnimation();
+    } catch (error) {
+      console.error("Erro ao descriptografar arquivo:", error);
+      showToast = true;
+      toastMessage = "Erro ao descriptografar arquivo: " + error.message;
+      toastType = "error";
+    } finally {
+      decryptingFiles.delete(id);
+    }
+
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      showToast = false;
+    }, 3000);
   }
 </script>
 
@@ -462,9 +492,20 @@
                   <button
                     class="btn btn-outline"
                     on:click={() => decryptFile(file.id)}
+                    disabled={decryptingFiles.has(file.id)}
                   >
-                    <div class="icon"><Download /></div>
-                    Descriptografar
+                    <div class="icon">
+                      {#if decryptingFiles.has(file.id)}
+                        <div class="animate-spin">
+                          <Sync />
+                        </div>
+                      {:else}
+                        <Download />
+                      {/if}
+                    </div>
+                    {decryptingFiles.has(file.id)
+                      ? "Descriptografando..."
+                      : "Descriptografar"}
                   </button>
                 </div>
               </div>

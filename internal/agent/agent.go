@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
+	"runtime"
+	"strings"
 	"time"
 	"tpm-bunker/internal/api"
 	"tpm-bunker/internal/tpm"
 	"tpm-bunker/internal/types"
-
-	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type Agent struct {
@@ -80,21 +82,21 @@ func (a *Agent) InitializeDevice(ctx context.Context) (*types.DeviceInfo, error)
 	// Verifica se o dispositivo já está registrado
 	isRegistered, err := a.client.IsDeviceRegistered(ctx, deviceInfo.UUID)
 	if err != nil {
-		runtime.LogError(a.ctx, fmt.Sprintf("Erro ao verificar registro: %v", err))
+		log.Printf("Erro ao verificar registro: %v", err)
 		return nil, fmt.Errorf("falha ao verificar registro: %v", err)
 	}
 
 	// Registro com timeout específico
 	if !isRegistered {
-		runtime.LogInfo(a.ctx, "Registrando novo dispositivo...")
+		fmt.Printf("Registrando novo dispositivo...")
 		registerCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 		defer cancel()
 
 		if err := a.client.RegisterDevice(registerCtx, deviceInfo); err != nil {
-			runtime.LogError(a.ctx, fmt.Sprintf("Falha ao registrar: %v", err))
+			log.Printf("Falha ao registrar: %v", err)
 			return nil, fmt.Errorf("falha ao registrar: %v", err)
 		}
-		runtime.LogInfo(a.ctx, "Dispositivo registrado com sucesso")
+		fmt.Printf("Dispositivo registrado com sucesso")
 	}
 
 	return deviceInfo, nil
@@ -104,7 +106,7 @@ func (a *Agent) InitializeDevice(ctx context.Context) (*types.DeviceInfo, error)
 func (a *Agent) AuthLogin(ctx context.Context) bool {
 	deviceInfo, err := a.GetDeviceInfo(ctx)
 	if err != nil {
-		runtime.LogError(a.ctx, fmt.Sprintf("Falha ao obter informações: %v", err))
+		log.Printf("Falha ao obter informações: %v", err)
 		return false
 	}
 
@@ -112,9 +114,9 @@ func (a *Agent) AuthLogin(ctx context.Context) bool {
 	loginCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
-	runtime.LogInfo(a.ctx, "Realizando login na API...")
+	fmt.Printf("Realizando login na API...")
 	if err := a.client.Login(loginCtx, deviceInfo.UUID, a.tpmMgr.EK); err != nil {
-		runtime.LogError(a.ctx, fmt.Sprintf("Falha no login: %v", err))
+		log.Printf("Falha no login: %v", err)
 		return false
 	}
 
@@ -154,9 +156,9 @@ func (a *Agent) CheckTPMPresence(ctx context.Context) bool {
 	default:
 		hasTPM := tpm.CheckTPMPresence(ctx)
 		if hasTPM {
-			runtime.LogInfo(a.ctx, "TPM presence check successful")
+			fmt.Printf("TPM presence check successful")
 		} else {
-			runtime.LogInfo(a.ctx, "TPM not found or not accessible")
+			fmt.Printf("TPM not found or not accessible")
 		}
 		return hasTPM
 	}
@@ -166,9 +168,9 @@ func (a *Agent) CheckTPMPresence(ctx context.Context) bool {
 func (a *Agent) CheckConnection(ctx context.Context) bool {
 	hasConnection := a.client.CheckConnection(ctx)
 	if hasConnection {
-		runtime.LogInfo(a.ctx, "API connection successful")
+		fmt.Printf("API connection successful")
 	} else {
-		runtime.LogInfo(a.ctx, "API connection failed")
+		fmt.Printf("API connection failed")
 	}
 	return hasConnection
 }
@@ -248,8 +250,136 @@ func (a *Agent) Encrypt(ctx context.Context, filePath string) ([]byte, error) {
 	}
 }
 
-// Decrypt Recupera um arquivo através da API com um operation_id e o descriptografa
-func (a *Agent) Decrypt() []byte {
-	// implementar
-	return nil
+// Decrypt recupera e descriptografa um arquivo usando um operation_id
+func (a *Agent) Decrypt(ctx context.Context, operationID string) (string, error) {
+	// Timeout específico para decriptação
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Minute)
+	defer cancel()
+
+	// Verifica cancelamento
+	select {
+	case <-ctx.Done():
+		return "", ctx.Err()
+	default:
+		// Headers para a requisição
+		header := map[string]string{
+			"X-Device-UUID": a.tpmMgr.DeviceUUID,
+		}
+
+		// Contexto específico para a requisição API
+		apiCtx, apiCancel := context.WithTimeout(ctx, 2*time.Minute)
+		defer apiCancel()
+
+		// Faz a requisição para recuperar os dados encriptados
+		log.Printf("Recuperando dados da operação: %s", operationID)
+		response, err := a.client.DecryptRequest(apiCtx, http.MethodGet, "operations/retrieve_data/", header, operationID)
+		if err != nil {
+			return "", fmt.Errorf("erro ao recuperar dados da API: %w", err)
+		}
+
+		// Contexto específico para decriptação
+		decryptCtx, decryptCancel := context.WithTimeout(ctx, 5*time.Minute)
+		defer decryptCancel()
+
+		// Descriptografa os dados
+		log.Printf("Iniciando processo de decriptação")
+		result, err := DecryptFile(decryptCtx, response, a.tpmMgr)
+		if err != nil {
+			return "", fmt.Errorf("erro na decriptação: %w", err)
+		}
+
+		if !result.Verified {
+			return "", fmt.Errorf("falha na verificação da assinatura digital")
+		}
+
+		// Obter caminho da pasta Downloads
+		downloadPath, err := getDownloadsPath()
+		if err != nil {
+			return "", fmt.Errorf("erro ao obter pasta de downloads: %w", err)
+		}
+
+		// Se o nome do arquivo não estiver disponível, usar um nome padrão
+		fileName := response.FileName
+		if fileName == "" {
+			fileName = fmt.Sprintf("decrypted_file_%s_%s",
+				operationID,
+				time.Now().Format("20060102_150405"))
+		}
+
+		// Caminho completo do arquivo
+		filePath := filepath.Join(downloadPath, fileName)
+
+		// Garantir que não sobrescreva arquivo existente
+		filePath = ensureUniqueFilePath(filePath)
+
+		// Salvar arquivo
+		err = os.WriteFile(filePath, result.DecryptedData, 0600)
+		if err != nil {
+			return "", fmt.Errorf("erro ao salvar arquivo: %w", err)
+		}
+
+		log.Printf("Arquivo salvo com sucesso em: %s", filePath)
+		return filePath, nil
+	}
+}
+
+// getDownloadsPath retorna o caminho da pasta Downloads do usuário
+func getDownloadsPath() (string, error) {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", fmt.Errorf("erro ao obter pasta home: %w", err)
+	}
+
+	var downloadPath string
+	if runtime.GOOS == "windows" {
+		downloadPath = filepath.Join(homeDir, "Downloads")
+	} else {
+		// Linux e outros sistemas Unix-like
+		downloadPath = filepath.Join(homeDir, "Downloads")
+
+		// Se a pasta Downloads não existir, tentar XDG_DOWNLOAD_DIR
+		if _, err := os.Stat(downloadPath); os.IsNotExist(err) {
+			// Tenta ler o arquivo user-dirs.dirs
+			xdgConfig := filepath.Join(homeDir, ".config", "user-dirs.dirs")
+			if data, err := os.ReadFile(xdgConfig); err == nil {
+				for _, line := range strings.Split(string(data), "\n") {
+					if strings.HasPrefix(line, "XDG_DOWNLOAD_DIR=") {
+						dir := strings.Trim(strings.Split(line, "=")[1], "\"")
+						dir = strings.ReplaceAll(dir, "$HOME", homeDir)
+						if _, err := os.Stat(dir); err == nil {
+							downloadPath = dir
+							break
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Verifica se a pasta existe
+	if _, err := os.Stat(downloadPath); os.IsNotExist(err) {
+		return "", fmt.Errorf("pasta de downloads não encontrada: %s", downloadPath)
+	}
+
+	return downloadPath, nil
+}
+
+// ensureUniqueFilePath garante que o caminho do arquivo não existe,
+// adicionando um número se necessário
+func ensureUniqueFilePath(filePath string) string {
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		return filePath
+	}
+
+	ext := filepath.Ext(filePath)
+	baseFilePath := filePath[:len(filePath)-len(ext)]
+	counter := 1
+
+	for {
+		newPath := fmt.Sprintf("%s_%d%s", baseFilePath, counter, ext)
+		if _, err := os.Stat(newPath); os.IsNotExist(err) {
+			return newPath
+		}
+		counter++
+	}
 }
