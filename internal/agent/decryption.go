@@ -9,6 +9,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"tpm-bunker/internal/tpm"
 	"tpm-bunker/internal/types"
 )
@@ -36,6 +37,12 @@ func DecryptFile(ctx context.Context, decryptResp *types.DecryptResponse, tpmMgr
 	err = rsa.VerifyPKCS1v15(pubKey, crypto.SHA256, hash[:], signature)
 	if err != nil {
 		return nil, fmt.Errorf("assinatura digital inválida: %w", err)
+	}
+
+	log.Printf("[Decrypt] Received Encrypted Symmetric Key (Hex): %x", decryptResp.EncryptedSymmetricKey)
+
+	if err != nil {
+		return nil, fmt.Errorf("erro ao decodificar chave simétrica: %w", err)
 	}
 
 	// Decrypt the data

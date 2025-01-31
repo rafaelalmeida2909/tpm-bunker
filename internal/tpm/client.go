@@ -479,7 +479,6 @@ func (c *TPMClient) generateRSAKeyPair(ctx context.Context) (*rsa.PublicKey, err
 				ExponentRaw: 0x10001,
 			},
 		}
-
 		decryptKeyHandle, _, _, _, _, _, err := tpm2.CreatePrimaryEx(
 			c.rwc,
 			tpm2.HandleOwner,
@@ -566,26 +565,25 @@ func (c *TPMClient) RSADecrypt(ctx context.Context, ciphertext []byte) ([]byte, 
 		// Using decryptHandle directly, removed reference to rsaHandle
 		pub, _, _, err := tpm2.ReadPublic(c.rwc, c.decryptHandle)
 		if err != nil {
-			return nil, fmt.Errorf("failed to read decryption key: %v", err)
+			return nil, fmt.Errorf("falha ao ler chave de decriptação: %w", err)
 		}
-		log.Printf("Atributos da chave: %x", pub.Attributes)
-
 		handles, _, err := tpm2.GetCapability(c.rwc, tpm2.CapabilityHandles, 100, uint32(tpm2.PersistentFirst))
 		if err != nil {
 			log.Fatalf("Erro ao listar handles: %v", err)
 		}
 		log.Printf("Handles disponíveis: %v", handles)
 
-		fmt.Printf(string(ciphertext))
+		log.Printf("Encrypted Symmetric Key (Hex): %x", ciphertext)
 		// Log para debug
-		log.Printf("Tentando decriptar com handle: %x", c.decryptHandle)
-		log.Printf("Tamanho do ciphertext: %d bytes", len(ciphertext))
+		log.Printf("Handle de decriptação: 0x%x", c.decryptHandle)
+		log.Printf("Tamanho do ciphertext: %d", len(ciphertext))
+		log.Printf("Atributos da chave: %x", pub.Attributes)
 
 		// Decripta usando OAEP com SHA256
 		decrypted, err := tpm2.RSADecrypt(
 			c.rwc,
 			c.decryptHandle,
-			"", // Sem senha
+			"",
 			ciphertext,
 			&tpm2.AsymScheme{
 				Alg:  tpm2.AlgOAEP,

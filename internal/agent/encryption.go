@@ -10,6 +10,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -70,6 +71,7 @@ func encryptInMemory(ctx context.Context, data []byte, pubKey *rsa.PublicKey, tp
 		symmetricKey,
 		nil,
 	)
+	log.Printf("[Encrypt] Encrypted Symmetric Key (Hex): %x", encryptedKey)
 	if err != nil {
 		return nil, nil, nil, hash, fmt.Errorf("error encrypting symmetric key: %w", err)
 	}
