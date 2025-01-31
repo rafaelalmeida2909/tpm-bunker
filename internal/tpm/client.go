@@ -207,6 +207,7 @@ func (c *TPMClient) InitializeDevice(ctx context.Context) (*types.DeviceInfo, er
 	}
 
 	pubKeyPEM := GetPublicKeyPEM(pubKey)
+	fmt.Printf("PUBKEY %s", pubKeyPEM)
 	deviceUUID, err := generateTPMBasedUUID(ek)
 	if err != nil {
 		return nil, fmt.Errorf("falha ao gerar UUID: %v", err)
@@ -339,7 +340,9 @@ func (c *TPMClient) generateRSAKeyPair(ctx context.Context) (*rsa.PrivateKey, *r
 				tpm2.FlagFixedParent |
 				tpm2.FlagSensitiveDataOrigin |
 				tpm2.FlagUserWithAuth |
-				tpm2.FlagSign, // Apenas FlagSign para assinatura
+				tpm2.FlagRestricted |
+				tpm2.FlagSign | // Apenas FlagSign para assinatura
+				tpm2.FlagDecrypt,
 			RSAParameters: &tpm2.RSAParams{
 				KeyBits:     2048,
 				ExponentRaw: 0x10001,
@@ -438,18 +441,26 @@ func (c *TPMClient) RSADecrypt(ctx context.Context, ciphertext []byte) ([]byte, 
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	default:
+		tpm2.EvictControl(c.rwc, "", tpm2.HandleOwner, c.rsaHandle, c.rsaHandle)
 		// Primeiro verifica se a chave existe
-		_, _, _, err := tpm2.ReadPublic(c.rwc, c.rsaHandle)
+		pub, _, _, err := tpm2.ReadPublic(c.rwc, c.rsaHandle)
 		if err != nil {
-			return nil, fmt.Errorf("chave RSA não encontrada: %w", err)
+			log.Fatalf("Erro ao ler chave RSA do TPM: %v", err)
 		}
+		log.Printf("Atributos da chave: %x", pub.Attributes)
+
+		handles, _, err := tpm2.GetCapability(c.rwc, tpm2.CapabilityHandles, 100, uint32(tpm2.PersistentFirst))
+		if err != nil {
+			log.Fatalf("Erro ao listar handles: %v", err)
+		}
+		log.Printf("Handles disponíveis: %v", handles)
 
 		// Configura o esquema de decriptação para OAEP com SHA256
 		scheme := &tpm2.AsymScheme{
-			Alg:  tpm2.AlgOAEP,
+			Alg:  tpm2.AlgOAEP, // Mesmo algoritmo definido na chave
 			Hash: tpm2.AlgSHA256,
 		}
-
+		fmt.Printf(string(ciphertext))
 		// Log para debug
 		log.Printf("Tentando decriptar com handle: %x", c.rsaHandle)
 		log.Printf("Tamanho do ciphertext: %d bytes", len(ciphertext))
@@ -461,7 +472,7 @@ func (c *TPMClient) RSADecrypt(ctx context.Context, ciphertext []byte) ([]byte, 
 			"", // Sem senha
 			ciphertext,
 			scheme,
-			nil, // Label vazio para OAEP
+			"", // Label vazio para OAEP
 		)
 		if err != nil {
 			log.Printf("Erro na decriptação TPM. Handle: %x, Erro: %v", c.rsaHandle, err)
