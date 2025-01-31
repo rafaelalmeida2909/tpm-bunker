@@ -10,7 +10,6 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"time"
@@ -26,15 +25,13 @@ type EncryptionResult struct {
 	EncryptedData         []byte
 }
 
-func EncryptFile(ctx context.Context, inputFilePath string, privateKey *rsa.PrivateKey, tpmMgr *tpm.Manager) (*EncryptionResult, error) {
-	// Lê arquivo
+func EncryptFile(ctx context.Context, inputFilePath string, pubKey *rsa.PublicKey, tpmMgr *tpm.Manager) (*EncryptionResult, error) {
 	fileData, err := os.ReadFile(inputFilePath)
 	if err != nil {
-		return nil, fmt.Errorf("erro ao ler arquivo: %w", err)
+		return nil, fmt.Errorf("error reading file: %w", err)
 	}
 
-	// Criptografa em memória
-	encryptedData, encryptedKey, signature, hash, err := encryptInMemory(ctx, fileData, tpmMgr)
+	encryptedData, encryptedKey, signature, hash, err := encryptInMemory(ctx, fileData, pubKey, tpmMgr)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +41,7 @@ func EncryptFile(ctx context.Context, inputFilePath string, privateKey *rsa.Priv
 	encryptedFilePath := filename + "_encrypted" + ext
 
 	return &EncryptionResult{
-		EncryptedFilePath:     encryptedFilePath, // Dados já criptografados prontos para API
+		EncryptedFilePath:     encryptedFilePath,
 		EncryptedSymmetricKey: base64.StdEncoding.EncodeToString(encryptedKey),
 		DigitalSignature:      base64.StdEncoding.EncodeToString(signature),
 		HashOriginal:          base64.StdEncoding.EncodeToString(hash[:]),
@@ -58,43 +55,14 @@ func EncryptFile(ctx context.Context, inputFilePath string, privateKey *rsa.Priv
 	}, nil
 }
 
-func encryptInMemory(ctx context.Context, fileData []byte, tpmMgr *tpm.Manager) (encryptedData, encryptedKey, signature []byte, hash [32]byte, err error) {
-	// Gera chave AES
+func encryptInMemory(ctx context.Context, data []byte, pubKey *rsa.PublicKey, tpmMgr *tpm.Manager) (encryptedData []byte, encryptedKey []byte, signature []byte, hash [32]byte, err error) {
+	// Generate random AES key
 	symmetricKey := make([]byte, 32)
-	if _, err = io.ReadFull(rand.Reader, symmetricKey); err != nil {
-		return nil, nil, nil, hash, fmt.Errorf("erro ao gerar chave simétrica: %w", err)
+	if _, err := rand.Read(symmetricKey); err != nil {
+		return nil, nil, nil, hash, fmt.Errorf("error generating symmetric key: %w", err)
 	}
 
-	// Gera IV
-	iv := make([]byte, aes.BlockSize)
-	if _, err = io.ReadFull(rand.Reader, iv); err != nil {
-		return nil, nil, nil, hash, fmt.Errorf("erro ao gerar IV: %w", err)
-	}
-
-	// Padding e criptografia
-	paddedData := padPKCS7(fileData, aes.BlockSize)
-	block, err := aes.NewCipher(symmetricKey)
-	if err != nil {
-		return nil, nil, nil, hash, fmt.Errorf("erro ao criar cipher AES: %w", err)
-	}
-
-	// Encripta dados
-	mode := cipher.NewCBCEncrypter(block, iv)
-	encryptedContent := make([]byte, len(paddedData))
-	mode.CryptBlocks(encryptedContent, paddedData)
-
-	// Combina IV e dados
-	encryptedData = make([]byte, len(iv)+len(encryptedContent))
-	copy(encryptedData[0:aes.BlockSize], iv)
-	copy(encryptedData[aes.BlockSize:], encryptedContent)
-
-	// Recupera chave pública
-	pubKey, err := tpmMgr.Client.RetrieveRSAKey(ctx)
-	if err != nil {
-		return nil, nil, nil, hash, fmt.Errorf("erro ao recuperar chave pública: %w", err)
-	}
-
-	// Encripta chave simétrica
+	// Encrypt AES key with RSA public key
 	encryptedKey, err = rsa.EncryptOAEP(
 		sha256.New(),
 		rand.Reader,
@@ -103,14 +71,36 @@ func encryptInMemory(ctx context.Context, fileData []byte, tpmMgr *tpm.Manager) 
 		nil,
 	)
 	if err != nil {
-		return nil, nil, nil, hash, fmt.Errorf("erro ao encriptar chave simétrica: %w", err)
+		return nil, nil, nil, hash, fmt.Errorf("error encrypting symmetric key: %w", err)
 	}
 
-	// Hash e assinatura
-	hash = sha256.Sum256(encryptedData)
-	signature, err = tpmMgr.Client.SignData(ctx, hash[:])
+	// Create AES cipher
+	block, err := aes.NewCipher(symmetricKey)
 	if err != nil {
-		return nil, nil, nil, hash, fmt.Errorf("falha na assinatura: %w", err)
+		return nil, nil, nil, hash, fmt.Errorf("error creating AES cipher: %w", err)
+	}
+
+	// Generate IV
+	iv := make([]byte, aes.BlockSize)
+	if _, err := rand.Read(iv); err != nil {
+		return nil, nil, nil, hash, fmt.Errorf("error generating IV: %w", err)
+	}
+
+	// Encrypt data
+	encryptedData = make([]byte, len(data))
+	stream := cipher.NewCFBEncrypter(block, iv)
+	stream.XORKeyStream(encryptedData, data)
+
+	// Prepend IV to encrypted data
+	encryptedData = append(iv, encryptedData...)
+
+	// Calculate hash
+	hash_256 := sha256.Sum256(encryptedData)
+
+	// Sign hash using TPM
+	signature, err = tpmMgr.Client.SignData(ctx, hash_256[:])
+	if err != nil {
+		return nil, nil, nil, hash_256, fmt.Errorf("error signing data: %w", err)
 	}
 
 	return encryptedData, encryptedKey, signature, hash, nil

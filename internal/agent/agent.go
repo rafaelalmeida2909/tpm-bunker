@@ -2,7 +2,6 @@ package agent
 
 import (
 	"context"
-	"crypto/rsa"
 	"fmt"
 	"log"
 	"net/http"
@@ -199,35 +198,21 @@ func (a *Agent) GetOperations(ctx context.Context) ([]byte, error) {
 
 // Encrypt encripta um arquivo e o envia para a API
 func (a *Agent) Encrypt(ctx context.Context, filePath string) ([]byte, error) {
-	// Timeout específico para encriptação
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Minute)
 	defer cancel()
 
-	// Verifica cancelamento
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	default:
-		// Verifica se a chave RSA foi inicializada
-		if a.tpmMgr.Client.KeyPair == nil || a.tpmMgr.Client.KeyPair.PublicKey.N == nil {
-			log.Printf("Chave RSA não inicializada ou inválida. Tentando recuperar...")
-			pubKey, err := a.tpmMgr.Client.RetrieveRSAKey(ctx)
-			if err != nil {
-				return nil, fmt.Errorf("falha ao recuperar chave RSA: %w", err)
-			}
-			a.tpmMgr.Client.KeyPair = &rsa.PrivateKey{
-				PublicKey: *pubKey,
-			}
-			log.Printf("Chave RSA recuperada com sucesso.")
+		pubKey, err := a.tpmMgr.Client.RetrieveRSASignKey(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("failed to retrieve RSA key: %w", err)
 		}
 
-		// Continua com a encriptação
-		keyPair := a.tpmMgr.Client.KeyPair
-		log.Printf("Usando chave RSA: %+v", keyPair.PublicKey)
-
-		result, err := EncryptFile(ctx, filePath, keyPair, a.tpmMgr)
+		result, err := EncryptFile(ctx, filePath, pubKey, a.tpmMgr)
 		if err != nil {
-			return nil, fmt.Errorf("erro na encriptação: %w", err)
+			return nil, fmt.Errorf("encryption error: %w", err)
 		}
 
 		payload := &api.EncryptionRequest{
@@ -242,7 +227,6 @@ func (a *Agent) Encrypt(ctx context.Context, filePath string) ([]byte, error) {
 			"X-Device-UUID": a.tpmMgr.DeviceUUID,
 		}
 
-		// Envia para API com timeout específico
 		apiCtx, apiCancel := context.WithTimeout(ctx, 2*time.Minute)
 		defer apiCancel()
 

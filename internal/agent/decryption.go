@@ -27,7 +27,7 @@ func DecryptFile(ctx context.Context, decryptResp *types.DecryptResponse, tpmMgr
 	}
 
 	// Get public key for verification
-	pubKey, err := tpmMgr.Client.RetrieveRSAKey(ctx)
+	pubKey, err := tpmMgr.Client.RetrieveRSASignKey(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("erro ao recuperar chave pública: %w", err)
 	}
