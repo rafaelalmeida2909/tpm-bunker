@@ -137,10 +137,18 @@ class OperationViewSet(viewsets.GenericViewSet):
             "digital_signature": encrypted_package.digital_signature,
         }
 
+        # Definir headers explicitamente
+        response["Content-Type"] = "application/octet-stream"
         response["Content-Disposition"] = (
             f"attachment; filename={encrypted_package.file_name}"
         )
         response["Content-Transfer-Encoding"] = "binary"
+        response["Content-Length"] = str(len(encrypted_package.encrypted_data))
         response["X-Operation-Metadata"] = json.dumps(metadata)
+
+        # Adicionar headers para evitar cache
+        response["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response["Pragma"] = "no-cache"
+        response["Expires"] = "0"
 
         return response

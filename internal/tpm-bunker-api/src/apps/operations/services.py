@@ -3,7 +3,6 @@ import traceback
 from base64 import b64decode
 
 from bson.objectid import ObjectId
-from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding, utils
 from rest_framework.serializers import ValidationError
@@ -17,10 +16,6 @@ def _verify_signature(device, encrypted_data, signature):
         # Preparação dos dados
         hashed_data = hashlib.sha256(encrypted_data).digest()
         decoded_signature = b64decode(signature)
-
-        print(f"Hash para verificação (hex): {hashed_data.hex()}")
-        print(f"Tamanho do hash: {len(hashed_data)}")
-        print(f"Tamanho da assinatura: {len(decoded_signature)}")
 
         # Carregar a chave pública
         public_key = serialization.load_pem_public_key(
@@ -45,7 +40,6 @@ def _verify_signature(device, encrypted_data, signature):
 
 class OperationService:
     def store_data(self, device, serializer_data):
-        # Inicializa a operação
         operation = Operation(
             device=device,
             operation_type=OperationTypes.STORE,
@@ -53,7 +47,6 @@ class OperationService:
         ).save()
 
         try:
-            # Ler o conteúdo do arquivo criptografado
             if hasattr(serializer_data["encrypted_data"], "read"):
                 encrypted_data = serializer_data["encrypted_data"].read()
                 file_name = serializer_data["encrypted_data"].name
@@ -61,7 +54,6 @@ class OperationService:
             else:
                 raise ValidationError({"error": "Invalid file format"})
 
-            # Decodificar a chave simétrica
             try:
                 encrypted_symmetric_key = b64decode(
                     serializer_data["encrypted_symmetric_key"]
@@ -71,25 +63,25 @@ class OperationService:
                     {"error": "Invalid encrypted_symmetric_key format"}
                 )
 
-            # Verificar assinatura digital
             if not _verify_signature(
                 device, encrypted_data, serializer_data["digital_signature"]
             ):
                 raise ValidationError("Assinatura digital inválida")
 
-            # Criar o pacote criptografado
+            # Criar o pacote criptografado (GridFS será usado automaticamente)
             encrypted_package = EncryptedPackage(
                 operation=operation,
                 file_name=file_name,
                 file_size=file_size,
-                encrypted_data=encrypted_data,  # bytes
-                encrypted_symmetric_key=encrypted_symmetric_key,  # bytes
+                encrypted_symmetric_key=encrypted_symmetric_key,
                 digital_signature=serializer_data["digital_signature"],
                 hash_original=serializer_data["hash_original"],
                 metadata=serializer_data.get("metadata", {}),
-            ).save()
+            )
+            # Use o setter do encrypted_data que salvará no GridFS
+            encrypted_package.encrypted_data = encrypted_data
+            encrypted_package.save()
 
-            # Atualizar status da operação
             operation.update(set__status=StatusChoices.COMPLETED)
 
             OperationLog(
@@ -99,6 +91,7 @@ class OperationService:
             ).save()
 
             return {"operation_id": str(operation.id), "status": "success"}
+
         except Exception as e:
             operation.update(
                 set__status=StatusChoices.FAILED, set__error_message=str(e)
@@ -125,15 +118,6 @@ class OperationService:
                 raise EncryptedPackage.DoesNotExist()
 
             return encrypted_package
-
-        except Operation.DoesNotExist:
-            raise ValidationError({"error": "Operação não encontrada"}, code=404)
-
-        except EncryptedPackage.DoesNotExist:
-            raise ValidationError({"error": "Dados não encontrados"}, code=404)
-
-        except ValidationError:
-            raise
 
         except Exception as e:
             raise ValidationError({"error": f"Erro inesperado: {str(e)}"}, code=500)
