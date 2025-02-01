@@ -205,12 +205,12 @@ func (a *Agent) Encrypt(ctx context.Context, filePath string) ([]byte, error) {
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	default:
-		pubKey, err := a.tpmMgr.Client.RetrieveRSASignKey(ctx)
+		encryptKey, err := a.tpmMgr.Client.RetrieveRSADecryptKey(ctx)
 		if err != nil {
-			return nil, fmt.Errorf("failed to retrieve RSA key: %w", err)
+			return nil, fmt.Errorf("failed to get encryption key: %w", err)
 		}
 
-		result, err := EncryptFile(ctx, filePath, pubKey, a.tpmMgr)
+		result, err := EncryptFile(ctx, filePath, encryptKey, a.tpmMgr)
 		if err != nil {
 			return nil, fmt.Errorf("encryption error: %w", err)
 		}

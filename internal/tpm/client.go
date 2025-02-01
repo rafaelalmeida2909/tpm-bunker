@@ -556,6 +556,27 @@ func (c *TPMClient) RetrieveRSASignKey(ctx context.Context) (*rsa.PublicKey, err
 	}
 }
 
+func (c *TPMClient) RetrieveRSADecryptKey(ctx context.Context) (*rsa.PublicKey, error) {
+    select {
+    case <-ctx.Done():
+        return nil, ctx.Err()
+    default:
+        // Read public key from decrypt handle
+        pub, _, _, err := tpm2.ReadPublic(c.rwc, c.decryptHandle)
+        if err != nil {
+            return nil, fmt.Errorf("failed to read RSA key from TPM: %v", err)
+        }
+
+        // Convert to rsa.PublicKey
+        pubKey := rsa.PublicKey{
+            N: pub.RSAParameters.Modulus(),
+            E: 65537,
+        }
+
+        return &pubKey, nil
+    }
+}
+
 // RSADecrypt decrypts data using the TPM's RSA key
 func (c *TPMClient) RSADecrypt(ctx context.Context, ciphertext []byte) ([]byte, error) {
 	select {

@@ -88,10 +88,12 @@ func encryptInMemory(ctx context.Context, data []byte, pubKey *rsa.PublicKey, tp
 		return nil, nil, nil, hash, fmt.Errorf("error generating IV: %w", err)
 	}
 
+	paddedData := padPKCS7(data, aes.BlockSize)
+
 	// Encrypt data
-	encryptedData = make([]byte, len(data))
-	stream := cipher.NewCFBEncrypter(block, iv)
-	stream.XORKeyStream(encryptedData, data)
+	encryptedData = make([]byte, len(paddedData))
+    mode := cipher.NewCBCEncrypter(block, iv)
+    mode.CryptBlocks(encryptedData, paddedData)
 
 	// Prepend IV to encrypted data
 	encryptedData = append(iv, encryptedData...)
