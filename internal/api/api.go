@@ -295,3 +295,93 @@ func (c *APIClient) EncryptRequest(ctx context.Context, method string, endpoint 
 		return respBody, nil
 	}
 }
+
+func (c *APIClient) DecryptRequest(ctx context.Context, method string, endpoint string, headers map[string]string, operationID string) (*types.DecryptResponse, error) {
+	// Build the URL with query parameters
+	url := fmt.Sprintf("%s%s?OperationID=%s", c.baseURL, endpoint, operationID)
+
+	// Create request with context
+	req, err := http.NewRequestWithContext(ctx, method, url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao criar requisição: %w", err)
+	}
+
+	// Set authorization header if token exists
+	if c.authToken != "" {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.authToken))
+	}
+
+	// Add any additional headers
+	for key, value := range headers {
+		req.Header.Set(key, value)
+	}
+
+	// Create channel for response
+	respChan := make(chan struct {
+		resp *http.Response
+		err  error
+	})
+
+	// Make the request in a goroutine
+	go func() {
+		resp, err := c.client.Do(req)
+		respChan <- struct {
+			resp *http.Response
+			err  error
+		}{resp, err}
+	}()
+
+	// Wait for response or context cancellation
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	case result := <-respChan:
+		if result.err != nil {
+			return nil, fmt.Errorf("erro ao enviar requisição: %w", result.err)
+		}
+		defer result.resp.Body.Close()
+
+		// Check status code
+		if result.resp.StatusCode < 200 || result.resp.StatusCode > 299 {
+			body, _ := io.ReadAll(result.resp.Body)
+			return nil, fmt.Errorf("requisição falhou com status %d: %s", result.resp.StatusCode, string(body))
+		}
+
+		// Read metadata from header
+		metadataJSON := result.resp.Header.Get("X-Operation-Metadata")
+		if metadataJSON == "" {
+			return nil, fmt.Errorf("metadata não encontrado na resposta")
+		}
+
+		// Parse metadata
+		var metadata struct {
+			FileName              string `json:"file_name"`
+			EncryptedSymmetricKey string `json:"encrypted_symmetric_key"`
+			DigitalSignature      string `json:"digital_signature"`
+		}
+
+		if err := json.Unmarshal([]byte(metadataJSON), &metadata); err != nil {
+			return nil, fmt.Errorf("erro ao decodificar metadata: %w", err)
+		}
+
+		// Read encrypted data from response body
+		encryptedData, err := io.ReadAll(result.resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("erro ao ler dados encriptados: %w", err)
+		}
+
+		// Decode base64 encrypted symmetric key
+		encryptedSymmetricKey, err := base64.StdEncoding.DecodeString(metadata.EncryptedSymmetricKey)
+		if err != nil {
+			return nil, fmt.Errorf("erro ao decodificar chave simétrica: %w", err)
+		}
+		response := &types.DecryptResponse{
+			EncryptedData:         encryptedData,
+			EncryptedSymmetricKey: encryptedSymmetricKey,
+			DigitalSignature:      metadata.DigitalSignature,
+			FileName:              metadata.FileName,
+		}
+
+		return response, nil
+	}
+}

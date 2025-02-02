@@ -25,3 +25,10 @@ type TPMStatus struct {
 	Available   bool `json:"available"`
 	Initialized bool `json:"initialized"`
 }
+
+type DecryptResponse struct {
+	EncryptedData         []byte
+	EncryptedSymmetricKey []byte
+	DigitalSignature      string
+	FileName              string
+}

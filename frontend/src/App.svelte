@@ -91,6 +91,7 @@
   let connectionCheckInterval;
   let initializationRetryInterval;
   let lockCount = 0;
+  let decryptingFiles = new Set();
 
   let files = [];
 
@@ -281,9 +282,43 @@
     showEncryptionModal = true;
   }
 
-  function decryptFile(id) {
-    console.log("Descriptografando arquivo...", id);
-  }
+async function decryptFile(id) {
+    if (decryptingFiles.has(id)) return; 
+
+    // Create a new Set to trigger reactivity and add the file
+    decryptingFiles = new Set(decryptingFiles).add(id);
+
+    try {
+        showToast = true;
+        toastMessage = "Iniciando descriptografia do arquivo...";
+        toastType = "info";
+
+        await window.go.main.App.DecryptFile(id);
+        await getOperations();  // Update the files list
+
+        // Create a new Set without this file to trigger reactivity
+        decryptingFiles = new Set([...decryptingFiles].filter(fileId => fileId !== id));
+
+        showToast = true;
+        toastMessage = "Arquivo descriptografado com sucesso! Salvo na pasta Downloads.";
+        toastType = "success";
+
+        handleStartLockAnimation();
+    } catch (error) {
+        console.error("Erro ao descriptografar arquivo:", error);
+        showToast = true;
+        toastMessage = "Erro ao descriptografar arquivo: " + error.message;
+        toastType = "error";
+        
+        // Also remove from decryptingFiles on error
+        decryptingFiles = new Set([...decryptingFiles].filter(fileId => fileId !== id));
+    }
+
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+        showToast = false;
+    }, 3000);
+}
 </script>
 
 {#if lockCount > 0}
@@ -434,10 +469,11 @@
 
             {#if showToast}
               <div
-                class="fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white {toastType ===
-                'success'
-                  ? 'bg-green-500'
-                  : 'bg-red-500'}"
+                class="fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white {toastType === 'success' 
+                  ? 'bg-green-500' 
+                  : toastType === 'info' 
+                    ? 'bg-blue-500' 
+                    : 'bg-red-500'}"
                 transition:fade={{ duration: 200 }}
               >
                 <p>{toastMessage}</p>
@@ -462,9 +498,20 @@
                   <button
                     class="btn btn-outline"
                     on:click={() => decryptFile(file.id)}
+                    disabled={decryptingFiles.has(file.id)}
                   >
-                    <div class="icon"><Download /></div>
-                    Descriptografar
+                    <div class="icon">
+                      {#if decryptingFiles.has(file.id)}
+                        <div class="animate-spin">
+                          <Sync />
+                        </div>
+                      {:else}
+                        <Download />
+                      {/if}
+                    </div>
+                    {decryptingFiles.has(file.id)
+                      ? "Descriptografando..."
+                      : "Descriptografar"}
                   </button>
                 </div>
               </div>

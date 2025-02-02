@@ -1,4 +1,8 @@
-from django.http import HttpResponse
+import base64
+import json
+from io import BytesIO
+
+from django.http import HttpResponse, StreamingHttpResponse
 from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes,
@@ -116,14 +120,35 @@ class OperationViewSet(viewsets.GenericViewSet):
                 {"error": "OperationID is required"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        file = self.service_class.retrieve_data(
+        encrypted_package = self.service_class.retrieve_data(
             device=request.device,
             operation_id=operation_id,
         )
 
-        response = HttpResponse(file, content_type="application/octet-stream")
-        response["Content-Disposition"] = f"attachment; filename=encrypted_data.bin"
+        response = HttpResponse(
+            encrypted_package.encrypted_data, content_type="application/octet-stream"
+        )
+
+        metadata = {
+            "file_name": encrypted_package.file_name,
+            "encrypted_symmetric_key": base64.b64encode(
+                encrypted_package.encrypted_symmetric_key
+            ).decode("utf-8"),
+            "digital_signature": encrypted_package.digital_signature,
+        }
+
+        # Definir headers explicitamente
+        response["Content-Type"] = "application/octet-stream"
+        response["Content-Disposition"] = (
+            f"attachment; filename={encrypted_package.file_name}"
+        )
         response["Content-Transfer-Encoding"] = "binary"
-        response["Accept-Ranges"] = "bytes"
+        response["Content-Length"] = str(len(encrypted_package.encrypted_data))
+        response["X-Operation-Metadata"] = json.dumps(metadata)
+
+        # Adicionar headers para evitar cache
+        response["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response["Pragma"] = "no-cache"
+        response["Expires"] = "0"
 
         return response

@@ -11,6 +11,7 @@ import (
 	"log"
 	"os"
 	"runtime"
+	"time"
 	"tpm-bunker/internal/types"
 
 	"github.com/google/go-tpm/legacy/tpm2"
@@ -19,53 +20,61 @@ import (
 )
 
 type TPMClient struct {
-	rwc     io.ReadWriteCloser
-	ek      []byte
-	aik     []byte
-	KeyPair *rsa.PrivateKey
+	rwc io.ReadWriteCloser
+	ek  []byte
+	aik []byte
 
 	// Handles persistentes
-	ekHandle  tpmutil.Handle
-	aikHandle tpmutil.Handle
-	rsaHandle tpmutil.Handle
+	ekHandle      tpmutil.Handle
+	aikHandle     tpmutil.Handle
+	signHandle    tpmutil.Handle // Handle para chave de assinatura
+	decryptHandle tpmutil.Handle // Handle para chave de criptografia/decriptação
 }
 
 func (c *TPMClient) SignData(ctx context.Context, hash []byte) ([]byte, error) {
-	log.Printf("Tamanho do hash a ser assinado: %d bytes", len(hash))
-	if ctx == nil {
-		return nil, fmt.Errorf("context is required")
-	}
-	if len(hash) != sha256.Size {
-		return nil, fmt.Errorf("hash deve ter tamanho SHA256 (32 bytes)")
-	}
-	if c.rwc == nil {
-		return nil, fmt.Errorf("TPM connection not initialized")
+	caps, _, err := tpm2.GetCapability(c.rwc, tpm2.CapabilityAlgs, 100, 0)
+	if err != nil {
+		log.Printf("[SignData] Erro ao listar algoritmos suportados: %v", err)
+	} else {
+		log.Printf("[SignData] Algoritmos suportados pelo TPM: %v", caps)
 	}
 
-	log.Printf("Hash a ser assinado (hex): %x", hash)
+	log.Printf("[SignData] Starting signature operation")
+	log.Printf("[SignData] Hash length: %d bytes", len(hash))
+	log.Printf("[SignData] Hash value (hex): %x", hash)
+	log.Printf("[SignData] Using sign handle: 0x%x", c.signHandle)
 
-	sig, err := tpm2.Sign(
+	// Check if handle exists and read its properties
+	pub, _, _, err := tpm2.ReadPublic(c.rwc, c.signHandle)
+	if err != nil {
+		log.Printf("[SignData] ERROR: Failed to read public key: %v", err)
+		return nil, fmt.Errorf("failed to read public key: %w", err)
+	}
+	log.Printf("[SignData] Key attributes: 0x%x", pub.Attributes)
+	log.Printf("[SignData] Key algorithm: %v", pub.Type)
+	log.Printf("[SignData] Signing scheme: %v", pub.RSAParameters.Sign.Alg)
+
+	signature, err := tpm2.Sign(
 		c.rwc,
-		c.rsaHandle,
-		"",   // Sem senha
-		hash, // Hash pré-calculado
-		nil,  // Sem ticket
+		c.signHandle,
+		"", // Sem senha
+		hash,
+		nil,
 		&tpm2.SigScheme{
 			Alg:  tpm2.AlgRSASSA, // Mesmo algoritmo definido na chave
 			Hash: tpm2.AlgSHA256,
 		},
 	)
+	log.Printf("[SignData] Key scheme: %v", pub.RSAParameters.Sign)
+
 	if err != nil {
-		log.Printf("Erro na assinatura TPM. Handle: %x, Erro: %v", c.rsaHandle, err)
-		return nil, fmt.Errorf("TPM signing failed: %w", err)
+		return nil, fmt.Errorf("erro ao assinar dados: %w", err)
 	}
 
-	if sig.RSA == nil || len(sig.RSA.Signature) == 0 {
-		return nil, fmt.Errorf("invalid signature generated")
-	}
+	log.Printf("[SignData] Signature length: %d bytes", len(signature.RSA.Signature))
+	log.Printf("[SignData] Signature created successfully")
 
-	log.Printf("Assinatura gerada (hex): %x", sig.RSA.Signature)
-	return sig.RSA.Signature, nil
+	return signature.RSA.Signature, nil
 }
 
 func GetPublicKeyPEM(pubKey *rsa.PublicKey) string {
@@ -131,13 +140,32 @@ func NewTPMClient(ctx context.Context) (*TPMClient, error) {
 			return nil, fmt.Errorf("falha ao inicializar TPM: %v", err)
 		}
 
-		return &TPMClient{
-			rwc:       rwc,
-			ekHandle:  tpmutil.Handle(0x81010001), // EK handle
-			aikHandle: tpmutil.Handle(0x81008F01), // AIK handle
-			rsaHandle: tpmutil.Handle(0x81008F02), // Handle dedicado para chave de assinatura
-		}, nil
+		client := &TPMClient{rwc: rwc}
 
+		// Buscar os handles dinâmicos
+		client.ekHandle = tpmutil.Handle(0x81010001)  // Handle fixo para EK
+		client.aikHandle = tpmutil.Handle(0x81008F01) // Handle fixo para AIK
+
+		// Procurar os handles para assinatura e decriptação
+		signHandle, err := findRSAHandle(rwc, true)
+		if err != nil {
+			log.Printf("Chave de assinatura não encontrada, criando nova...")
+			client.signHandle = tpmutil.Handle(0x81008F02) // Definir um novo handle
+		} else {
+			log.Printf("Chave de assinatura encontrada no handle: 0x%x", signHandle)
+			client.signHandle = signHandle
+		}
+
+		decryptHandle, err := findRSAHandle(rwc, false)
+		if err != nil {
+			log.Printf("Chave de decriptação não encontrada, criando nova...")
+			client.decryptHandle = tpmutil.Handle(0x81008F03) // Definir um novo handle
+		} else {
+			log.Printf("Chave de decriptação encontrada no handle: 0x%x", decryptHandle)
+			client.decryptHandle = decryptHandle
+		}
+
+		return client, nil
 	}
 }
 
@@ -161,63 +189,148 @@ func CheckTPMPresence(ctx context.Context) bool {
 	}
 }
 
+func listTPMHandles(rwc io.ReadWriteCloser) ([]tpmutil.Handle, error) {
+	handlesRaw, _, err := tpm2.GetCapability(rwc, tpm2.CapabilityHandles, 100, uint32(tpm2.PersistentFirst))
+	if err != nil {
+		return nil, fmt.Errorf("erro ao listar handles: %w", err)
+	}
+
+	var handles []tpmutil.Handle
+	for _, h := range handlesRaw {
+		if handle, ok := h.(tpmutil.Handle); ok {
+			handles = append(handles, handle)
+		} else {
+			log.Printf("Aviso: handle inválido encontrado no TPM: %v", h)
+		}
+	}
+
+	return handles, nil
+}
+
+// Verificar qual handle pertence a uma chave RSA
+func findRSAHandle(rwc io.ReadWriteCloser, isSigningKey bool) (tpmutil.Handle, error) {
+	handlesRaw, _, err := tpm2.GetCapability(rwc, tpm2.CapabilityHandles, 100, uint32(tpm2.PersistentFirst))
+	if err != nil {
+		return 0, err
+	}
+
+	activeHandles := make(map[tpmutil.Handle]bool)
+	for _, h := range handlesRaw {
+		if handle, ok := h.(tpmutil.Handle); ok {
+			activeHandles[handle] = true
+		}
+	}
+
+	for handle := range activeHandles {
+		pub, _, _, err := tpm2.ReadPublic(rwc, handle)
+		if err != nil {
+			continue
+		}
+
+		if pub.Type == tpm2.AlgRSA {
+			if isSigningKey && (pub.Attributes&tpm2.FlagSign != 0) {
+				return handle, nil
+			} else if !isSigningKey && (pub.Attributes&tpm2.FlagDecrypt != 0) {
+				return handle, nil
+			}
+		}
+	}
+
+	return 0, fmt.Errorf("no suitable RSA key found")
+}
+
 // InitializeDevice configura o dispositivo pela primeira vez
 func (c *TPMClient) InitializeDevice(ctx context.Context) (*types.DeviceInfo, error) {
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	default:
-	}
+	log.Println("[InitializeDevice] Iniciando inicialização do dispositivo TPM")
+	maxRetries := 1 // Número máximo de tentativas
+	var lastErr error
 
-	ek, err := c.getEndorsementKey(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("falha ao recuperar EK: %v", err)
-	}
-	c.ek = ek
+	for i := 0; i <= maxRetries; i++ {
+		select {
+		case <-ctx.Done():
+			log.Println("[InitializeDevice] Cancelado pelo contexto")
+			return nil, ctx.Err()
+		default:
+			log.Printf("[InitializeDevice] Tentativa %d/%d\n", i+1, maxRetries+1)
 
-	aik, err := c.generateAIK(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("falha ao gerar AIK: %v", err)
-	}
-	c.aik = aik
+			// Obtendo chave de endosso (EK)
+			log.Println("[InitializeDevice] Recuperando Endorsement Key (EK)...")
+			ek, err := c.getEndorsementKey(ctx)
+			if err != nil {
+				lastErr = fmt.Errorf("falha ao recuperar EK: %v", err)
+				log.Println("[InitializeDevice] Erro ao recuperar EK:", err)
+				continue
+			}
+			c.ek = ek
+			log.Println("[InitializeDevice] EK recuperada com sucesso")
 
-	// Verificar existência da chave RSA
-	_, _, _, err = tpm2.ReadPublic(c.rwc, c.rsaHandle)
-	if err == nil {
-		log.Printf("Chave RSA encontrada no TPM")
-	} else {
-		log.Printf("Chave RSA não encontrada, criando uma nova...")
-		keyPair, _, err := c.generateRSAKeyPair(ctx)
-		if err != nil {
-			return nil, fmt.Errorf("falha ao gerar par de chaves RSA: %v", err)
+			// Gerando AIK (Attestation Identity Key)
+			log.Println("[InitializeDevice] Gerando AIK (Attestation Identity Key)...")
+			aik, err := c.generateAIK(ctx)
+			if err != nil {
+				lastErr = fmt.Errorf("falha ao gerar AIK: %v", err)
+				log.Println("[InitializeDevice] Erro ao gerar AIK:", err)
+				continue
+			}
+			c.aik = aik
+			log.Println("[InitializeDevice] AIK gerada com sucesso")
+
+			// Buscando handle da chave RSA de assinatura
+			log.Println("[InitializeDevice] Buscando handle da chave RSA de assinatura...")
+			signHandle, err := findRSAHandle(c.rwc, true)
+			if err == nil {
+				log.Printf("[InitializeDevice] Chave de assinatura encontrada no handle: 0x%x\n", signHandle)
+				c.signHandle = signHandle
+			} else {
+				log.Println("[InitializeDevice] Chave de assinatura não encontrada, gerando uma nova...")
+				_, err := c.generateRSAKeyPair(ctx)
+				if err != nil {
+					lastErr = fmt.Errorf("falha ao gerar chaves RSA: %v", err)
+					log.Println("[InitializeDevice] Erro ao gerar chaves RSA:", err)
+					if i < maxRetries {
+						log.Printf("[InitializeDevice] Tentando novamente... (%d/%d)\n", i+1, maxRetries)
+						continue
+					}
+					return nil, lastErr
+				}
+			}
+
+			// Recuperando chave pública RSA
+			log.Println("[InitializeDevice] Recuperando chave pública RSA de assinatura...")
+			pubKey, err := c.RetrieveRSASignKey(ctx)
+			if err != nil {
+				lastErr = fmt.Errorf("falha ao recuperar chave RSA: %v", err)
+				log.Println("[InitializeDevice] Erro ao recuperar chave RSA:", err)
+				continue
+			}
+			log.Println("[InitializeDevice] Chave pública RSA recuperada com sucesso")
+			// Convertendo chave pública para formato PEM
+			pubKeyPEM := GetPublicKeyPEM(pubKey)
+			log.Println("[InitializeDevice] Chave pública convertida para formato PEM")
+			log.Println("PUBKEYPEM %s", pubKeyPEM)
+
+			// Gerando UUID baseado na EK
+			log.Println("[InitializeDevice] Gerando UUID baseado na EK...")
+			deviceUUID, err := generateTPMBasedUUID(ek)
+			if err != nil {
+				log.Println("[InitializeDevice] Erro ao gerar UUID:", err)
+				return nil, fmt.Errorf("falha ao gerar UUID: %v", err)
+			}
+			log.Println("[InitializeDevice] UUID gerado com sucesso:", deviceUUID)
+
+			// Retornando informações do dispositivo
+			log.Println("[InitializeDevice] Inicialização do dispositivo concluída com sucesso!")
+			return &types.DeviceInfo{
+				UUID:      deviceUUID,
+				EK:        ek,
+				AIK:       aik,
+				PublicKey: pubKeyPEM,
+			}, nil
 		}
-		c.KeyPair = keyPair
-
-		// Tornar o handle persistente
-		err = tpm2.EvictControl(c.rwc, "", tpm2.HandleOwner, c.rsaHandle, c.rsaHandle)
-		if err != nil {
-			return nil, fmt.Errorf("falha ao tornar handle persistente: %v", err)
-		}
-		log.Printf("Chave RSA criada e persistida com sucesso")
 	}
 
-	pubKey, err := c.RetrieveRSAKey(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("falha ao recuperar chave RSA: %v", err)
-	}
-
-	pubKeyPEM := GetPublicKeyPEM(pubKey)
-	deviceUUID, err := generateTPMBasedUUID(ek)
-	if err != nil {
-		return nil, fmt.Errorf("falha ao gerar UUID: %v", err)
-	}
-
-	return &types.DeviceInfo{
-		UUID:      deviceUUID,
-		EK:        ek,
-		AIK:       aik,
-		PublicKey: pubKeyPEM,
-	}, nil
+	log.Println("[InitializeDevice] Falha ao inicializar o dispositivo após todas as tentativas")
+	return nil, lastErr
 }
 
 // generateTPMBasedUUID gera um UUID v5 usando o EK como namespace
@@ -313,33 +426,21 @@ func (c *TPMClient) generateAIK(ctx context.Context) ([]byte, error) {
 }
 
 // generateRSAKeyPair gera um novo par de chaves RSA protegido pelo TPM
-func (c *TPMClient) generateRSAKeyPair(ctx context.Context) (*rsa.PrivateKey, *rsa.PublicKey, error) {
-
+func (c *TPMClient) generateRSAKeyPair(ctx context.Context) (*rsa.PublicKey, error) {
 	select {
 	case <-ctx.Done():
-		return nil, nil, ctx.Err()
+		return nil, ctx.Err()
 	default:
-		// Verificar se o handle persistente já existe
-		_, _, _, err := tpm2.ReadPublic(c.rwc, c.rsaHandle)
-		if err == nil {
-			log.Printf("Handle persistente já existe para rsaHandle")
-			pubKey, err := c.RetrieveRSAKey(ctx)
-			if err != nil {
-				return nil, nil, fmt.Errorf("falha ao recuperar chave existente: %v", err)
-			}
-			return nil, pubKey, nil
-		}
+		log.Printf("[generateRSAKeyPair] Starting key generation")
 
-		// Create template for RSA key
-		template := tpm2.Public{
+		signTemplate := tpm2.Public{
 			Type:    tpm2.AlgRSA,
 			NameAlg: tpm2.AlgSHA256,
-			// Remove FlagRestricted porque pode estar causando o erro
 			Attributes: tpm2.FlagFixedTPM |
 				tpm2.FlagFixedParent |
 				tpm2.FlagSensitiveDataOrigin |
 				tpm2.FlagUserWithAuth |
-				tpm2.FlagSign, // Apenas FlagSign para assinatura
+				tpm2.FlagSign,
 			RSAParameters: &tpm2.RSAParams{
 				KeyBits:     2048,
 				ExponentRaw: 0x10001,
@@ -349,65 +450,88 @@ func (c *TPMClient) generateRSAKeyPair(ctx context.Context) (*rsa.PrivateKey, *r
 				},
 			},
 		}
-		// Create primary key in owner hierarchy
-		keyHandle, pub, _, _, _, _, err := tpm2.CreatePrimaryEx(
+
+		log.Printf("[generateRSAKeyPair] Template attributes: 0x%x", signTemplate.Attributes)
+
+		signKeyHandle, signPub, _, _, _, _, err := tpm2.CreatePrimaryEx(
 			c.rwc,
 			tpm2.HandleOwner,
 			tpm2.PCRSelection{},
 			"",
 			"",
-			template,
+			signTemplate,
 		)
 		if err != nil {
-			return nil, nil, fmt.Errorf("falha ao criar chave RSA: %v", err)
+			return nil, fmt.Errorf("failed to create signing key: %v", err)
 		}
-		defer tpm2.FlushContext(c.rwc, keyHandle)
+		defer tpm2.FlushContext(c.rwc, signKeyHandle)
 
-		// Limpar handle antigo se existir
-		_ = tpm2.EvictControl(c.rwc, "", tpm2.HandleOwner, c.rsaHandle, c.rsaHandle)
-
-		// Tornar o handle persistente
-		err = tpm2.EvictControl(c.rwc, "", tpm2.HandleOwner, keyHandle, c.rsaHandle)
+		decryptTemplate := tpm2.Public{
+			Type:    tpm2.AlgRSA,
+			NameAlg: tpm2.AlgSHA256,
+			Attributes: tpm2.FlagFixedTPM |
+				tpm2.FlagFixedParent |
+				tpm2.FlagSensitiveDataOrigin |
+				tpm2.FlagUserWithAuth |
+				tpm2.FlagDecrypt,
+			RSAParameters: &tpm2.RSAParams{
+				KeyBits:     2048,
+				ExponentRaw: 0x10001,
+			},
+		}
+		decryptKeyHandle, _, _, _, _, _, err := tpm2.CreatePrimaryEx(
+			c.rwc,
+			tpm2.HandleOwner,
+			tpm2.PCRSelection{},
+			"",
+			"",
+			decryptTemplate,
+		)
 		if err != nil {
-			return nil, nil, fmt.Errorf("falha ao tornar handle persistente: %v", err)
+			return nil, fmt.Errorf("failed to create decryption key: %v", err)
+		}
+		defer tpm2.FlushContext(c.rwc, decryptKeyHandle)
+
+		if err := tpm2.EvictControl(c.rwc, "", tpm2.HandleOwner, c.signHandle, c.signHandle); err == nil {
+			time.Sleep(100 * time.Millisecond)
 		}
 
-		// Decodificar a chave pública diretamente do retorno do TPM
-		rsaPub, err := tpm2.DecodePublic(pub)
+		if err := tpm2.EvictControl(c.rwc, "", tpm2.HandleOwner, c.decryptHandle, c.decryptHandle); err != nil {
+			log.Printf("[generateRSAKeyPair] Warning: Failed to clear existing decrypt handle: %v", err)
+		}
+
+		// Make handles persistent with logging
+		log.Printf("[generateRSAKeyPair] Persisting signing key to handle 0x%x", c.signHandle)
+		if err := tpm2.EvictControl(c.rwc, "", tpm2.HandleOwner, signKeyHandle, c.signHandle); err != nil {
+			return nil, fmt.Errorf("failed to persist signing handle: %v", err)
+		}
+
+		log.Printf("[generateRSAKeyPair] Persisting decryption key to handle 0x%x", c.decryptHandle)
+		if err := tpm2.EvictControl(c.rwc, "", tpm2.HandleOwner, decryptKeyHandle, c.decryptHandle); err != nil {
+			return nil, fmt.Errorf("failed to persist decryption handle: %v", err)
+		}
+
+		rsaPub, err := tpm2.DecodePublic(signPub)
 		if err != nil {
-			log.Fatalf("Falha ao decodificar chave pública: %v", err)
+			return nil, fmt.Errorf("failed to decode public key: %v", err)
 		}
 
-		// Valida o exponente da chave pública
-		if rsaPub.RSAParameters.ExponentRaw != 0x10001 {
-			log.Fatalf("Exponente inválido na chave RSA gerada: %d", rsaPub.RSAParameters.ExponentRaw)
-		}
-
-		log.Printf("Chave RSA gerada com sucesso. Exponente: %d", rsaPub.RSAParameters.ExponentRaw)
-
-		pubKey := rsa.PublicKey{
+		return &rsa.PublicKey{
 			N: rsaPub.RSAParameters.Modulus(),
 			E: 65537,
-		}
-
-		// Criar chave privada como wrapper
-		privKey := &rsa.PrivateKey{
-			PublicKey: pubKey,
-		}
-
-		return privKey, &pubKey, nil
+		}, nil
 	}
 }
 
-func (c *TPMClient) RetrieveRSAKey(ctx context.Context) (*rsa.PublicKey, error) {
+func (c *TPMClient) RetrieveRSASignKey(ctx context.Context) (*rsa.PublicKey, error) {
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	default:
-		// Lê a chave pública do handle persistente
-		pub, _, _, err := tpm2.ReadPublic(c.rwc, c.rsaHandle)
+		// Read public key from signing handle
+		pub, _, _, err := tpm2.ReadPublic(c.rwc, c.signHandle)
 		if err != nil {
-			return nil, fmt.Errorf("falha ao ler chave RSA do TPM: %v", err)
+			return nil, fmt.Errorf("failed to read RSA key from TPM: %v", err)
 		}
 
 		// Serializa a chave pública
@@ -429,6 +553,70 @@ func (c *TPMClient) RetrieveRSAKey(ctx context.Context) (*rsa.PublicKey, error) 
 		}
 
 		return &pubKey, nil
+	}
+}
+
+func (c *TPMClient) RetrieveRSADecryptKey(ctx context.Context) (*rsa.PublicKey, error) {
+    select {
+    case <-ctx.Done():
+        return nil, ctx.Err()
+    default:
+        // Read public key from decrypt handle
+        pub, _, _, err := tpm2.ReadPublic(c.rwc, c.decryptHandle)
+        if err != nil {
+            return nil, fmt.Errorf("failed to read RSA key from TPM: %v", err)
+        }
+
+        // Convert to rsa.PublicKey
+        pubKey := rsa.PublicKey{
+            N: pub.RSAParameters.Modulus(),
+            E: 65537,
+        }
+
+        return &pubKey, nil
+    }
+}
+
+// RSADecrypt decrypts data using the TPM's RSA key
+func (c *TPMClient) RSADecrypt(ctx context.Context, ciphertext []byte) ([]byte, error) {
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
+		// Using decryptHandle directly, removed reference to rsaHandle
+		pub, _, _, err := tpm2.ReadPublic(c.rwc, c.decryptHandle)
+		if err != nil {
+			return nil, fmt.Errorf("falha ao ler chave de decriptação: %w", err)
+		}
+		handles, _, err := tpm2.GetCapability(c.rwc, tpm2.CapabilityHandles, 100, uint32(tpm2.PersistentFirst))
+		if err != nil {
+			log.Fatalf("Erro ao listar handles: %v", err)
+		}
+		log.Printf("Handles disponíveis: %v", handles)
+
+		log.Printf("Encrypted Symmetric Key (Hex): %x", ciphertext)
+		// Log para debug
+		log.Printf("Handle de decriptação: 0x%x", c.decryptHandle)
+		log.Printf("Tamanho do ciphertext: %d", len(ciphertext))
+		log.Printf("Atributos da chave: %x", pub.Attributes)
+
+		// Decripta usando OAEP com SHA256
+		decrypted, err := tpm2.RSADecrypt(
+			c.rwc,
+			c.decryptHandle,
+			"",
+			ciphertext,
+			&tpm2.AsymScheme{
+				Alg:  tpm2.AlgOAEP,
+				Hash: tpm2.AlgSHA256,
+			},
+			"",
+		)
+		if err != nil {
+			return nil, fmt.Errorf("erro na decriptação TPM: %w", err)
+		}
+
+		return decrypted, nil
 	}
 }
 
