@@ -155,9 +155,9 @@ func (a *Agent) CheckTPMPresence(ctx context.Context) bool {
 	default:
 		hasTPM := tpm.CheckTPMPresence(ctx)
 		if hasTPM {
-			fmt.Printf("TPM presence check successful")
+			fmt.Println("TPM presence check successful")
 		} else {
-			fmt.Printf("TPM not found or not accessible")
+			fmt.Println("TPM not found or not accessible")
 		}
 		return hasTPM
 	}
@@ -167,9 +167,9 @@ func (a *Agent) CheckTPMPresence(ctx context.Context) bool {
 func (a *Agent) CheckConnection(ctx context.Context) bool {
 	hasConnection := a.client.CheckConnection(ctx)
 	if hasConnection {
-		fmt.Printf("API connection successful")
+		fmt.Println("API connection successful")
 	} else {
-		fmt.Printf("API connection failed")
+		fmt.Println("API connection failed")
 	}
 	return hasConnection
 }
@@ -210,10 +210,21 @@ func (a *Agent) Encrypt(ctx context.Context, filePath string) ([]byte, error) {
 			return nil, fmt.Errorf("failed to get encryption key: %w", err)
 		}
 
+		// Start timing encryption
+		encryptStart := time.Now()
 		result, err := EncryptFile(ctx, filePath, encryptKey, a.tpmMgr)
 		if err != nil {
 			return nil, fmt.Errorf("encryption error: %w", err)
 		}
+		encryptDuration := time.Since(encryptStart)
+		
+		// Get file size for throughput calculation
+		fileInfo, _ := os.Stat(filePath)
+		fileSizeMB := float64(fileInfo.Size()) / (1024 * 1024)
+		throughput := fileSizeMB / encryptDuration.Seconds()
+		
+		log.Printf("Encryption Stats - Size: %.2f MB, Duration: %v, Throughput: %.2f MB/s",
+			fileSizeMB, encryptDuration, throughput)
 
 		payload := &api.EncryptionRequest{
 			EncryptedData:    result.EncryptedData,
@@ -267,10 +278,21 @@ func (a *Agent) Decrypt(ctx context.Context, operationID string) (string, error)
 
 		// Descriptografa os dados
 		log.Printf("Iniciando processo de decriptação")
+
+		// Start timing decryption
+		decryptStart := time.Now()
 		result, err := DecryptFile(decryptCtx, response, a.tpmMgr)
 		if err != nil {
 			return "", fmt.Errorf("erro na decriptação: %w", err)
 		}
+		decryptDuration := time.Since(decryptStart)
+		
+		// Calculate throughput
+		fileSizeMB := float64(len(response.EncryptedData)) / (1024 * 1024)
+		throughput := fileSizeMB / decryptDuration.Seconds()
+		
+		log.Printf("Decryption Stats - Size: %.2f MB, Duration: %v, Throughput: %.2f MB/s",
+			fileSizeMB, decryptDuration, throughput)
 
 		if !result.Verified {
 			return "", fmt.Errorf("falha na verificação da assinatura digital")
