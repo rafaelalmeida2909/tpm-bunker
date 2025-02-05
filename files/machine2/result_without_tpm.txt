@@ -1,0 +1,85 @@
+Encriptação:
+2025/02/05 10:06:13 Encryption - Run 1 - Size: 1.00 MB, Duration: 3.064323ms, Throughput: 326.34 MB/s
+2025/02/05 10:06:14 Encryption - Run 2 - Size: 1.00 MB, Duration: 2.833629ms, Throughput: 352.90 MB/s
+2025/02/05 10:06:14 Encryption - Run 3 - Size: 1.00 MB, Duration: 2.531568ms, Throughput: 395.01 MB/s
+2025/02/05 10:06:14 Encryption - Run 4 - Size: 1.00 MB, Duration: 2.274466ms, Throughput: 439.66 MB/s
+2025/02/05 10:06:14 Encryption - Run 5 - Size: 1.00 MB, Duration: 2.52243ms, Throughput: 396.44 MB/s
+
+2025/02/05 10:06:14 Encryption - Run 1 - Size: 10.00 MB, Duration: 22.289666ms, Throughput: 448.64 MB/s
+2025/02/05 10:06:14 Encryption - Run 2 - Size: 10.00 MB, Duration: 15.345537ms, Throughput: 651.66 MB/s
+2025/02/05 10:06:14 Encryption - Run 3 - Size: 10.00 MB, Duration: 15.752573ms, Throughput: 634.82 MB/s
+2025/02/05 10:06:14 Encryption - Run 4 - Size: 10.00 MB, Duration: 17.151077ms, Throughput: 583.05 MB/s
+2025/02/05 10:06:14 Encryption - Run 5 - Size: 10.00 MB, Duration: 15.992058ms, Throughput: 625.31 MB/s
+
+2025/02/05 10:06:14 Encryption - Run 1 - Size: 50.00 MB, Duration: 102.379703ms, Throughput: 488.38 MB/s
+2025/02/05 10:06:14 Encryption - Run 2 - Size: 50.00 MB, Duration: 77.668022ms, Throughput: 643.77 MB/s
+2025/02/05 10:06:14 Encryption - Run 3 - Size: 50.00 MB, Duration: 77.259942ms, Throughput: 647.17 MB/s
+2025/02/05 10:06:14 Encryption - Run 4 - Size: 50.00 MB, Duration: 75.507764ms, Throughput: 662.18 MB/s
+2025/02/05 10:06:14 Encryption - Run 5 - Size: 50.00 MB, Duration: 75.342581ms, Throughput: 663.64 MB/s
+
+2025/02/05 10:06:15 Encryption - Run 1 - Size: 100.00 MB, Duration: 194.966651ms, Throughput: 512.91 MB/s
+2025/02/05 10:06:15 Encryption - Run 2 - Size: 100.00 MB, Duration: 149.692929ms, Throughput: 668.03 MB/s
+2025/02/05 10:06:15 Encryption - Run 3 - Size: 100.00 MB, Duration: 151.12641ms, Throughput: 661.70 MB/s
+2025/02/05 10:06:16 Encryption - Run 4 - Size: 100.00 MB, Duration: 149.599692ms, Throughput: 668.45 MB/s
+2025/02/05 10:06:16 Encryption - Run 5 - Size: 100.00 MB, Duration: 150.453653ms, Throughput: 664.66 MB/s
+
+2025/02/05 10:06:17 Encryption - Run 1 - Size: 250.00 MB, Duration: 470.746141ms, Throughput: 531.07 MB/s
+2025/02/05 10:06:18 Encryption - Run 2 - Size: 250.00 MB, Duration: 372.104896ms, Throughput: 671.85 MB/s
+2025/02/05 10:06:18 Encryption - Run 3 - Size: 250.00 MB, Duration: 370.581907ms, Throughput: 674.61 MB/s
+2025/02/05 10:06:19 Encryption - Run 4 - Size: 250.00 MB, Duration: 371.378923ms, Throughput: 673.17 MB/s
+2025/02/05 10:06:19 Encryption - Run 5 - Size: 250.00 MB, Duration: 364.383614ms, Throughput: 686.09 MB/s
+
+2025/02/05 10:06:21 Encryption - Run 1 - Size: 500.00 MB, Duration: 931.681563ms, Throughput: 536.66 MB/s
+2025/02/05 10:06:23 Encryption - Run 2 - Size: 500.00 MB, Duration: 725.467412ms, Throughput: 689.21 MB/s
+2025/02/05 10:06:24 Encryption - Run 3 - Size: 500.00 MB, Duration: 730.686272ms, Throughput: 684.29 MB/s
+2025/02/05 10:06:25 Encryption - Run 4 - Size: 500.00 MB, Duration: 745.948284ms, Throughput: 670.29 MB/s
+2025/02/05 10:06:27 Encryption - Run 5 - Size: 500.00 MB, Duration: 725.691576ms, Throughput: 689.00 MB/s
+
+2025/02/05 10:06:31 Encryption - Run 1 - Size: 1024.00 MB, Duration: 1.942827863s, Throughput: 527.07 MB/s
+2025/02/05 10:06:33 Encryption - Run 2 - Size: 1024.00 MB, Duration: 1.483424096s, Throughput: 690.29 MB/s
+2025/02/05 10:06:36 Encryption - Run 3 - Size: 1024.00 MB, Duration: 1.489553719s, Throughput: 687.45 MB/s
+2025/02/05 10:06:39 Encryption - Run 4 - Size: 1024.00 MB, Duration: 1.48204997s, Throughput: 690.93 MB/s
+2025/02/05 10:06:41 Encryption - Run 5 - Size: 1024.00 MB, Duration: 1.4854568s, Throughput: 689.35 MB/s
+
+Decriptação:
+2025/02/05 10:06:14 Decryption - Run 1 - Size: 1.00 MB, Duration: 1.912103ms, Throughput: 522.98 MB/s
+2025/02/05 10:06:14 Decryption - Run 2 - Size: 1.00 MB, Duration: 1.706096ms, Throughput: 586.13 MB/s
+2025/02/05 10:06:14 Decryption - Run 3 - Size: 1.00 MB, Duration: 1.750396ms, Throughput: 571.30 MB/s
+2025/02/05 10:06:14 Decryption - Run 4 - Size: 1.00 MB, Duration: 1.752143ms, Throughput: 570.73 MB/s
+2025/02/05 10:06:14 Decryption - Run 5 - Size: 1.00 MB, Duration: 1.710393ms, Throughput: 584.66 MB/s
+
+2025/02/05 10:06:14 Decryption - Run 1 - Size: 10.00 MB, Duration: 11.493196ms, Throughput: 870.08 MB/s
+2025/02/05 10:06:14 Decryption - Run 2 - Size: 10.00 MB, Duration: 11.234497ms, Throughput: 890.12 MB/s
+2025/02/05 10:06:14 Decryption - Run 3 - Size: 10.00 MB, Duration: 11.362597ms, Throughput: 880.08 MB/s
+2025/02/05 10:06:14 Decryption - Run 4 - Size: 10.00 MB, Duration: 11.482854ms, Throughput: 870.86 MB/s
+2025/02/05 10:06:14 Decryption - Run 5 - Size: 10.00 MB, Duration: 12.21586ms, Throughput: 818.61 MB/s
+
+2025/02/05 10:06:14 Decryption - Run 1 - Size: 50.00 MB, Duration: 56.319537ms, Throughput: 887.79 MB/s
+2025/02/05 10:06:14 Decryption - Run 2 - Size: 50.00 MB, Duration: 56.319571ms, Throughput: 887.79 MB/s
+2025/02/05 10:06:14 Decryption - Run 3 - Size: 50.00 MB, Duration: 57.367724ms, Throughput: 871.57 MB/s
+2025/02/05 10:06:14 Decryption - Run 4 - Size: 50.00 MB, Duration: 54.968601ms, Throughput: 909.61 MB/s
+2025/02/05 10:06:14 Decryption - Run 5 - Size: 50.00 MB, Duration: 54.740311ms, Throughput: 913.40 MB/s
+
+2025/02/05 10:06:15 Decryption - Run 1 - Size: 100.00 MB, Duration: 110.558411ms, Throughput: 904.50 MB/s
+2025/02/05 10:06:15 Decryption - Run 2 - Size: 100.00 MB, Duration: 107.753274ms, Throughput: 928.05 MB/s
+2025/02/05 10:06:15 Decryption - Run 3 - Size: 100.00 MB, Duration: 111.24403ms, Throughput: 898.92 MB/s
+2025/02/05 10:06:16 Decryption - Run 4 - Size: 100.00 MB, Duration: 107.647579ms, Throughput: 928.96 MB/s
+2025/02/05 10:06:16 Decryption - Run 5 - Size: 100.00 MB, Duration: 109.491703ms, Throughput: 913.31 MB/s
+
+2025/02/05 10:06:17 Decryption - Run 1 - Size: 250.00 MB, Duration: 268.393397ms, Throughput: 931.47 MB/s
+2025/02/05 10:06:18 Decryption - Run 2 - Size: 250.00 MB, Duration: 272.217787ms, Throughput: 918.38 MB/s
+2025/02/05 10:06:18 Decryption - Run 3 - Size: 250.00 MB, Duration: 267.580957ms, Throughput: 934.30 MB/s
+2025/02/05 10:06:19 Decryption - Run 4 - Size: 250.00 MB, Duration: 270.257021ms, Throughput: 925.05 MB/s
+2025/02/05 10:06:20 Decryption - Run 5 - Size: 250.00 MB, Duration: 266.802573ms, Throughput: 937.02 MB/s
+
+2025/02/05 10:06:22 Decryption - Run 1 - Size: 500.00 MB, Duration: 532.518801ms, Throughput: 938.93 MB/s
+2025/02/05 10:06:23 Decryption - Run 2 - Size: 500.00 MB, Duration: 533.751231ms, Throughput: 936.77 MB/s
+2025/02/05 10:06:25 Decryption - Run 3 - Size: 500.00 MB, Duration: 537.509624ms, Throughput: 930.22 MB/s
+2025/02/05 10:06:26 Decryption - Run 4 - Size: 500.00 MB, Duration: 539.503571ms, Throughput: 926.78 MB/s
+2025/02/05 10:06:27 Decryption - Run 5 - Size: 500.00 MB, Duration: 526.661528ms, Throughput: 949.38 MB/s
+
+2025/02/05 10:06:32 Decryption - Run 1 - Size: 1024.00 MB, Duration: 1.087469926s, Throughput: 941.64 MB/s
+2025/02/05 10:06:34 Decryption - Run 2 - Size: 1024.00 MB, Duration: 1.090355668s, Throughput: 939.14 MB/s
+2025/02/05 10:06:37 Decryption - Run 3 - Size: 1024.00 MB, Duration: 1.090847491s, Throughput: 938.72 MB/s
+2025/02/05 10:06:40 Decryption - Run 4 - Size: 1024.00 MB, Duration: 1.083978964s, Throughput: 944.67 MB/s
+2025/02/05 10:06:42 Decryption - Run 5 - Size: 1024.00 MB, Duration: 1.090495773s, Throughput: 939.02 MB/s
