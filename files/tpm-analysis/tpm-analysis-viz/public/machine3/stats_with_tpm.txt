@@ -1,0 +1,941 @@
+hmr/runtime/proxy.js?v=1905ba34'
+DEB | [AssetHandler] Handling request '/node_modules/svelte-hmr/runtime/svelte-hooks.js' (file='node_modules/svelte-hmr/runtime/svelte-hooks.js')
+DEB | [AssetHandler] File 'node_modules/svelte-hmr/runtime/svelte-hooks.js' not found, serving '/node_modules/svelte-hmr/runtime/svelte-hooks.js' by AssetHandler
+DEB | [ExternalAssetHandler] Loading 'http://localhost:5174/node_modules/svelte-hmr/runtime/svelte-hooks.js?v=1905ba34'
+TPM presence check successful
+2025/02/05 12:59:40 Verificando conexão com API em: http://localhost:8003/api/v1/
+2025/02/05 12:59:40 Conexão com API estabelecida com sucesso
+API connection successful
+2025/02/05 12:59:40 [InitializeDevice] Iniciando inicialização do dispositivo TPM
+2025/02/05 12:59:40 [InitializeDevice] Tentativa 1/2
+2025/02/05 12:59:40 [InitializeDevice] Recuperando Endorsement Key (EK)...
+Watching (sub)/directory: /home/larces/tpm-bunker
+
+
+To develop in the browser and call your bound Go methods from Javascript, navigate to: http://localhost:34115
+2025/02/05 12:59:43 [InitializeDevice] EK recuperada com sucesso
+TPM presence check successful
+2025/02/05 12:59:43 [InitializeDevice] Gerando AIK (Attestation Identity Key)...
+2025/02/05 12:59:45 [InitializeDevice] AIK gerada com sucesso
+2025/02/05 12:59:45 [InitializeDevice] Buscando handle da chave RSA de assinatura...
+2025/02/05 12:59:45 [InitializeDevice] Chave de assinatura não encontrada, gerando uma nova...
+2025/02/05 12:59:45 [generateRSAKeyPair] Starting key generation
+2025/02/05 12:59:45 [generateRSAKeyPair] Template attributes: 0x40072
+2025/02/05 12:59:50 Verificando conexão com API em: http://localhost:8003/api/v1/
+2025/02/05 12:59:50 Conexão com API estabelecida com sucesso
+API connection successful
+2025/02/05 12:59:55 [generateRSAKeyPair] Warning: Failed to clear existing decrypt handle: handle 2, error code 0xb : the handle is not correct for the use
+2025/02/05 12:59:55 [generateRSAKeyPair] Persisting signing key to handle 0x81008f02
+2025/02/05 12:59:55 [generateRSAKeyPair] Persisting decryption key to handle 0x81008f03
+2025/02/05 12:59:55 [InitializeDevice] Recuperando chave pública RSA de assinatura...
+2025/02/05 12:59:55 [InitializeDevice] Chave pública RSA recuperada com sucesso
+2025/02/05 12:59:55 [InitializeDevice] Chave pública convertida para formato PEM
+2025/02/05 12:59:55 PUBKEYPEM %s -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+aDYp86CFQopTnG4u6rW
+KEd+OebNCHzm9hLSy3fhe/V73tadLP8YaqyIPipwsQiQ/Ezfn8ay/+68gwHsFTis
+ElXol+RMqw+E3ev2YHNjiH3Qco1zcbGP5kYeYnOJ+QEmTLcnlupkgl5zYdOjsRQq
+tt46mIZmLezzJFYLgJEMfRdDsAO6B8Ymk0KwQw3TTJNBNXYekvGhIG+EA6PAfVDF
+AmrfivcsHvc9sHRaLxtXWZ9Ubiq3sUfocw0+q8iZ79EqVlSTrlW4lAJ4u4+ylfqI
+uVVHNoQgbu30IvWF2r62hEunbPoSLNqRs4NsOlK+dhjX+4OTdqE6MADhstNWC/CZ
+0wIDAQAB
+-----END PUBLIC KEY-----
+
+2025/02/05 12:59:55 [InitializeDevice] Gerando UUID baseado na EK...
+2025/02/05 12:59:55 [InitializeDevice] UUID gerado com sucesso: 6074169b-7f86-5032-8598-ed983102c774
+2025/02/05 12:59:55 [InitializeDevice] Inicialização do dispositivo concluída com sucesso!
+2025/02/05 12:59:55 Verificando conexão com API em: http://localhost:8003/api/v1/
+2025/02/05 12:59:55 Conexão com API estabelecida com sucesso
+Realizando login na API...2025/02/05 12:59:56 Falha no login: falha ao realizar login: requisição falhou com status 400: {"error":{"message":"Dispositivo não encontrado ou credenciais inválidas","code":400}}
+Registrando novo dispositivo...2025/02/05 12:59:56 Dispositivo registrado com sucesso. UUID: 6074169b-7f86-5032-8598-ed983102c774
+Dispositivo registrado com sucessoRealizando login na API...2025/02/05 12:59:56 Login realizado com sucesso para o dispositivo: 6074169b-7f86-5032-8598-ed983102c774
+2025/02/05 12:59:56 Realizando get de operações
+2025/02/05 13:00:00 Verificando conexão com API em: http://localhost:8003/api/v1/
+2025/02/05 13:00:00 Conexão com API estabelecida com sucesso
+API connection successful
+2025/02/05 13:00:02 [Encrypt] Encrypted Symmetric Key (Hex): 3d58f5223ddd7fe4aaa6f7893a48e4e9f8652e09c9a5dda9bdc9d3ed6a6a1fb5bf779c1e4d6db5a882c348e803bf10054e7d57c0acb685f37c309f771f09b461939172841fc4c0b0d0e6a6ffd50af6291c4e1a53635b2a61b0bd1985afdca4debea1782a943b65085286b5f6ea51d413ffbdd146af59b05f1cbe0326a73657c232f2814f1d127349b67fccc787dd91cba5a99c70d379c61d21052721892e98e610cd1c026e6c81ec7c747b8c73d458aeee11a00a351575f9d1bb8a32b0534c4f0cefc12e51641b793965486d82fe86fc858ae4b8aca73d430275669d5b355e06d17abf1ab6a4b89a4921a64da050b74db96400ec859121f84aeeeb5c2c00a5f8
+2025/02/05 13:00:02 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:00:02 [SignData] Starting signature operation
+2025/02/05 13:00:02 [SignData] Hash length: 32 bytes
+2025/02/05 13:00:02 [SignData] Hash value (hex): 31d9bf717a67389b423aaa5b2f9c87fb152ac61461dcffca2c73d610fc24d431
+2025/02/05 13:00:02 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:00:02 [SignData] Key attributes: 0x40072
+2025/02/05 13:00:02 [SignData] Key algorithm: RSA
+2025/02/05 13:00:02 [SignData] Signing scheme: RSASSA
+2025/02/05 13:00:02 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:00:02 [SignData] Signature length: 256 bytes
+2025/02/05 13:00:02 [SignData] Signature created successfully
+2025/02/05 13:00:02 Encryption Stats - Size: 1.00 MB, Duration: 104.783524ms, Throughput: 9.54 MB/s
+2025/02/05 13:00:02 API KEY: OK-9vLtibfJHWw-zhjR-LpYbduzGzLdR2N_1zkUkxyE
+2025/02/05 13:00:02 Realizando get de operações
+2025/02/05 13:00:07 [Encrypt] Encrypted Symmetric Key (Hex): bcd33f2e62256cf19f68eff59d7a4d42bac0fc29af75ca0e1aa0c01e8baffb47406e848b36a193c48cd12f56a1ffafa116dae2312917bed80cc705669b6046947f0dbca63f773b9b523d5b8c7cda90ebe7810daef2e43cdc3f49cbdb0e178c641d77369327cb6859e58a1aed0a92a771130508cdbc435b9fa7cbfd873ccc8cc4c5325e1357fef5e9c79155e6e6b50f69d0ecaabd66d8b12e6919ce183747460f6d0bee60fd216a96f5c1b11a2c9e81d4f019fde22c6c918d0f60a598f3a8b2ec27d72cff6d222d0ad101a15eab7dda49eda8dd5ce20d1e3af3d07571fe6d3148317566b861c6959ecea178274cd5ec19b4c589f7626874da3b0b3663cf470135
+2025/02/05 13:00:07 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:00:07 [SignData] Starting signature operation
+2025/02/05 13:00:07 [SignData] Hash length: 32 bytes
+2025/02/05 13:00:07 [SignData] Hash value (hex): 9456009cdcd24bd2cebe4fae51596a83cef18ce16178e7f65d9e4137fb9988e4
+2025/02/05 13:00:07 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:00:07 [SignData] Key attributes: 0x40072
+2025/02/05 13:00:07 [SignData] Key algorithm: RSA
+2025/02/05 13:00:07 [SignData] Signing scheme: RSASSA
+2025/02/05 13:00:07 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:00:07 [SignData] Signature length: 256 bytes
+2025/02/05 13:00:07 [SignData] Signature created successfully
+2025/02/05 13:00:07 Encryption Stats - Size: 10.00 MB, Duration: 200.275524ms, Throughput: 49.93 MB/s
+2025/02/05 13:00:07 API KEY: OK-9vLtibfJHWw-zhjR-LpYbduzGzLdR2N_1zkUkxyE
+2025/02/05 13:00:07 Realizando get de operações
+2025/02/05 13:00:12 [Encrypt] Encrypted Symmetric Key (Hex): bb44e7d59cb227326f607bcdb165e3821c0d5ea38bdac364a0fc4bced524c9223b60f1b7c0ddda8834ea6d3f75c0a420d901415cedbfeb1bfcbefbd3c23ebbf561306820da162ffe757735d4e38ba0080d100dccc94180387f3ae99c6bc1b6b54da904560ee63bd6038eb79eb6ff538762c7b51a9f0c9ac8e4fff457a3cd83c9aee5cdb838bac9f61d8e80ea6a1349032efa2303737168ca2b320d1354aaffc8a703ec7ff4ffe16bdc073e739a9946430d351c165c9dcaa090eb37b4baa2180de22ffe61f818d02a83458677adf4ccdbd82715119a3d418a96e5be95ea5a8f9861836b7446fb79d321046dfd614be5a071e172e8781104396bc457b14fd74909
+2025/02/05 13:00:12 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:00:12 [SignData] Starting signature operation
+2025/02/05 13:00:12 [SignData] Hash length: 32 bytes
+2025/02/05 13:00:12 [SignData] Hash value (hex): 5411caae68c4dbc988e5d72f63984ef4cd24ddae8c5516cb44472b9945ebbfa7
+2025/02/05 13:00:12 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:00:12 [SignData] Key attributes: 0x40072
+2025/02/05 13:00:12 [SignData] Key algorithm: RSA
+2025/02/05 13:00:12 [SignData] Signing scheme: RSASSA
+2025/02/05 13:00:12 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:00:12 [SignData] Signature length: 256 bytes
+2025/02/05 13:00:12 [SignData] Signature created successfully
+2025/02/05 13:00:12 Encryption Stats - Size: 50.00 MB, Duration: 385.664717ms, Throughput: 129.65 MB/s
+2025/02/05 13:00:13 API KEY: OK-9vLtibfJHWw-zhjR-LpYbduzGzLdR2N_1zkUkxyE
+2025/02/05 13:00:13 Realizando get de operações
+2025/02/05 13:00:18 [Encrypt] Encrypted Symmetric Key (Hex): aa74aa2492309af69bf49f8640fc1a52742a54d0bf0f7d9784f57f033d56a0fdc6f01fa263ea32c6789ae81f61c849b1dd206724849c1d28b222f69b2356eb90fd3fc147555b8bc599ee516f1675c7ebdb599b1798c651cd23d5ac62594dc7562572f21ae952be11fef1dba60d795c3f4c81fdfb48bbe2a14c52d8bd660d6f33b939028cbf25fc7ed4e49d98e1965f8a5fb540ea777ec7df452bddb38149a22a7b4d02ebb5f375585152c055b504adb14b019ef152b495636b0d8f969d3da5e2bc1b98248f7c43a927b22ff34ea51a44eaad416833fefc5a64b6df1d672b618c02734c89d9ff2c4284c55467767964bed9cda9b25e66f1d1f801596897aa5e70
+2025/02/05 13:00:18 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:00:18 [SignData] Starting signature operation
+2025/02/05 13:00:18 [SignData] Hash length: 32 bytes
+2025/02/05 13:00:18 [SignData] Hash value (hex): df77aed27b14b484386a1dd76527935d52b33baf00f5e13e46d1b2d05caee658
+2025/02/05 13:00:18 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:00:18 [SignData] Key attributes: 0x40072
+2025/02/05 13:00:18 [SignData] Key algorithm: RSA
+2025/02/05 13:00:18 [SignData] Signing scheme: RSASSA
+2025/02/05 13:00:18 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:00:18 [SignData] Signature length: 256 bytes
+2025/02/05 13:00:18 [SignData] Signature created successfully
+2025/02/05 13:00:18 Encryption Stats - Size: 100.00 MB, Duration: 428.9423ms, Throughput: 233.13 MB/s
+2025/02/05 13:00:18 API KEY: OK-9vLtibfJHWw-zhjR-LpYbduzGzLdR2N_1zkUkxyE
+2025/02/05 13:00:19 Realizando get de operações
+2025/02/05 13:00:24 [Encrypt] Encrypted Symmetric Key (Hex): 6b6c115cd31a4234492bd66c55309e9452159eb98d45f0ac743a4e3f715fea59799bfa4c8a02159f149ed83446ea3c8a89a5246be3d2cb861a5315a9c0a06844263b261f472d75677bcb12e65a2411ccc0e8914e7ee6d6113d262773a9efb9df6c28df4fbb53cd285e940e9c0ae9d8d4f2a3e76b2bbd1fc1e49d25ddf062ea1fb89ef06164cae5fcf179d61a1c11b04031cc5701cdaa89dce33f79bdbaedd1febf0a6ee4f86f8633c6589e4d8c07ba44c9e5cb083beffd7ebb31e3193f13e9d127b790ebb1cbb62168e24a85fd134e86f0cdd6925c281e2c5b90d15f4cb6fa7fe9a14cecc4d99e8769fc948959578642e03e6a09a55b06fb6766fcbdf7438f66
+2025/02/05 13:00:25 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:00:25 [SignData] Starting signature operation
+2025/02/05 13:00:25 [SignData] Hash length: 32 bytes
+2025/02/05 13:00:25 [SignData] Hash value (hex): c22e9052c6c3b0e779a7fe1e2318a2ee9665914b7e7a402a571acb5b2c9ff091
+2025/02/05 13:00:25 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:00:25 [SignData] Key attributes: 0x40072
+2025/02/05 13:00:25 [SignData] Key algorithm: RSA
+2025/02/05 13:00:25 [SignData] Signing scheme: RSASSA
+2025/02/05 13:00:25 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:00:25 [SignData] Signature length: 256 bytes
+2025/02/05 13:00:25 [SignData] Signature created successfully
+2025/02/05 13:00:25 Encryption Stats - Size: 250.00 MB, Duration: 1.019984784s, Throughput: 245.10 MB/s
+2025/02/05 13:00:25 API KEY: OK-9vLtibfJHWw-zhjR-LpYbduzGzLdR2N_1zkUkxyE
+2025/02/05 13:00:26 Realizando get de operações
+2025/02/05 13:00:33 [Encrypt] Encrypted Symmetric Key (Hex): 0e66a765392c295eeff58eda2ee1f2c18e14aa5ebfa32a06bbd66b61cbca2ae12403a687c86bce61439b80eb8710a3dcb7585f482e097c9be353d89a645b0357b249355fa63f9e2af6f7f881c18187321fe952f4fe98730f7c87e9190ec0943c08e0605fb75022f2bdb0dacfd3591a9ab2c8cfb7a0166b3b168f0f8e608f0d1d6998e4a469f411fa3bd73736d6cdd33d8573f5b9b0a43162e3b19680e5ca50c247ce80f6ba85fd0f637d6007d1b967eecf1c5e02f73414d8dce75857147550e1fb973bb2fc34aac18cad14e9b2ecda39b2179c6e23380ac2a848a876575e64533b919aa4244b2cf27bda76a57c498ce0dfb8e3fc389dff3f994bb5a0206f22a9
+2025/02/05 13:00:35 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:00:35 [SignData] Starting signature operation
+2025/02/05 13:00:35 [SignData] Hash length: 32 bytes
+2025/02/05 13:00:35 [SignData] Hash value (hex): 0ece1fc2054751548554a22f3db6160166943756a73461100c43619513d22f94
+2025/02/05 13:00:35 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:00:35 [SignData] Key attributes: 0x40072
+2025/02/05 13:00:35 [SignData] Key algorithm: RSA
+2025/02/05 13:00:35 [SignData] Signing scheme: RSASSA
+2025/02/05 13:00:35 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:00:35 [SignData] Signature length: 256 bytes
+2025/02/05 13:00:35 [SignData] Signature created successfully
+2025/02/05 13:00:35 Encryption Stats - Size: 500.00 MB, Duration: 1.888713317s, Throughput: 264.73 MB/s
+2025/02/05 13:00:35 API KEY: OK-9vLtibfJHWw-zhjR-LpYbduzGzLdR2N_1zkUkxyE
+2025/02/05 13:00:37 Realizando get de operações
+2025/02/05 13:00:46 [Encrypt] Encrypted Symmetric Key (Hex): c42aae5964cc4e179f29a8de42905bff7cf89c80798d08e713f208ac51ad4aa2ade445a658682db71b6df001919e93da7ece5f7ef3a01857e7faaec633554be07d9820158bcdf5d31c62f52a2a6bb9a19d2132de2937a80317bc0314de388b7fe22271fb90a39f4051f901baf848a38243afe1b72ed2ba1de91effb9defa1a4f89c33eb9167824f60f240551a6d1bf99ce92285d7f140662ded6dd979af1722284d08e6a4d7f885b6ff98d48808c26c997cc311da39bd017fb5d7485be47f24d27915216aa2b9a0015b7736458aa7b37ca4c1656be8614796d28005bb0472455232796e1825f993d0c4459d4cc354622ec5cc2a4b64544436aef265d821fb632
+2025/02/05 13:00:49 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:00:49 [SignData] Starting signature operation
+2025/02/05 13:00:49 [SignData] Hash length: 32 bytes
+2025/02/05 13:00:49 [SignData] Hash value (hex): 13cc5bd50146c2560b8c7486ffbffdd3e2fce2050037bcae1e826ad1aac8bcdf
+2025/02/05 13:00:49 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:00:49 [SignData] Key attributes: 0x40072
+2025/02/05 13:00:49 [SignData] Key algorithm: RSA
+2025/02/05 13:00:49 [SignData] Signing scheme: RSASSA
+2025/02/05 13:00:49 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:00:49 [SignData] Signature length: 256 bytes
+2025/02/05 13:00:49 [SignData] Signature created successfully
+2025/02/05 13:00:49 Encryption Stats - Size: 1024.00 MB, Duration: 4.013832702s, Throughput: 255.12 MB/s
+2025/02/05 13:00:50 API KEY: OK-9vLtibfJHWw-zhjR-LpYbduzGzLdR2N_1zkUkxyE
+2025/02/05 13:00:57 Realizando get de operações
+Added new directory to watcher: /home/larces/tpm-bunker/files/machine3
+2025/02/05 13:01:40 Verificando conexão com API em: http://localhost:8003/api/v1/
+2025/02/05 13:01:40 Conexão com API estabelecida com sucesso
+API connection successful
+2025/02/05 13:01:44 Recuperando dados da operação: 67a38b02d70f78705e26116f
+2025/02/05 13:01:44 Iniciando processo de decriptação
+2025/02/05 13:01:44 [Decrypt] Received Encrypted Symmetric Key (Hex): 3d58f5223ddd7fe4aaa6f7893a48e4e9f8652e09c9a5dda9bdc9d3ed6a6a1fb5bf779c1e4d6db5a882c348e803bf10054e7d57c0acb685f37c309f771f09b461939172841fc4c0b0d0e6a6ffd50af6291c4e1a53635b2a61b0bd1985afdca4debea1782a943b65085286b5f6ea51d413ffbdd146af59b05f1cbe0326a73657c232f2814f1d127349b67fccc787dd91cba5a99c70d379c61d21052721892e98e610cd1c026e6c81ec7c747b8c73d458aeee11a00a351575f9d1bb8a32b0534c4f0cefc12e51641b793965486d82fe86fc858ae4b8aca73d430275669d5b355e06d17abf1ab6a4b89a4921a64da050b74db96400ec859121f84aeeeb5c2c00a5f8
+2025/02/05 13:01:44 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:44 Encrypted Symmetric Key (Hex): 3d58f5223ddd7fe4aaa6f7893a48e4e9f8652e09c9a5dda9bdc9d3ed6a6a1fb5bf779c1e4d6db5a882c348e803bf10054e7d57c0acb685f37c309f771f09b461939172841fc4c0b0d0e6a6ffd50af6291c4e1a53635b2a61b0bd1985afdca4debea1782a943b65085286b5f6ea51d413ffbdd146af59b05f1cbe0326a73657c232f2814f1d127349b67fccc787dd91cba5a99c70d379c61d21052721892e98e610cd1c026e6c81ec7c747b8c73d458aeee11a00a351575f9d1bb8a32b0534c4f0cefc12e51641b793965486d82fe86fc858ae4b8aca73d430275669d5b355e06d17abf1ab6a4b89a4921a64da050b74db96400ec859121f84aeeeb5c2c00a5f8
+2025/02/05 13:01:44 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:44 Tamanho do ciphertext: 256
+2025/02/05 13:01:44 Atributos da chave: 20072
+2025/02/05 13:01:44 Decryption Stats - Size: 1.00 MB, Duration: 104.716486ms, Throughput: 9.55 MB/s
+2025/02/05 13:01:44 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_1mb.dat
+2025/02/05 13:01:44 Realizando get de operações
+2025/02/05 13:01:45 Recuperando dados da operação: 67a38b02d70f78705e26116f
+2025/02/05 13:01:45 Iniciando processo de decriptação
+2025/02/05 13:01:45 [Decrypt] Received Encrypted Symmetric Key (Hex): 3d58f5223ddd7fe4aaa6f7893a48e4e9f8652e09c9a5dda9bdc9d3ed6a6a1fb5bf779c1e4d6db5a882c348e803bf10054e7d57c0acb685f37c309f771f09b461939172841fc4c0b0d0e6a6ffd50af6291c4e1a53635b2a61b0bd1985afdca4debea1782a943b65085286b5f6ea51d413ffbdd146af59b05f1cbe0326a73657c232f2814f1d127349b67fccc787dd91cba5a99c70d379c61d21052721892e98e610cd1c026e6c81ec7c747b8c73d458aeee11a00a351575f9d1bb8a32b0534c4f0cefc12e51641b793965486d82fe86fc858ae4b8aca73d430275669d5b355e06d17abf1ab6a4b89a4921a64da050b74db96400ec859121f84aeeeb5c2c00a5f8
+2025/02/05 13:01:45 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:45 Encrypted Symmetric Key (Hex): 3d58f5223ddd7fe4aaa6f7893a48e4e9f8652e09c9a5dda9bdc9d3ed6a6a1fb5bf779c1e4d6db5a882c348e803bf10054e7d57c0acb685f37c309f771f09b461939172841fc4c0b0d0e6a6ffd50af6291c4e1a53635b2a61b0bd1985afdca4debea1782a943b65085286b5f6ea51d413ffbdd146af59b05f1cbe0326a73657c232f2814f1d127349b67fccc787dd91cba5a99c70d379c61d21052721892e98e610cd1c026e6c81ec7c747b8c73d458aeee11a00a351575f9d1bb8a32b0534c4f0cefc12e51641b793965486d82fe86fc858ae4b8aca73d430275669d5b355e06d17abf1ab6a4b89a4921a64da050b74db96400ec859121f84aeeeb5c2c00a5f8
+2025/02/05 13:01:45 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:45 Tamanho do ciphertext: 256
+2025/02/05 13:01:45 Atributos da chave: 20072
+2025/02/05 13:01:45 Decryption Stats - Size: 1.00 MB, Duration: 104.840865ms, Throughput: 9.54 MB/s
+2025/02/05 13:01:45 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_1mb_1.dat
+2025/02/05 13:01:45 Realizando get de operações
+2025/02/05 13:01:46 Recuperando dados da operação: 67a38b02d70f78705e26116f
+2025/02/05 13:01:46 Iniciando processo de decriptação
+2025/02/05 13:01:46 [Decrypt] Received Encrypted Symmetric Key (Hex): 3d58f5223ddd7fe4aaa6f7893a48e4e9f8652e09c9a5dda9bdc9d3ed6a6a1fb5bf779c1e4d6db5a882c348e803bf10054e7d57c0acb685f37c309f771f09b461939172841fc4c0b0d0e6a6ffd50af6291c4e1a53635b2a61b0bd1985afdca4debea1782a943b65085286b5f6ea51d413ffbdd146af59b05f1cbe0326a73657c232f2814f1d127349b67fccc787dd91cba5a99c70d379c61d21052721892e98e610cd1c026e6c81ec7c747b8c73d458aeee11a00a351575f9d1bb8a32b0534c4f0cefc12e51641b793965486d82fe86fc858ae4b8aca73d430275669d5b355e06d17abf1ab6a4b89a4921a64da050b74db96400ec859121f84aeeeb5c2c00a5f8
+2025/02/05 13:01:46 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:46 Encrypted Symmetric Key (Hex): 3d58f5223ddd7fe4aaa6f7893a48e4e9f8652e09c9a5dda9bdc9d3ed6a6a1fb5bf779c1e4d6db5a882c348e803bf10054e7d57c0acb685f37c309f771f09b461939172841fc4c0b0d0e6a6ffd50af6291c4e1a53635b2a61b0bd1985afdca4debea1782a943b65085286b5f6ea51d413ffbdd146af59b05f1cbe0326a73657c232f2814f1d127349b67fccc787dd91cba5a99c70d379c61d21052721892e98e610cd1c026e6c81ec7c747b8c73d458aeee11a00a351575f9d1bb8a32b0534c4f0cefc12e51641b793965486d82fe86fc858ae4b8aca73d430275669d5b355e06d17abf1ab6a4b89a4921a64da050b74db96400ec859121f84aeeeb5c2c00a5f8
+2025/02/05 13:01:46 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:46 Tamanho do ciphertext: 256
+2025/02/05 13:01:46 Atributos da chave: 20072
+2025/02/05 13:01:46 Decryption Stats - Size: 1.00 MB, Duration: 104.595898ms, Throughput: 9.56 MB/s
+2025/02/05 13:01:46 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_1mb_2.dat
+2025/02/05 13:01:46 Realizando get de operações
+2025/02/05 13:01:47 Recuperando dados da operação: 67a38b02d70f78705e26116f
+2025/02/05 13:01:47 Iniciando processo de decriptação
+2025/02/05 13:01:47 [Decrypt] Received Encrypted Symmetric Key (Hex): 3d58f5223ddd7fe4aaa6f7893a48e4e9f8652e09c9a5dda9bdc9d3ed6a6a1fb5bf779c1e4d6db5a882c348e803bf10054e7d57c0acb685f37c309f771f09b461939172841fc4c0b0d0e6a6ffd50af6291c4e1a53635b2a61b0bd1985afdca4debea1782a943b65085286b5f6ea51d413ffbdd146af59b05f1cbe0326a73657c232f2814f1d127349b67fccc787dd91cba5a99c70d379c61d21052721892e98e610cd1c026e6c81ec7c747b8c73d458aeee11a00a351575f9d1bb8a32b0534c4f0cefc12e51641b793965486d82fe86fc858ae4b8aca73d430275669d5b355e06d17abf1ab6a4b89a4921a64da050b74db96400ec859121f84aeeeb5c2c00a5f8
+2025/02/05 13:01:47 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:47 Encrypted Symmetric Key (Hex): 3d58f5223ddd7fe4aaa6f7893a48e4e9f8652e09c9a5dda9bdc9d3ed6a6a1fb5bf779c1e4d6db5a882c348e803bf10054e7d57c0acb685f37c309f771f09b461939172841fc4c0b0d0e6a6ffd50af6291c4e1a53635b2a61b0bd1985afdca4debea1782a943b65085286b5f6ea51d413ffbdd146af59b05f1cbe0326a73657c232f2814f1d127349b67fccc787dd91cba5a99c70d379c61d21052721892e98e610cd1c026e6c81ec7c747b8c73d458aeee11a00a351575f9d1bb8a32b0534c4f0cefc12e51641b793965486d82fe86fc858ae4b8aca73d430275669d5b355e06d17abf1ab6a4b89a4921a64da050b74db96400ec859121f84aeeeb5c2c00a5f8
+2025/02/05 13:01:47 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:47 Tamanho do ciphertext: 256
+2025/02/05 13:01:47 Atributos da chave: 20072
+2025/02/05 13:01:47 Decryption Stats - Size: 1.00 MB, Duration: 106.598525ms, Throughput: 9.38 MB/s
+2025/02/05 13:01:47 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_1mb_3.dat
+2025/02/05 13:01:47 Realizando get de operações
+2025/02/05 13:01:48 Recuperando dados da operação: 67a38b02d70f78705e26116f
+2025/02/05 13:01:48 Iniciando processo de decriptação
+2025/02/05 13:01:48 [Decrypt] Received Encrypted Symmetric Key (Hex): 3d58f5223ddd7fe4aaa6f7893a48e4e9f8652e09c9a5dda9bdc9d3ed6a6a1fb5bf779c1e4d6db5a882c348e803bf10054e7d57c0acb685f37c309f771f09b461939172841fc4c0b0d0e6a6ffd50af6291c4e1a53635b2a61b0bd1985afdca4debea1782a943b65085286b5f6ea51d413ffbdd146af59b05f1cbe0326a73657c232f2814f1d127349b67fccc787dd91cba5a99c70d379c61d21052721892e98e610cd1c026e6c81ec7c747b8c73d458aeee11a00a351575f9d1bb8a32b0534c4f0cefc12e51641b793965486d82fe86fc858ae4b8aca73d430275669d5b355e06d17abf1ab6a4b89a4921a64da050b74db96400ec859121f84aeeeb5c2c00a5f8
+2025/02/05 13:01:48 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:48 Encrypted Symmetric Key (Hex): 3d58f5223ddd7fe4aaa6f7893a48e4e9f8652e09c9a5dda9bdc9d3ed6a6a1fb5bf779c1e4d6db5a882c348e803bf10054e7d57c0acb685f37c309f771f09b461939172841fc4c0b0d0e6a6ffd50af6291c4e1a53635b2a61b0bd1985afdca4debea1782a943b65085286b5f6ea51d413ffbdd146af59b05f1cbe0326a73657c232f2814f1d127349b67fccc787dd91cba5a99c70d379c61d21052721892e98e610cd1c026e6c81ec7c747b8c73d458aeee11a00a351575f9d1bb8a32b0534c4f0cefc12e51641b793965486d82fe86fc858ae4b8aca73d430275669d5b355e06d17abf1ab6a4b89a4921a64da050b74db96400ec859121f84aeeeb5c2c00a5f8
+2025/02/05 13:01:48 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:48 Tamanho do ciphertext: 256
+2025/02/05 13:01:48 Atributos da chave: 20072
+2025/02/05 13:01:48 Decryption Stats - Size: 1.00 MB, Duration: 105.841896ms, Throughput: 9.45 MB/s
+2025/02/05 13:01:48 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_1mb_4.dat
+2025/02/05 13:01:48 Realizando get de operações
+2025/02/05 13:01:49 Recuperando dados da operação: 67a38b07d70f78705e261178
+2025/02/05 13:01:49 Iniciando processo de decriptação
+2025/02/05 13:01:49 [Decrypt] Received Encrypted Symmetric Key (Hex): bcd33f2e62256cf19f68eff59d7a4d42bac0fc29af75ca0e1aa0c01e8baffb47406e848b36a193c48cd12f56a1ffafa116dae2312917bed80cc705669b6046947f0dbca63f773b9b523d5b8c7cda90ebe7810daef2e43cdc3f49cbdb0e178c641d77369327cb6859e58a1aed0a92a771130508cdbc435b9fa7cbfd873ccc8cc4c5325e1357fef5e9c79155e6e6b50f69d0ecaabd66d8b12e6919ce183747460f6d0bee60fd216a96f5c1b11a2c9e81d4f019fde22c6c918d0f60a598f3a8b2ec27d72cff6d222d0ad101a15eab7dda49eda8dd5ce20d1e3af3d07571fe6d3148317566b861c6959ecea178274cd5ec19b4c589f7626874da3b0b3663cf470135
+2025/02/05 13:01:49 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:49 Encrypted Symmetric Key (Hex): bcd33f2e62256cf19f68eff59d7a4d42bac0fc29af75ca0e1aa0c01e8baffb47406e848b36a193c48cd12f56a1ffafa116dae2312917bed80cc705669b6046947f0dbca63f773b9b523d5b8c7cda90ebe7810daef2e43cdc3f49cbdb0e178c641d77369327cb6859e58a1aed0a92a771130508cdbc435b9fa7cbfd873ccc8cc4c5325e1357fef5e9c79155e6e6b50f69d0ecaabd66d8b12e6919ce183747460f6d0bee60fd216a96f5c1b11a2c9e81d4f019fde22c6c918d0f60a598f3a8b2ec27d72cff6d222d0ad101a15eab7dda49eda8dd5ce20d1e3af3d07571fe6d3148317566b861c6959ecea178274cd5ec19b4c589f7626874da3b0b3663cf470135
+2025/02/05 13:01:49 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:49 Tamanho do ciphertext: 256
+2025/02/05 13:01:49 Atributos da chave: 20072
+2025/02/05 13:01:49 Decryption Stats - Size: 10.00 MB, Duration: 142.958467ms, Throughput: 69.95 MB/s
+2025/02/05 13:01:49 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_10mb.dat
+2025/02/05 13:01:49 Realizando get de operações
+2025/02/05 13:01:50 Recuperando dados da operação: 67a38b07d70f78705e261178
+2025/02/05 13:01:50 Iniciando processo de decriptação
+2025/02/05 13:01:50 [Decrypt] Received Encrypted Symmetric Key (Hex): bcd33f2e62256cf19f68eff59d7a4d42bac0fc29af75ca0e1aa0c01e8baffb47406e848b36a193c48cd12f56a1ffafa116dae2312917bed80cc705669b6046947f0dbca63f773b9b523d5b8c7cda90ebe7810daef2e43cdc3f49cbdb0e178c641d77369327cb6859e58a1aed0a92a771130508cdbc435b9fa7cbfd873ccc8cc4c5325e1357fef5e9c79155e6e6b50f69d0ecaabd66d8b12e6919ce183747460f6d0bee60fd216a96f5c1b11a2c9e81d4f019fde22c6c918d0f60a598f3a8b2ec27d72cff6d222d0ad101a15eab7dda49eda8dd5ce20d1e3af3d07571fe6d3148317566b861c6959ecea178274cd5ec19b4c589f7626874da3b0b3663cf470135
+2025/02/05 13:01:50 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:50 Encrypted Symmetric Key (Hex): bcd33f2e62256cf19f68eff59d7a4d42bac0fc29af75ca0e1aa0c01e8baffb47406e848b36a193c48cd12f56a1ffafa116dae2312917bed80cc705669b6046947f0dbca63f773b9b523d5b8c7cda90ebe7810daef2e43cdc3f49cbdb0e178c641d77369327cb6859e58a1aed0a92a771130508cdbc435b9fa7cbfd873ccc8cc4c5325e1357fef5e9c79155e6e6b50f69d0ecaabd66d8b12e6919ce183747460f6d0bee60fd216a96f5c1b11a2c9e81d4f019fde22c6c918d0f60a598f3a8b2ec27d72cff6d222d0ad101a15eab7dda49eda8dd5ce20d1e3af3d07571fe6d3148317566b861c6959ecea178274cd5ec19b4c589f7626874da3b0b3663cf470135
+2025/02/05 13:01:50 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:50 Tamanho do ciphertext: 256
+2025/02/05 13:01:50 Atributos da chave: 20072
+2025/02/05 13:01:50 Decryption Stats - Size: 10.00 MB, Duration: 153.322945ms, Throughput: 65.22 MB/s
+2025/02/05 13:01:50 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_10mb_1.dat
+2025/02/05 13:01:50 Realizando get de operações
+2025/02/05 13:01:51 Recuperando dados da operação: 67a38b07d70f78705e261178
+2025/02/05 13:01:51 Iniciando processo de decriptação
+2025/02/05 13:01:51 [Decrypt] Received Encrypted Symmetric Key (Hex): bcd33f2e62256cf19f68eff59d7a4d42bac0fc29af75ca0e1aa0c01e8baffb47406e848b36a193c48cd12f56a1ffafa116dae2312917bed80cc705669b6046947f0dbca63f773b9b523d5b8c7cda90ebe7810daef2e43cdc3f49cbdb0e178c641d77369327cb6859e58a1aed0a92a771130508cdbc435b9fa7cbfd873ccc8cc4c5325e1357fef5e9c79155e6e6b50f69d0ecaabd66d8b12e6919ce183747460f6d0bee60fd216a96f5c1b11a2c9e81d4f019fde22c6c918d0f60a598f3a8b2ec27d72cff6d222d0ad101a15eab7dda49eda8dd5ce20d1e3af3d07571fe6d3148317566b861c6959ecea178274cd5ec19b4c589f7626874da3b0b3663cf470135
+2025/02/05 13:01:51 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:51 Encrypted Symmetric Key (Hex): bcd33f2e62256cf19f68eff59d7a4d42bac0fc29af75ca0e1aa0c01e8baffb47406e848b36a193c48cd12f56a1ffafa116dae2312917bed80cc705669b6046947f0dbca63f773b9b523d5b8c7cda90ebe7810daef2e43cdc3f49cbdb0e178c641d77369327cb6859e58a1aed0a92a771130508cdbc435b9fa7cbfd873ccc8cc4c5325e1357fef5e9c79155e6e6b50f69d0ecaabd66d8b12e6919ce183747460f6d0bee60fd216a96f5c1b11a2c9e81d4f019fde22c6c918d0f60a598f3a8b2ec27d72cff6d222d0ad101a15eab7dda49eda8dd5ce20d1e3af3d07571fe6d3148317566b861c6959ecea178274cd5ec19b4c589f7626874da3b0b3663cf470135
+2025/02/05 13:01:51 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:51 Tamanho do ciphertext: 256
+2025/02/05 13:01:51 Atributos da chave: 20072
+2025/02/05 13:01:51 Decryption Stats - Size: 10.00 MB, Duration: 153.197715ms, Throughput: 65.28 MB/s
+2025/02/05 13:01:51 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_10mb_2.dat
+2025/02/05 13:01:51 Realizando get de operações
+2025/02/05 13:01:52 Recuperando dados da operação: 67a38b07d70f78705e261178
+2025/02/05 13:01:52 Iniciando processo de decriptação
+2025/02/05 13:01:52 [Decrypt] Received Encrypted Symmetric Key (Hex): bcd33f2e62256cf19f68eff59d7a4d42bac0fc29af75ca0e1aa0c01e8baffb47406e848b36a193c48cd12f56a1ffafa116dae2312917bed80cc705669b6046947f0dbca63f773b9b523d5b8c7cda90ebe7810daef2e43cdc3f49cbdb0e178c641d77369327cb6859e58a1aed0a92a771130508cdbc435b9fa7cbfd873ccc8cc4c5325e1357fef5e9c79155e6e6b50f69d0ecaabd66d8b12e6919ce183747460f6d0bee60fd216a96f5c1b11a2c9e81d4f019fde22c6c918d0f60a598f3a8b2ec27d72cff6d222d0ad101a15eab7dda49eda8dd5ce20d1e3af3d07571fe6d3148317566b861c6959ecea178274cd5ec19b4c589f7626874da3b0b3663cf470135
+2025/02/05 13:01:52 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:52 Encrypted Symmetric Key (Hex): bcd33f2e62256cf19f68eff59d7a4d42bac0fc29af75ca0e1aa0c01e8baffb47406e848b36a193c48cd12f56a1ffafa116dae2312917bed80cc705669b6046947f0dbca63f773b9b523d5b8c7cda90ebe7810daef2e43cdc3f49cbdb0e178c641d77369327cb6859e58a1aed0a92a771130508cdbc435b9fa7cbfd873ccc8cc4c5325e1357fef5e9c79155e6e6b50f69d0ecaabd66d8b12e6919ce183747460f6d0bee60fd216a96f5c1b11a2c9e81d4f019fde22c6c918d0f60a598f3a8b2ec27d72cff6d222d0ad101a15eab7dda49eda8dd5ce20d1e3af3d07571fe6d3148317566b861c6959ecea178274cd5ec19b4c589f7626874da3b0b3663cf470135
+2025/02/05 13:01:52 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:52 Tamanho do ciphertext: 256
+2025/02/05 13:01:52 Atributos da chave: 20072
+2025/02/05 13:01:52 Decryption Stats - Size: 10.00 MB, Duration: 148.624944ms, Throughput: 67.28 MB/s
+2025/02/05 13:01:52 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_10mb_3.dat
+2025/02/05 13:01:52 Realizando get de operações
+2025/02/05 13:01:52 Recuperando dados da operação: 67a38b07d70f78705e261178
+2025/02/05 13:01:53 Iniciando processo de decriptação
+2025/02/05 13:01:53 [Decrypt] Received Encrypted Symmetric Key (Hex): bcd33f2e62256cf19f68eff59d7a4d42bac0fc29af75ca0e1aa0c01e8baffb47406e848b36a193c48cd12f56a1ffafa116dae2312917bed80cc705669b6046947f0dbca63f773b9b523d5b8c7cda90ebe7810daef2e43cdc3f49cbdb0e178c641d77369327cb6859e58a1aed0a92a771130508cdbc435b9fa7cbfd873ccc8cc4c5325e1357fef5e9c79155e6e6b50f69d0ecaabd66d8b12e6919ce183747460f6d0bee60fd216a96f5c1b11a2c9e81d4f019fde22c6c918d0f60a598f3a8b2ec27d72cff6d222d0ad101a15eab7dda49eda8dd5ce20d1e3af3d07571fe6d3148317566b861c6959ecea178274cd5ec19b4c589f7626874da3b0b3663cf470135
+2025/02/05 13:01:53 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:53 Encrypted Symmetric Key (Hex): bcd33f2e62256cf19f68eff59d7a4d42bac0fc29af75ca0e1aa0c01e8baffb47406e848b36a193c48cd12f56a1ffafa116dae2312917bed80cc705669b6046947f0dbca63f773b9b523d5b8c7cda90ebe7810daef2e43cdc3f49cbdb0e178c641d77369327cb6859e58a1aed0a92a771130508cdbc435b9fa7cbfd873ccc8cc4c5325e1357fef5e9c79155e6e6b50f69d0ecaabd66d8b12e6919ce183747460f6d0bee60fd216a96f5c1b11a2c9e81d4f019fde22c6c918d0f60a598f3a8b2ec27d72cff6d222d0ad101a15eab7dda49eda8dd5ce20d1e3af3d07571fe6d3148317566b861c6959ecea178274cd5ec19b4c589f7626874da3b0b3663cf470135
+2025/02/05 13:01:53 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:53 Tamanho do ciphertext: 256
+2025/02/05 13:01:53 Atributos da chave: 20072
+2025/02/05 13:01:53 Decryption Stats - Size: 10.00 MB, Duration: 143.651383ms, Throughput: 69.61 MB/s
+2025/02/05 13:01:53 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_10mb_4.dat
+2025/02/05 13:01:53 Realizando get de operações
+2025/02/05 13:01:53 Recuperando dados da operação: 67a38b0dd70f78705e2611a5
+2025/02/05 13:01:54 Iniciando processo de decriptação
+2025/02/05 13:01:54 [Decrypt] Received Encrypted Symmetric Key (Hex): bb44e7d59cb227326f607bcdb165e3821c0d5ea38bdac364a0fc4bced524c9223b60f1b7c0ddda8834ea6d3f75c0a420d901415cedbfeb1bfcbefbd3c23ebbf561306820da162ffe757735d4e38ba0080d100dccc94180387f3ae99c6bc1b6b54da904560ee63bd6038eb79eb6ff538762c7b51a9f0c9ac8e4fff457a3cd83c9aee5cdb838bac9f61d8e80ea6a1349032efa2303737168ca2b320d1354aaffc8a703ec7ff4ffe16bdc073e739a9946430d351c165c9dcaa090eb37b4baa2180de22ffe61f818d02a83458677adf4ccdbd82715119a3d418a96e5be95ea5a8f9861836b7446fb79d321046dfd614be5a071e172e8781104396bc457b14fd74909
+2025/02/05 13:01:54 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:54 Encrypted Symmetric Key (Hex): bb44e7d59cb227326f607bcdb165e3821c0d5ea38bdac364a0fc4bced524c9223b60f1b7c0ddda8834ea6d3f75c0a420d901415cedbfeb1bfcbefbd3c23ebbf561306820da162ffe757735d4e38ba0080d100dccc94180387f3ae99c6bc1b6b54da904560ee63bd6038eb79eb6ff538762c7b51a9f0c9ac8e4fff457a3cd83c9aee5cdb838bac9f61d8e80ea6a1349032efa2303737168ca2b320d1354aaffc8a703ec7ff4ffe16bdc073e739a9946430d351c165c9dcaa090eb37b4baa2180de22ffe61f818d02a83458677adf4ccdbd82715119a3d418a96e5be95ea5a8f9861836b7446fb79d321046dfd614be5a071e172e8781104396bc457b14fd74909
+2025/02/05 13:01:54 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:54 Tamanho do ciphertext: 256
+2025/02/05 13:01:54 Atributos da chave: 20072
+2025/02/05 13:01:54 Decryption Stats - Size: 50.00 MB, Duration: 242.08553ms, Throughput: 206.54 MB/s
+2025/02/05 13:01:54 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_50mb.dat
+2025/02/05 13:01:54 Realizando get de operações
+2025/02/05 13:01:55 Recuperando dados da operação: 67a38b0dd70f78705e2611a5
+2025/02/05 13:01:55 Iniciando processo de decriptação
+2025/02/05 13:01:56 [Decrypt] Received Encrypted Symmetric Key (Hex): bb44e7d59cb227326f607bcdb165e3821c0d5ea38bdac364a0fc4bced524c9223b60f1b7c0ddda8834ea6d3f75c0a420d901415cedbfeb1bfcbefbd3c23ebbf561306820da162ffe757735d4e38ba0080d100dccc94180387f3ae99c6bc1b6b54da904560ee63bd6038eb79eb6ff538762c7b51a9f0c9ac8e4fff457a3cd83c9aee5cdb838bac9f61d8e80ea6a1349032efa2303737168ca2b320d1354aaffc8a703ec7ff4ffe16bdc073e739a9946430d351c165c9dcaa090eb37b4baa2180de22ffe61f818d02a83458677adf4ccdbd82715119a3d418a96e5be95ea5a8f9861836b7446fb79d321046dfd614be5a071e172e8781104396bc457b14fd74909
+2025/02/05 13:01:56 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:56 Encrypted Symmetric Key (Hex): bb44e7d59cb227326f607bcdb165e3821c0d5ea38bdac364a0fc4bced524c9223b60f1b7c0ddda8834ea6d3f75c0a420d901415cedbfeb1bfcbefbd3c23ebbf561306820da162ffe757735d4e38ba0080d100dccc94180387f3ae99c6bc1b6b54da904560ee63bd6038eb79eb6ff538762c7b51a9f0c9ac8e4fff457a3cd83c9aee5cdb838bac9f61d8e80ea6a1349032efa2303737168ca2b320d1354aaffc8a703ec7ff4ffe16bdc073e739a9946430d351c165c9dcaa090eb37b4baa2180de22ffe61f818d02a83458677adf4ccdbd82715119a3d418a96e5be95ea5a8f9861836b7446fb79d321046dfd614be5a071e172e8781104396bc457b14fd74909
+2025/02/05 13:01:56 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:56 Tamanho do ciphertext: 256
+2025/02/05 13:01:56 Atributos da chave: 20072
+2025/02/05 13:01:56 Decryption Stats - Size: 50.00 MB, Duration: 232.437869ms, Throughput: 215.11 MB/s
+2025/02/05 13:01:56 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_50mb_1.dat
+2025/02/05 13:01:56 Realizando get de operações
+2025/02/05 13:01:56 Recuperando dados da operação: 67a38b0dd70f78705e2611a5
+2025/02/05 13:01:57 Iniciando processo de decriptação
+2025/02/05 13:01:57 [Decrypt] Received Encrypted Symmetric Key (Hex): bb44e7d59cb227326f607bcdb165e3821c0d5ea38bdac364a0fc4bced524c9223b60f1b7c0ddda8834ea6d3f75c0a420d901415cedbfeb1bfcbefbd3c23ebbf561306820da162ffe757735d4e38ba0080d100dccc94180387f3ae99c6bc1b6b54da904560ee63bd6038eb79eb6ff538762c7b51a9f0c9ac8e4fff457a3cd83c9aee5cdb838bac9f61d8e80ea6a1349032efa2303737168ca2b320d1354aaffc8a703ec7ff4ffe16bdc073e739a9946430d351c165c9dcaa090eb37b4baa2180de22ffe61f818d02a83458677adf4ccdbd82715119a3d418a96e5be95ea5a8f9861836b7446fb79d321046dfd614be5a071e172e8781104396bc457b14fd74909
+2025/02/05 13:01:57 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:57 Encrypted Symmetric Key (Hex): bb44e7d59cb227326f607bcdb165e3821c0d5ea38bdac364a0fc4bced524c9223b60f1b7c0ddda8834ea6d3f75c0a420d901415cedbfeb1bfcbefbd3c23ebbf561306820da162ffe757735d4e38ba0080d100dccc94180387f3ae99c6bc1b6b54da904560ee63bd6038eb79eb6ff538762c7b51a9f0c9ac8e4fff457a3cd83c9aee5cdb838bac9f61d8e80ea6a1349032efa2303737168ca2b320d1354aaffc8a703ec7ff4ffe16bdc073e739a9946430d351c165c9dcaa090eb37b4baa2180de22ffe61f818d02a83458677adf4ccdbd82715119a3d418a96e5be95ea5a8f9861836b7446fb79d321046dfd614be5a071e172e8781104396bc457b14fd74909
+2025/02/05 13:01:57 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:57 Tamanho do ciphertext: 256
+2025/02/05 13:01:57 Atributos da chave: 20072
+2025/02/05 13:01:57 Decryption Stats - Size: 50.00 MB, Duration: 223.671804ms, Throughput: 223.54 MB/s
+2025/02/05 13:01:57 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_50mb_2.dat
+2025/02/05 13:01:57 Realizando get de operações
+2025/02/05 13:01:58 Recuperando dados da operação: 67a38b0dd70f78705e2611a5
+2025/02/05 13:01:58 Iniciando processo de decriptação
+2025/02/05 13:01:58 [Decrypt] Received Encrypted Symmetric Key (Hex): bb44e7d59cb227326f607bcdb165e3821c0d5ea38bdac364a0fc4bced524c9223b60f1b7c0ddda8834ea6d3f75c0a420d901415cedbfeb1bfcbefbd3c23ebbf561306820da162ffe757735d4e38ba0080d100dccc94180387f3ae99c6bc1b6b54da904560ee63bd6038eb79eb6ff538762c7b51a9f0c9ac8e4fff457a3cd83c9aee5cdb838bac9f61d8e80ea6a1349032efa2303737168ca2b320d1354aaffc8a703ec7ff4ffe16bdc073e739a9946430d351c165c9dcaa090eb37b4baa2180de22ffe61f818d02a83458677adf4ccdbd82715119a3d418a96e5be95ea5a8f9861836b7446fb79d321046dfd614be5a071e172e8781104396bc457b14fd74909
+2025/02/05 13:01:58 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:58 Encrypted Symmetric Key (Hex): bb44e7d59cb227326f607bcdb165e3821c0d5ea38bdac364a0fc4bced524c9223b60f1b7c0ddda8834ea6d3f75c0a420d901415cedbfeb1bfcbefbd3c23ebbf561306820da162ffe757735d4e38ba0080d100dccc94180387f3ae99c6bc1b6b54da904560ee63bd6038eb79eb6ff538762c7b51a9f0c9ac8e4fff457a3cd83c9aee5cdb838bac9f61d8e80ea6a1349032efa2303737168ca2b320d1354aaffc8a703ec7ff4ffe16bdc073e739a9946430d351c165c9dcaa090eb37b4baa2180de22ffe61f818d02a83458677adf4ccdbd82715119a3d418a96e5be95ea5a8f9861836b7446fb79d321046dfd614be5a071e172e8781104396bc457b14fd74909
+2025/02/05 13:01:58 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:58 Tamanho do ciphertext: 256
+2025/02/05 13:01:58 Atributos da chave: 20072
+2025/02/05 13:01:58 Decryption Stats - Size: 50.00 MB, Duration: 213.586307ms, Throughput: 234.10 MB/s
+2025/02/05 13:01:58 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_50mb_3.dat
+2025/02/05 13:01:58 Realizando get de operações
+2025/02/05 13:01:59 Recuperando dados da operação: 67a38b0dd70f78705e2611a5
+2025/02/05 13:01:59 Iniciando processo de decriptação
+2025/02/05 13:01:59 [Decrypt] Received Encrypted Symmetric Key (Hex): bb44e7d59cb227326f607bcdb165e3821c0d5ea38bdac364a0fc4bced524c9223b60f1b7c0ddda8834ea6d3f75c0a420d901415cedbfeb1bfcbefbd3c23ebbf561306820da162ffe757735d4e38ba0080d100dccc94180387f3ae99c6bc1b6b54da904560ee63bd6038eb79eb6ff538762c7b51a9f0c9ac8e4fff457a3cd83c9aee5cdb838bac9f61d8e80ea6a1349032efa2303737168ca2b320d1354aaffc8a703ec7ff4ffe16bdc073e739a9946430d351c165c9dcaa090eb37b4baa2180de22ffe61f818d02a83458677adf4ccdbd82715119a3d418a96e5be95ea5a8f9861836b7446fb79d321046dfd614be5a071e172e8781104396bc457b14fd74909
+2025/02/05 13:01:59 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:01:59 Encrypted Symmetric Key (Hex): bb44e7d59cb227326f607bcdb165e3821c0d5ea38bdac364a0fc4bced524c9223b60f1b7c0ddda8834ea6d3f75c0a420d901415cedbfeb1bfcbefbd3c23ebbf561306820da162ffe757735d4e38ba0080d100dccc94180387f3ae99c6bc1b6b54da904560ee63bd6038eb79eb6ff538762c7b51a9f0c9ac8e4fff457a3cd83c9aee5cdb838bac9f61d8e80ea6a1349032efa2303737168ca2b320d1354aaffc8a703ec7ff4ffe16bdc073e739a9946430d351c165c9dcaa090eb37b4baa2180de22ffe61f818d02a83458677adf4ccdbd82715119a3d418a96e5be95ea5a8f9861836b7446fb79d321046dfd614be5a071e172e8781104396bc457b14fd74909
+2025/02/05 13:01:59 Handle de decriptação: 0x81008f03
+2025/02/05 13:01:59 Tamanho do ciphertext: 256
+2025/02/05 13:01:59 Atributos da chave: 20072
+2025/02/05 13:01:59 Decryption Stats - Size: 50.00 MB, Duration: 211.14917ms, Throughput: 236.80 MB/s
+2025/02/05 13:01:59 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_50mb_4.dat
+2025/02/05 13:01:59 Realizando get de operações
+2025/02/05 13:02:12 Recuperando dados da operação: 67a38b12d70f78705e261272
+2025/02/05 13:02:13 Iniciando processo de decriptação
+2025/02/05 13:02:13 [Decrypt] Received Encrypted Symmetric Key (Hex): aa74aa2492309af69bf49f8640fc1a52742a54d0bf0f7d9784f57f033d56a0fdc6f01fa263ea32c6789ae81f61c849b1dd206724849c1d28b222f69b2356eb90fd3fc147555b8bc599ee516f1675c7ebdb599b1798c651cd23d5ac62594dc7562572f21ae952be11fef1dba60d795c3f4c81fdfb48bbe2a14c52d8bd660d6f33b939028cbf25fc7ed4e49d98e1965f8a5fb540ea777ec7df452bddb38149a22a7b4d02ebb5f375585152c055b504adb14b019ef152b495636b0d8f969d3da5e2bc1b98248f7c43a927b22ff34ea51a44eaad416833fefc5a64b6df1d672b618c02734c89d9ff2c4284c55467767964bed9cda9b25e66f1d1f801596897aa5e70
+2025/02/05 13:02:13 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:02:13 Encrypted Symmetric Key (Hex): aa74aa2492309af69bf49f8640fc1a52742a54d0bf0f7d9784f57f033d56a0fdc6f01fa263ea32c6789ae81f61c849b1dd206724849c1d28b222f69b2356eb90fd3fc147555b8bc599ee516f1675c7ebdb599b1798c651cd23d5ac62594dc7562572f21ae952be11fef1dba60d795c3f4c81fdfb48bbe2a14c52d8bd660d6f33b939028cbf25fc7ed4e49d98e1965f8a5fb540ea777ec7df452bddb38149a22a7b4d02ebb5f375585152c055b504adb14b019ef152b495636b0d8f969d3da5e2bc1b98248f7c43a927b22ff34ea51a44eaad416833fefc5a64b6df1d672b618c02734c89d9ff2c4284c55467767964bed9cda9b25e66f1d1f801596897aa5e70
+2025/02/05 13:02:13 Handle de decriptação: 0x81008f03
+2025/02/05 13:02:13 Tamanho do ciphertext: 256
+2025/02/05 13:02:13 Atributos da chave: 20072
+2025/02/05 13:02:13 Decryption Stats - Size: 100.00 MB, Duration: 340.125859ms, Throughput: 294.01 MB/s
+2025/02/05 13:02:13 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_100mb.dat
+2025/02/05 13:02:13 Realizando get de operações
+2025/02/05 13:02:14 Recuperando dados da operação: 67a38b12d70f78705e261272
+2025/02/05 13:02:14 Iniciando processo de decriptação
+2025/02/05 13:02:14 [Decrypt] Received Encrypted Symmetric Key (Hex): aa74aa2492309af69bf49f8640fc1a52742a54d0bf0f7d9784f57f033d56a0fdc6f01fa263ea32c6789ae81f61c849b1dd206724849c1d28b222f69b2356eb90fd3fc147555b8bc599ee516f1675c7ebdb599b1798c651cd23d5ac62594dc7562572f21ae952be11fef1dba60d795c3f4c81fdfb48bbe2a14c52d8bd660d6f33b939028cbf25fc7ed4e49d98e1965f8a5fb540ea777ec7df452bddb38149a22a7b4d02ebb5f375585152c055b504adb14b019ef152b495636b0d8f969d3da5e2bc1b98248f7c43a927b22ff34ea51a44eaad416833fefc5a64b6df1d672b618c02734c89d9ff2c4284c55467767964bed9cda9b25e66f1d1f801596897aa5e70
+2025/02/05 13:02:14 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:02:14 Encrypted Symmetric Key (Hex): aa74aa2492309af69bf49f8640fc1a52742a54d0bf0f7d9784f57f033d56a0fdc6f01fa263ea32c6789ae81f61c849b1dd206724849c1d28b222f69b2356eb90fd3fc147555b8bc599ee516f1675c7ebdb599b1798c651cd23d5ac62594dc7562572f21ae952be11fef1dba60d795c3f4c81fdfb48bbe2a14c52d8bd660d6f33b939028cbf25fc7ed4e49d98e1965f8a5fb540ea777ec7df452bddb38149a22a7b4d02ebb5f375585152c055b504adb14b019ef152b495636b0d8f969d3da5e2bc1b98248f7c43a927b22ff34ea51a44eaad416833fefc5a64b6df1d672b618c02734c89d9ff2c4284c55467767964bed9cda9b25e66f1d1f801596897aa5e70
+2025/02/05 13:02:14 Handle de decriptação: 0x81008f03
+2025/02/05 13:02:14 Tamanho do ciphertext: 256
+2025/02/05 13:02:14 Atributos da chave: 20072
+2025/02/05 13:02:15 Decryption Stats - Size: 100.00 MB, Duration: 312.281717ms, Throughput: 320.22 MB/s
+2025/02/05 13:02:15 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_100mb_1.dat
+2025/02/05 13:02:15 Realizando get de operações
+2025/02/05 13:02:16 Recuperando dados da operação: 67a38b12d70f78705e261272
+2025/02/05 13:02:16 Iniciando processo de decriptação
+2025/02/05 13:02:16 [Decrypt] Received Encrypted Symmetric Key (Hex): aa74aa2492309af69bf49f8640fc1a52742a54d0bf0f7d9784f57f033d56a0fdc6f01fa263ea32c6789ae81f61c849b1dd206724849c1d28b222f69b2356eb90fd3fc147555b8bc599ee516f1675c7ebdb599b1798c651cd23d5ac62594dc7562572f21ae952be11fef1dba60d795c3f4c81fdfb48bbe2a14c52d8bd660d6f33b939028cbf25fc7ed4e49d98e1965f8a5fb540ea777ec7df452bddb38149a22a7b4d02ebb5f375585152c055b504adb14b019ef152b495636b0d8f969d3da5e2bc1b98248f7c43a927b22ff34ea51a44eaad416833fefc5a64b6df1d672b618c02734c89d9ff2c4284c55467767964bed9cda9b25e66f1d1f801596897aa5e70
+2025/02/05 13:02:16 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:02:16 Encrypted Symmetric Key (Hex): aa74aa2492309af69bf49f8640fc1a52742a54d0bf0f7d9784f57f033d56a0fdc6f01fa263ea32c6789ae81f61c849b1dd206724849c1d28b222f69b2356eb90fd3fc147555b8bc599ee516f1675c7ebdb599b1798c651cd23d5ac62594dc7562572f21ae952be11fef1dba60d795c3f4c81fdfb48bbe2a14c52d8bd660d6f33b939028cbf25fc7ed4e49d98e1965f8a5fb540ea777ec7df452bddb38149a22a7b4d02ebb5f375585152c055b504adb14b019ef152b495636b0d8f969d3da5e2bc1b98248f7c43a927b22ff34ea51a44eaad416833fefc5a64b6df1d672b618c02734c89d9ff2c4284c55467767964bed9cda9b25e66f1d1f801596897aa5e70
+2025/02/05 13:02:16 Handle de decriptação: 0x81008f03
+2025/02/05 13:02:16 Tamanho do ciphertext: 256
+2025/02/05 13:02:16 Atributos da chave: 20072
+2025/02/05 13:02:17 Decryption Stats - Size: 100.00 MB, Duration: 319.787106ms, Throughput: 312.71 MB/s
+2025/02/05 13:02:17 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_100mb_2.dat
+2025/02/05 13:02:17 Realizando get de operações
+2025/02/05 13:02:17 Recuperando dados da operação: 67a38b12d70f78705e261272
+2025/02/05 13:02:18 Iniciando processo de decriptação
+2025/02/05 13:02:18 [Decrypt] Received Encrypted Symmetric Key (Hex): aa74aa2492309af69bf49f8640fc1a52742a54d0bf0f7d9784f57f033d56a0fdc6f01fa263ea32c6789ae81f61c849b1dd206724849c1d28b222f69b2356eb90fd3fc147555b8bc599ee516f1675c7ebdb599b1798c651cd23d5ac62594dc7562572f21ae952be11fef1dba60d795c3f4c81fdfb48bbe2a14c52d8bd660d6f33b939028cbf25fc7ed4e49d98e1965f8a5fb540ea777ec7df452bddb38149a22a7b4d02ebb5f375585152c055b504adb14b019ef152b495636b0d8f969d3da5e2bc1b98248f7c43a927b22ff34ea51a44eaad416833fefc5a64b6df1d672b618c02734c89d9ff2c4284c55467767964bed9cda9b25e66f1d1f801596897aa5e70
+2025/02/05 13:02:18 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:02:18 Encrypted Symmetric Key (Hex): aa74aa2492309af69bf49f8640fc1a52742a54d0bf0f7d9784f57f033d56a0fdc6f01fa263ea32c6789ae81f61c849b1dd206724849c1d28b222f69b2356eb90fd3fc147555b8bc599ee516f1675c7ebdb599b1798c651cd23d5ac62594dc7562572f21ae952be11fef1dba60d795c3f4c81fdfb48bbe2a14c52d8bd660d6f33b939028cbf25fc7ed4e49d98e1965f8a5fb540ea777ec7df452bddb38149a22a7b4d02ebb5f375585152c055b504adb14b019ef152b495636b0d8f969d3da5e2bc1b98248f7c43a927b22ff34ea51a44eaad416833fefc5a64b6df1d672b618c02734c89d9ff2c4284c55467767964bed9cda9b25e66f1d1f801596897aa5e70
+2025/02/05 13:02:18 Handle de decriptação: 0x81008f03
+2025/02/05 13:02:18 Tamanho do ciphertext: 256
+2025/02/05 13:02:18 Atributos da chave: 20072
+2025/02/05 13:02:18 Decryption Stats - Size: 100.00 MB, Duration: 325.66879ms, Throughput: 307.06 MB/s
+2025/02/05 13:02:18 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_100mb_3.dat
+2025/02/05 13:02:18 Realizando get de operações
+2025/02/05 13:02:19 Recuperando dados da operação: 67a38b12d70f78705e261272
+2025/02/05 13:02:19 Iniciando processo de decriptação
+2025/02/05 13:02:19 [Decrypt] Received Encrypted Symmetric Key (Hex): aa74aa2492309af69bf49f8640fc1a52742a54d0bf0f7d9784f57f033d56a0fdc6f01fa263ea32c6789ae81f61c849b1dd206724849c1d28b222f69b2356eb90fd3fc147555b8bc599ee516f1675c7ebdb599b1798c651cd23d5ac62594dc7562572f21ae952be11fef1dba60d795c3f4c81fdfb48bbe2a14c52d8bd660d6f33b939028cbf25fc7ed4e49d98e1965f8a5fb540ea777ec7df452bddb38149a22a7b4d02ebb5f375585152c055b504adb14b019ef152b495636b0d8f969d3da5e2bc1b98248f7c43a927b22ff34ea51a44eaad416833fefc5a64b6df1d672b618c02734c89d9ff2c4284c55467767964bed9cda9b25e66f1d1f801596897aa5e70
+2025/02/05 13:02:19 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:02:19 Encrypted Symmetric Key (Hex): aa74aa2492309af69bf49f8640fc1a52742a54d0bf0f7d9784f57f033d56a0fdc6f01fa263ea32c6789ae81f61c849b1dd206724849c1d28b222f69b2356eb90fd3fc147555b8bc599ee516f1675c7ebdb599b1798c651cd23d5ac62594dc7562572f21ae952be11fef1dba60d795c3f4c81fdfb48bbe2a14c52d8bd660d6f33b939028cbf25fc7ed4e49d98e1965f8a5fb540ea777ec7df452bddb38149a22a7b4d02ebb5f375585152c055b504adb14b019ef152b495636b0d8f969d3da5e2bc1b98248f7c43a927b22ff34ea51a44eaad416833fefc5a64b6df1d672b618c02734c89d9ff2c4284c55467767964bed9cda9b25e66f1d1f801596897aa5e70
+2025/02/05 13:02:19 Handle de decriptação: 0x81008f03
+2025/02/05 13:02:19 Tamanho do ciphertext: 256
+2025/02/05 13:02:19 Atributos da chave: 20072
+2025/02/05 13:02:19 Decryption Stats - Size: 100.00 MB, Duration: 321.907803ms, Throughput: 310.65 MB/s
+2025/02/05 13:02:19 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_100mb_4.dat
+2025/02/05 13:02:19 Realizando get de operações
+2025/02/05 13:02:27 Recuperando dados da operação: 67a38b19d70f78705e261408
+2025/02/05 13:02:28 Iniciando processo de decriptação
+2025/02/05 13:02:28 [Decrypt] Received Encrypted Symmetric Key (Hex): 6b6c115cd31a4234492bd66c55309e9452159eb98d45f0ac743a4e3f715fea59799bfa4c8a02159f149ed83446ea3c8a89a5246be3d2cb861a5315a9c0a06844263b261f472d75677bcb12e65a2411ccc0e8914e7ee6d6113d262773a9efb9df6c28df4fbb53cd285e940e9c0ae9d8d4f2a3e76b2bbd1fc1e49d25ddf062ea1fb89ef06164cae5fcf179d61a1c11b04031cc5701cdaa89dce33f79bdbaedd1febf0a6ee4f86f8633c6589e4d8c07ba44c9e5cb083beffd7ebb31e3193f13e9d127b790ebb1cbb62168e24a85fd134e86f0cdd6925c281e2c5b90d15f4cb6fa7fe9a14cecc4d99e8769fc948959578642e03e6a09a55b06fb6766fcbdf7438f66
+2025/02/05 13:02:28 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:02:28 Encrypted Symmetric Key (Hex): 6b6c115cd31a4234492bd66c55309e9452159eb98d45f0ac743a4e3f715fea59799bfa4c8a02159f149ed83446ea3c8a89a5246be3d2cb861a5315a9c0a06844263b261f472d75677bcb12e65a2411ccc0e8914e7ee6d6113d262773a9efb9df6c28df4fbb53cd285e940e9c0ae9d8d4f2a3e76b2bbd1fc1e49d25ddf062ea1fb89ef06164cae5fcf179d61a1c11b04031cc5701cdaa89dce33f79bdbaedd1febf0a6ee4f86f8633c6589e4d8c07ba44c9e5cb083beffd7ebb31e3193f13e9d127b790ebb1cbb62168e24a85fd134e86f0cdd6925c281e2c5b90d15f4cb6fa7fe9a14cecc4d99e8769fc948959578642e03e6a09a55b06fb6766fcbdf7438f66
+2025/02/05 13:02:28 Handle de decriptação: 0x81008f03
+2025/02/05 13:02:28 Tamanho do ciphertext: 256
+2025/02/05 13:02:28 Atributos da chave: 20072
+2025/02/05 13:02:29 Decryption Stats - Size: 250.00 MB, Duration: 701.063054ms, Throughput: 356.60 MB/s
+2025/02/05 13:02:29 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_250mb.dat
+2025/02/05 13:02:29 Realizando get de operações
+2025/02/05 13:02:30 Recuperando dados da operação: 67a38b19d70f78705e261408
+2025/02/05 13:02:30 Iniciando processo de decriptação
+2025/02/05 13:02:31 [Decrypt] Received Encrypted Symmetric Key (Hex): 6b6c115cd31a4234492bd66c55309e9452159eb98d45f0ac743a4e3f715fea59799bfa4c8a02159f149ed83446ea3c8a89a5246be3d2cb861a5315a9c0a06844263b261f472d75677bcb12e65a2411ccc0e8914e7ee6d6113d262773a9efb9df6c28df4fbb53cd285e940e9c0ae9d8d4f2a3e76b2bbd1fc1e49d25ddf062ea1fb89ef06164cae5fcf179d61a1c11b04031cc5701cdaa89dce33f79bdbaedd1febf0a6ee4f86f8633c6589e4d8c07ba44c9e5cb083beffd7ebb31e3193f13e9d127b790ebb1cbb62168e24a85fd134e86f0cdd6925c281e2c5b90d15f4cb6fa7fe9a14cecc4d99e8769fc948959578642e03e6a09a55b06fb6766fcbdf7438f66
+2025/02/05 13:02:31 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:02:31 Encrypted Symmetric Key (Hex): 6b6c115cd31a4234492bd66c55309e9452159eb98d45f0ac743a4e3f715fea59799bfa4c8a02159f149ed83446ea3c8a89a5246be3d2cb861a5315a9c0a06844263b261f472d75677bcb12e65a2411ccc0e8914e7ee6d6113d262773a9efb9df6c28df4fbb53cd285e940e9c0ae9d8d4f2a3e76b2bbd1fc1e49d25ddf062ea1fb89ef06164cae5fcf179d61a1c11b04031cc5701cdaa89dce33f79bdbaedd1febf0a6ee4f86f8633c6589e4d8c07ba44c9e5cb083beffd7ebb31e3193f13e9d127b790ebb1cbb62168e24a85fd134e86f0cdd6925c281e2c5b90d15f4cb6fa7fe9a14cecc4d99e8769fc948959578642e03e6a09a55b06fb6766fcbdf7438f66
+2025/02/05 13:02:31 Handle de decriptação: 0x81008f03
+2025/02/05 13:02:31 Tamanho do ciphertext: 256
+2025/02/05 13:02:31 Atributos da chave: 20072
+2025/02/05 13:02:31 Decryption Stats - Size: 250.00 MB, Duration: 631.700425ms, Throughput: 395.76 MB/s
+2025/02/05 13:02:31 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_250mb_1.dat
+2025/02/05 13:02:31 Realizando get de operações
+2025/02/05 13:02:33 Recuperando dados da operação: 67a38b19d70f78705e261408
+2025/02/05 13:02:34 Iniciando processo de decriptação
+2025/02/05 13:02:34 [Decrypt] Received Encrypted Symmetric Key (Hex): 6b6c115cd31a4234492bd66c55309e9452159eb98d45f0ac743a4e3f715fea59799bfa4c8a02159f149ed83446ea3c8a89a5246be3d2cb861a5315a9c0a06844263b261f472d75677bcb12e65a2411ccc0e8914e7ee6d6113d262773a9efb9df6c28df4fbb53cd285e940e9c0ae9d8d4f2a3e76b2bbd1fc1e49d25ddf062ea1fb89ef06164cae5fcf179d61a1c11b04031cc5701cdaa89dce33f79bdbaedd1febf0a6ee4f86f8633c6589e4d8c07ba44c9e5cb083beffd7ebb31e3193f13e9d127b790ebb1cbb62168e24a85fd134e86f0cdd6925c281e2c5b90d15f4cb6fa7fe9a14cecc4d99e8769fc948959578642e03e6a09a55b06fb6766fcbdf7438f66
+2025/02/05 13:02:34 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:02:34 Encrypted Symmetric Key (Hex): 6b6c115cd31a4234492bd66c55309e9452159eb98d45f0ac743a4e3f715fea59799bfa4c8a02159f149ed83446ea3c8a89a5246be3d2cb861a5315a9c0a06844263b261f472d75677bcb12e65a2411ccc0e8914e7ee6d6113d262773a9efb9df6c28df4fbb53cd285e940e9c0ae9d8d4f2a3e76b2bbd1fc1e49d25ddf062ea1fb89ef06164cae5fcf179d61a1c11b04031cc5701cdaa89dce33f79bdbaedd1febf0a6ee4f86f8633c6589e4d8c07ba44c9e5cb083beffd7ebb31e3193f13e9d127b790ebb1cbb62168e24a85fd134e86f0cdd6925c281e2c5b90d15f4cb6fa7fe9a14cecc4d99e8769fc948959578642e03e6a09a55b06fb6766fcbdf7438f66
+2025/02/05 13:02:34 Handle de decriptação: 0x81008f03
+2025/02/05 13:02:34 Tamanho do ciphertext: 256
+2025/02/05 13:02:34 Atributos da chave: 20072
+2025/02/05 13:02:35 Decryption Stats - Size: 250.00 MB, Duration: 634.004116ms, Throughput: 394.32 MB/s
+2025/02/05 13:02:35 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_250mb_2.dat
+2025/02/05 13:02:35 Realizando get de operações
+2025/02/05 13:02:36 Recuperando dados da operação: 67a38b19d70f78705e261408
+2025/02/05 13:02:37 Iniciando processo de decriptação
+2025/02/05 13:02:37 [Decrypt] Received Encrypted Symmetric Key (Hex): 6b6c115cd31a4234492bd66c55309e9452159eb98d45f0ac743a4e3f715fea59799bfa4c8a02159f149ed83446ea3c8a89a5246be3d2cb861a5315a9c0a06844263b261f472d75677bcb12e65a2411ccc0e8914e7ee6d6113d262773a9efb9df6c28df4fbb53cd285e940e9c0ae9d8d4f2a3e76b2bbd1fc1e49d25ddf062ea1fb89ef06164cae5fcf179d61a1c11b04031cc5701cdaa89dce33f79bdbaedd1febf0a6ee4f86f8633c6589e4d8c07ba44c9e5cb083beffd7ebb31e3193f13e9d127b790ebb1cbb62168e24a85fd134e86f0cdd6925c281e2c5b90d15f4cb6fa7fe9a14cecc4d99e8769fc948959578642e03e6a09a55b06fb6766fcbdf7438f66
+2025/02/05 13:02:37 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:02:37 Encrypted Symmetric Key (Hex): 6b6c115cd31a4234492bd66c55309e9452159eb98d45f0ac743a4e3f715fea59799bfa4c8a02159f149ed83446ea3c8a89a5246be3d2cb861a5315a9c0a06844263b261f472d75677bcb12e65a2411ccc0e8914e7ee6d6113d262773a9efb9df6c28df4fbb53cd285e940e9c0ae9d8d4f2a3e76b2bbd1fc1e49d25ddf062ea1fb89ef06164cae5fcf179d61a1c11b04031cc5701cdaa89dce33f79bdbaedd1febf0a6ee4f86f8633c6589e4d8c07ba44c9e5cb083beffd7ebb31e3193f13e9d127b790ebb1cbb62168e24a85fd134e86f0cdd6925c281e2c5b90d15f4cb6fa7fe9a14cecc4d99e8769fc948959578642e03e6a09a55b06fb6766fcbdf7438f66
+2025/02/05 13:02:37 Handle de decriptação: 0x81008f03
+2025/02/05 13:02:37 Tamanho do ciphertext: 256
+2025/02/05 13:02:37 Atributos da chave: 20072
+2025/02/05 13:02:37 Decryption Stats - Size: 250.00 MB, Duration: 651.698221ms, Throughput: 383.61 MB/s
+2025/02/05 13:02:37 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_250mb_3.dat
+2025/02/05 13:02:37 Realizando get de operações
+2025/02/05 13:02:38 Recuperando dados da operação: 67a38b19d70f78705e261408
+2025/02/05 13:02:39 Iniciando processo de decriptação
+2025/02/05 13:02:39 [Decrypt] Received Encrypted Symmetric Key (Hex): 6b6c115cd31a4234492bd66c55309e9452159eb98d45f0ac743a4e3f715fea59799bfa4c8a02159f149ed83446ea3c8a89a5246be3d2cb861a5315a9c0a06844263b261f472d75677bcb12e65a2411ccc0e8914e7ee6d6113d262773a9efb9df6c28df4fbb53cd285e940e9c0ae9d8d4f2a3e76b2bbd1fc1e49d25ddf062ea1fb89ef06164cae5fcf179d61a1c11b04031cc5701cdaa89dce33f79bdbaedd1febf0a6ee4f86f8633c6589e4d8c07ba44c9e5cb083beffd7ebb31e3193f13e9d127b790ebb1cbb62168e24a85fd134e86f0cdd6925c281e2c5b90d15f4cb6fa7fe9a14cecc4d99e8769fc948959578642e03e6a09a55b06fb6766fcbdf7438f66
+2025/02/05 13:02:39 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:02:39 Encrypted Symmetric Key (Hex): 6b6c115cd31a4234492bd66c55309e9452159eb98d45f0ac743a4e3f715fea59799bfa4c8a02159f149ed83446ea3c8a89a5246be3d2cb861a5315a9c0a06844263b261f472d75677bcb12e65a2411ccc0e8914e7ee6d6113d262773a9efb9df6c28df4fbb53cd285e940e9c0ae9d8d4f2a3e76b2bbd1fc1e49d25ddf062ea1fb89ef06164cae5fcf179d61a1c11b04031cc5701cdaa89dce33f79bdbaedd1febf0a6ee4f86f8633c6589e4d8c07ba44c9e5cb083beffd7ebb31e3193f13e9d127b790ebb1cbb62168e24a85fd134e86f0cdd6925c281e2c5b90d15f4cb6fa7fe9a14cecc4d99e8769fc948959578642e03e6a09a55b06fb6766fcbdf7438f66
+2025/02/05 13:02:39 Handle de decriptação: 0x81008f03
+2025/02/05 13:02:39 Tamanho do ciphertext: 256
+2025/02/05 13:02:39 Atributos da chave: 20072
+2025/02/05 13:02:40 Decryption Stats - Size: 250.00 MB, Duration: 653.50448ms, Throughput: 382.55 MB/s
+2025/02/05 13:02:40 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_250mb_4.dat
+2025/02/05 13:02:40 Realizando get de operações
+2025/02/05 13:03:18 Decryption Stats - Size: 500.00 MB, Duration: 1.187921218s, Throughput: 420.90 MB/s
+2025/02/05 13:03:18 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_500mb.dat
+2025/02/05 13:03:18 Realizando get de operações
+2025/02/05 13:03:21 Recuperando dados da operação: 67a38b23d70f78705e2617f8
+2025/02/05 13:03:24 Iniciando processo de decriptação
+2025/02/05 13:03:24 [Decrypt] Received Encrypted Symmetric Key (Hex): 0e66a765392c295eeff58eda2ee1f2c18e14aa5ebfa32a06bbd66b61cbca2ae12403a687c86bce61439b80eb8710a3dcb7585f482e097c9be353d89a645b0357b249355fa63f9e2af6f7f881c18187321fe952f4fe98730f7c87e9190ec0943c08e0605fb75022f2bdb0dacfd3591a9ab2c8cfb7a0166b3b168f0f8e608f0d1d6998e4a469f411fa3bd73736d6cdd33d8573f5b9b0a43162e3b19680e5ca50c247ce80f6ba85fd0f637d6007d1b967eecf1c5e02f73414d8dce75857147550e1fb973bb2fc34aac18cad14e9b2ecda39b2179c6e23380ac2a848a876575e64533b919aa4244b2cf27bda76a57c498ce0dfb8e3fc389dff3f994bb5a0206f22a9
+2025/02/05 13:03:24 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:03:24 Encrypted Symmetric Key (Hex): 0e66a765392c295eeff58eda2ee1f2c18e14aa5ebfa32a06bbd66b61cbca2ae12403a687c86bce61439b80eb8710a3dcb7585f482e097c9be353d89a645b0357b249355fa63f9e2af6f7f881c18187321fe952f4fe98730f7c87e9190ec0943c08e0605fb75022f2bdb0dacfd3591a9ab2c8cfb7a0166b3b168f0f8e608f0d1d6998e4a469f411fa3bd73736d6cdd33d8573f5b9b0a43162e3b19680e5ca50c247ce80f6ba85fd0f637d6007d1b967eecf1c5e02f73414d8dce75857147550e1fb973bb2fc34aac18cad14e9b2ecda39b2179c6e23380ac2a848a876575e64533b919aa4244b2cf27bda76a57c498ce0dfb8e3fc389dff3f994bb5a0206f22a9
+2025/02/05 13:03:24 Handle de decriptação: 0x81008f03
+2025/02/05 13:03:24 Tamanho do ciphertext: 256
+2025/02/05 13:03:24 Atributos da chave: 20072
+2025/02/05 13:03:25 Decryption Stats - Size: 500.00 MB, Duration: 1.212042463s, Throughput: 412.53 MB/s
+2025/02/05 13:03:26 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_500mb_1.dat
+2025/02/05 13:03:26 Realizando get de operações
+2025/02/05 13:03:32 Recuperando dados da operação: 67a38b23d70f78705e2617f8
+2025/02/05 13:03:41 Verificando conexão com API em: http://localhost:8003/api/v1/
+2025/02/05 13:03:41 Conexão com API estabelecida com sucesso
+API connection successful
+2025/02/05 13:03:42 Iniciando processo de decriptação
+2025/02/05 13:03:42 [Decrypt] Received Encrypted Symmetric Key (Hex): 0e66a765392c295eeff58eda2ee1f2c18e14aa5ebfa32a06bbd66b61cbca2ae12403a687c86bce61439b80eb8710a3dcb7585f482e097c9be353d89a645b0357b249355fa63f9e2af6f7f881c18187321fe952f4fe98730f7c87e9190ec0943c08e0605fb75022f2bdb0dacfd3591a9ab2c8cfb7a0166b3b168f0f8e608f0d1d6998e4a469f411fa3bd73736d6cdd33d8573f5b9b0a43162e3b19680e5ca50c247ce80f6ba85fd0f637d6007d1b967eecf1c5e02f73414d8dce75857147550e1fb973bb2fc34aac18cad14e9b2ecda39b2179c6e23380ac2a848a876575e64533b919aa4244b2cf27bda76a57c498ce0dfb8e3fc389dff3f994bb5a0206f22a9
+2025/02/05 13:03:42 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:03:42 Encrypted Symmetric Key (Hex): 0e66a765392c295eeff58eda2ee1f2c18e14aa5ebfa32a06bbd66b61cbca2ae12403a687c86bce61439b80eb8710a3dcb7585f482e097c9be353d89a645b0357b249355fa63f9e2af6f7f881c18187321fe952f4fe98730f7c87e9190ec0943c08e0605fb75022f2bdb0dacfd3591a9ab2c8cfb7a0166b3b168f0f8e608f0d1d6998e4a469f411fa3bd73736d6cdd33d8573f5b9b0a43162e3b19680e5ca50c247ce80f6ba85fd0f637d6007d1b967eecf1c5e02f73414d8dce75857147550e1fb973bb2fc34aac18cad14e9b2ecda39b2179c6e23380ac2a848a876575e64533b919aa4244b2cf27bda76a57c498ce0dfb8e3fc389dff3f994bb5a0206f22a9
+2025/02/05 13:03:42 Handle de decriptação: 0x81008f03
+2025/02/05 13:03:42 Tamanho do ciphertext: 256
+2025/02/05 13:03:42 Atributos da chave: 20072
+2025/02/05 13:03:43 Decryption Stats - Size: 500.00 MB, Duration: 1.32494671s, Throughput: 377.37 MB/s
+2025/02/05 13:03:44 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_500mb.dat
+2025/02/05 13:03:44 Realizando get de operações
+2025/02/05 13:03:52 Recuperando dados da operação: 67a38b23d70f78705e2617f8
+2025/02/05 13:04:15 Iniciando processo de decriptação
+2025/02/05 13:04:16 [Decrypt] Received Encrypted Symmetric Key (Hex): 0e66a765392c295eeff58eda2ee1f2c18e14aa5ebfa32a06bbd66b61cbca2ae12403a687c86bce61439b80eb8710a3dcb7585f482e097c9be353d89a645b0357b249355fa63f9e2af6f7f881c18187321fe952f4fe98730f7c87e9190ec0943c08e0605fb75022f2bdb0dacfd3591a9ab2c8cfb7a0166b3b168f0f8e608f0d1d6998e4a469f411fa3bd73736d6cdd33d8573f5b9b0a43162e3b19680e5ca50c247ce80f6ba85fd0f637d6007d1b967eecf1c5e02f73414d8dce75857147550e1fb973bb2fc34aac18cad14e9b2ecda39b2179c6e23380ac2a848a876575e64533b919aa4244b2cf27bda76a57c498ce0dfb8e3fc389dff3f994bb5a0206f22a9
+2025/02/05 13:04:16 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:04:16 Encrypted Symmetric Key (Hex): 0e66a765392c295eeff58eda2ee1f2c18e14aa5ebfa32a06bbd66b61cbca2ae12403a687c86bce61439b80eb8710a3dcb7585f482e097c9be353d89a645b0357b249355fa63f9e2af6f7f881c18187321fe952f4fe98730f7c87e9190ec0943c08e0605fb75022f2bdb0dacfd3591a9ab2c8cfb7a0166b3b168f0f8e608f0d1d6998e4a469f411fa3bd73736d6cdd33d8573f5b9b0a43162e3b19680e5ca50c247ce80f6ba85fd0f637d6007d1b967eecf1c5e02f73414d8dce75857147550e1fb973bb2fc34aac18cad14e9b2ecda39b2179c6e23380ac2a848a876575e64533b919aa4244b2cf27bda76a57c498ce0dfb8e3fc389dff3f994bb5a0206f22a9
+2025/02/05 13:04:16 Handle de decriptação: 0x81008f03
+2025/02/05 13:04:16 Tamanho do ciphertext: 256
+2025/02/05 13:04:16 Atributos da chave: 20072
+2025/02/05 13:04:17 Decryption Stats - Size: 500.00 MB, Duration: 1.32244751s, Throughput: 378.09 MB/s
+2025/02/05 13:04:19 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_500mb_1.dat
+2025/02/05 13:04:19 Realizando get de operações
+2025/02/05 13:04:32 Recuperando dados da operação: 67a38b23d70f78705e2617f8
+Development mode exited
+ ♥   If Wails is useful to you or your company, please consider sponsoring the project:
+https://github.com/sponsors/leaanthony
+2025/02/05 13:08:03 Decryption Stats - Size: 1024.00 MB, Duration: 2.485513882s, Throughput: 411.99 MB/s
+2025/02/05 13:12:36 Encryption Stats - Size: 1024.00 MB, Duration: 4.121849911s, Throughput: 248.43 MB/s
+2025/02/05 13:12:36 API KEY: azRTIUEIgQ8asV-rflR_wc2BOBwp_8O7G9VxzDdmp08
+2025/02/05 13:12:43 Realizando get de operações
+2025/02/05 13:12:46 Recuperando dados da operação: 67a38df662157202658bfbe5
+2025/02/05 13:12:55 Iniciando processo de decriptação
+2025/02/05 13:12:55 [Decrypt] Received Encrypted Symmetric Key (Hex): 3736c16be8bfffc97e799310c2f9461c85a26dcd7e44c7691238666fcd75f0a4034beb338b42b8b5f83dc78b6745d77f6345ebf6cbca2c710959fe24380349dcf87e175ceeb0a7da30c863c33d9167c8dfb1832557a644f1bbc94bd7870ddab49873f0dccbad3f2675bb85b173770cfa22294c2a166ea018de5b77844555df95fb64a01a35e468515231865532c0b0020571d7113329ba9fcfdafcbdd344651d912fbaa027a6c55e4232efe70ce25ea17223b51e92ea7c8f8809f5f7dabd73ee44bf4dd5b8af3e7d0b2bfc477197b61e1ccb9bb6f8df7bf5c871314c6815170df95244c131fed67d8c5d29c1f06854b22a1405ceeae0800aedb39c7aa3b84ae6
+2025/02/05 13:12:55 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:12:55 Encrypted Symmetric Key (Hex): 3736c16be8bfffc97e799310c2f9461c85a26dcd7e44c7691238666fcd75f0a4034beb338b42b8b5f83dc78b6745d77f6345ebf6cbca2c710959fe24380349dcf87e175ceeb0a7da30c863c33d9167c8dfb1832557a644f1bbc94bd7870ddab49873f0dccbad3f2675bb85b173770cfa22294c2a166ea018de5b77844555df95fb64a01a35e468515231865532c0b0020571d7113329ba9fcfdafcbdd344651d912fbaa027a6c55e4232efe70ce25ea17223b51e92ea7c8f8809f5f7dabd73ee44bf4dd5b8af3e7d0b2bfc477197b61e1ccb9bb6f8df7bf5c871314c6815170df95244c131fed67d8c5d29c1f06854b22a1405ceeae0800aedb39c7aa3b84ae6
+2025/02/05 13:12:55 Handle de decriptação: 0x81008f03
+2025/02/05 13:12:55 Tamanho do ciphertext: 256
+2025/02/05 13:12:55 Atributos da chave: 20072
+2025/02/05 13:12:57 Decryption Stats - Size: 1024.00 MB, Duration: 2.326438481s, Throughput: 440.16 MB/s
+2025/02/05 13:12:58 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_1024mb.dat
+2025/02/05 13:12:58 Realizando get de operações
+2025/02/05 13:13:06 Recuperando dados da operação: 67a38df662157202658bfbe5
+2025/02/05 13:13:15 Iniciando processo de decriptação
+2025/02/05 13:13:15 [Decrypt] Received Encrypted Symmetric Key (Hex): 3736c16be8bfffc97e799310c2f9461c85a26dcd7e44c7691238666fcd75f0a4034beb338b42b8b5f83dc78b6745d77f6345ebf6cbca2c710959fe24380349dcf87e175ceeb0a7da30c863c33d9167c8dfb1832557a644f1bbc94bd7870ddab49873f0dccbad3f2675bb85b173770cfa22294c2a166ea018de5b77844555df95fb64a01a35e468515231865532c0b0020571d7113329ba9fcfdafcbdd344651d912fbaa027a6c55e4232efe70ce25ea17223b51e92ea7c8f8809f5f7dabd73ee44bf4dd5b8af3e7d0b2bfc477197b61e1ccb9bb6f8df7bf5c871314c6815170df95244c131fed67d8c5d29c1f06854b22a1405ceeae0800aedb39c7aa3b84ae6
+2025/02/05 13:13:15 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:13:15 Encrypted Symmetric Key (Hex): 3736c16be8bfffc97e799310c2f9461c85a26dcd7e44c7691238666fcd75f0a4034beb338b42b8b5f83dc78b6745d77f6345ebf6cbca2c710959fe24380349dcf87e175ceeb0a7da30c863c33d9167c8dfb1832557a644f1bbc94bd7870ddab49873f0dccbad3f2675bb85b173770cfa22294c2a166ea018de5b77844555df95fb64a01a35e468515231865532c0b0020571d7113329ba9fcfdafcbdd344651d912fbaa027a6c55e4232efe70ce25ea17223b51e92ea7c8f8809f5f7dabd73ee44bf4dd5b8af3e7d0b2bfc477197b61e1ccb9bb6f8df7bf5c871314c6815170df95244c131fed67d8c5d29c1f06854b22a1405ceeae0800aedb39c7aa3b84ae6
+2025/02/05 13:13:15 Handle de decriptação: 0x81008f03
+2025/02/05 13:13:15 Tamanho do ciphertext: 256
+2025/02/05 13:13:15 Atributos da chave: 20072
+2025/02/05 13:13:17 Decryption Stats - Size: 1024.00 MB, Duration: 2.309255393s, Throughput: 443.43 MB/s
+2025/02/05 13:13:17 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_1024mb.dat
+2025/02/05 13:13:17 Realizando get de operações
+2025/02/05 13:14:37 Decryption Stats - Size: 1024.00 MB, Duration: 2.316215738s, Throughput: 442.10 MB/s
+2025/02/05 13:18:20 Handle de decriptação: 0x81008f03
+2025/02/05 13:18:20 Tamanho do ciphertext: 256
+2025/02/05 13:18:20 Atributos da chave: 20072
+2025/02/05 13:18:22 Decryption Stats - Size: 1024.00 MB, Duration: 2.483303102s, Throughput: 412.35 MB/s
+2025/02/05 13:18:23 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_1024mb.dat
+2025/02/05 13:18:23 Realizando get de operações
+TPM presence check successful
+2025/02/05 13:18:01 Verificando conexão com API em: http://localhost:8003/api/v1/
+2025/02/05 13:18:01 Conexão com API estabelecida com sucesso
+API connection successful
+2025/02/05 13:18:01 [InitializeDevice] Iniciando inicialização do dispositivo TPM
+2025/02/05 13:18:01 [InitializeDevice] Tentativa 1/2
+2025/02/05 13:18:01 [InitializeDevice] Recuperando Endorsement Key (EK)...
+
+
+To develop in the browser and call your bound Go methods from Javascript, navigate to: http://localhost:34115
+TPM presence check successful
+2025/02/05 13:18:04 [InitializeDevice] EK recuperada com sucesso
+2025/02/05 13:18:04 [InitializeDevice] Gerando AIK (Attestation Identity Key)...
+2025/02/05 13:18:05 [InitializeDevice] AIK gerada com sucesso
+2025/02/05 13:18:05 [InitializeDevice] Buscando handle da chave RSA de assinatura...
+2025/02/05 13:18:05 [InitializeDevice] Chave de assinatura encontrada no handle: 0x81008f02
+2025/02/05 13:18:05 [InitializeDevice] Recuperando chave pública RSA de assinatura...
+2025/02/05 13:18:05 [InitializeDevice] Chave pública RSA recuperada com sucesso
+2025/02/05 13:18:05 [InitializeDevice] Chave pública convertida para formato PEM
+2025/02/05 13:18:05 PUBKEYPEM %s -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+aDYp86CFQopTnG4u6rW
+KEd+OebNCHzm9hLSy3fhe/V73tadLP8YaqyIPipwsQiQ/Ezfn8ay/+68gwHsFTis
+ElXol+RMqw+E3ev2YHNjiH3Qco1zcbGP5kYeYnOJ+QEmTLcnlupkgl5zYdOjsRQq
+tt46mIZmLezzJFYLgJEMfRdDsAO6B8Ymk0KwQw3TTJNBNXYekvGhIG+EA6PAfVDF
+AmrfivcsHvc9sHRaLxtXWZ9Ubiq3sUfocw0+q8iZ79EqVlSTrlW4lAJ4u4+ylfqI
+uVVHNoQgbu30IvWF2r62hEunbPoSLNqRs4NsOlK+dhjX+4OTdqE6MADhstNWC/CZ
+0wIDAQAB
+-----END PUBLIC KEY-----
+
+2025/02/05 13:18:05 [InitializeDevice] Gerando UUID baseado na EK...
+2025/02/05 13:18:05 [InitializeDevice] UUID gerado com sucesso: 6074169b-7f86-5032-8598-ed983102c774
+2025/02/05 13:18:05 [InitializeDevice] Inicialização do dispositivo concluída com sucesso!
+2025/02/05 13:18:05 Verificando conexão com API em: http://localhost:8003/api/v1/
+2025/02/05 13:18:05 Conexão com API estabelecida com sucesso
+Realizando login na API...2025/02/05 13:18:06 Login realizado com sucesso para o dispositivo: 6074169b-7f86-5032-8598-ed983102c774
+2025/02/05 13:18:06 Realizando get de operações
+2025/02/05 13:18:07 Recuperando dados da operação: 67a38df662157202658bfbe5
+2025/02/05 13:18:11 Verificando conexão com API em: http://localhost:8003/api/v1/
+2025/02/05 13:18:11 Conexão com API estabelecida com sucesso
+API connection successful
+2025/02/05 13:18:19 Iniciando processo de decriptação
+2025/02/05 13:18:20 [Decrypt] Received Encrypted Symmetric Key (Hex): 3736c16be8bfffc97e799310c2f9461c85a26dcd7e44c7691238666fcd75f0a4034beb338b42b8b5f83dc78b6745d77f6345ebf6cbca2c710959fe24380349dcf87e175ceeb0a7da30c863c33d9167c8dfb1832557a644f1bbc94bd7870ddab49873f0dccbad3f2675bb85b173770cfa22294c2a166ea018de5b77844555df95fb64a01a35e468515231865532c0b0020571d7113329ba9fcfdafcbdd344651d912fbaa027a6c55e4232efe70ce25ea17223b51e92ea7c8f8809f5f7dabd73ee44bf4dd5b8af3e7d0b2bfc477197b61e1ccb9bb6f8df7bf5c871314c6815170df95244c131fed67d8c5d29c1f06854b22a1405ceeae0800aedb39c7aa3b84ae6
+2025/02/05 13:18:20 Handles disponíveis: [2164297474 2164297475]
+2025/02/05 13:18:20 Encrypted Symmetric Key (Hex): 3736c16be8bfffc97e799310c2f9461c85a26dcd7e44c7691238666fcd75f0a4034beb338b42b8b5f83dc78b6745d77f6345ebf6cbca2c710959fe24380349dcf87e175ceeb0a7da30c863c33d9167c8dfb1832557a644f1bbc94bd7870ddab49873f0dccbad3f2675bb85b173770cfa22294c2a166ea018de5b77844555df95fb64a01a35e468515231865532c0b0020571d7113329ba9fcfdafcbdd344651d912fbaa027a6c55e4232efe70ce25ea17223b51e92ea7c8f8809f5f7dabd73ee44bf4dd5b8af3e7d0b2bfc477197b61e1ccb9bb6f8df7bf5c871314c6815170df95244c131fed67d8c5d29c1f06854b22a1405ceeae0800aedb39c7aa3b84ae6
+2025/02/05 13:18:20 Handle de decriptação: 0x81008f03
+2025/02/05 13:18:20 Tamanho do ciphertext: 256
+2025/02/05 13:18:20 Atributos da chave: 20072
+2025/02/05 13:18:22 Decryption Stats - Size: 1024.00 MB, Duration: 2.483303102s, Throughput: 412.35 MB/s
+2025/02/05 13:18:23 Arquivo salvo com sucesso em: /home/larces/Downloads/teste_1024mb.dat
+2025/02/05 13:18:23 Realizando get de operações
+2025/02/05 13:20:01 Verificando conexão com API em: http://localhost:8003/api/v1/
+2025/02/05 13:20:01 Conexão com API estabelecida com sucesso
+API connection successful
+2025/02/05 13:21:03 [Encrypt] Encrypted Symmetric Key (Hex): 1039fb8915001dfe13529e1540c71ad84c000962fbae7e1d103054aed13512428dc412a9b8730e531cf0bfb325fcecaec79bfabc594f09b1e010395eab20d23271610954ecd33718045eed00a7fbd1d311458c1fffeddf0ffcd15852177fa7705ced83969d98389c97fd022f7fe638239b66d036f42875fa58b9fa002d2d36a187c08c7807501882c7857462b577e768568f3b66fa0f8efb26f4bc1c3b21f8c8f70d2c9cd944660b54153dcd31abca795abb8633b8a32014f972f0fc014547165be3fc323da248d8d7b9715d75abaf14f8bfc5977dfc49b4f5c04923696d5713822a1b1a92f81654f777562f4de7d0a96bc2be24f297a72585639ba288e39b6b
+2025/02/05 13:21:03 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:21:03 [SignData] Starting signature operation
+2025/02/05 13:21:03 [SignData] Hash length: 32 bytes
+2025/02/05 13:21:03 [SignData] Hash value (hex): 062efaceffa18d9e43898acac1a16c375f150a7b4f3d038f3cb38492d8af5555
+2025/02/05 13:21:03 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:21:03 [SignData] Key attributes: 0x40072
+2025/02/05 13:21:03 [SignData] Key algorithm: RSA
+2025/02/05 13:21:03 [SignData] Signing scheme: RSASSA
+2025/02/05 13:21:03 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:21:03 [SignData] Signature length: 256 bytes
+2025/02/05 13:21:03 [SignData] Signature created successfully
+2025/02/05 13:21:03 Encryption Stats - Size: 1.00 MB, Duration: 138.66917ms, Throughput: 7.21 MB/s
+2025/02/05 13:21:03 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:21:03 Realizando get de operações
+2025/02/05 13:21:08 [Encrypt] Encrypted Symmetric Key (Hex): a3cc9d95aa0ec462270f97abcda79a9aeb1be412b317f04cb3a6cbf6b6ae94eb2177913dd17bb7d3469ee69edafddd0d64705a3b6bd2648d6a089b47647c78b9973b61d25f429f5e079cf8402df99f8ef9e4decc16c555b1ea572a145fd97c62d6e1cc97a50be96a7214576dcda45e198dc395e05fb8d9d875e6527d67482bd4282a4400127b09ec592d5e31c107531e72136c34df830ca0a785ec8760f8b079d0755dc3e7318e11f3044038ee35e0be7f9ee4a59160df1d51f9237a60e141ae140ea6cb17f480c23978ad3be151cf33c973e8dc3d2e4409795637efbd9c8a7a99d427d318a4008a713cfcd756eb602a90de0a44a2f9d700aaac105200c824d2
+2025/02/05 13:21:08 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:21:08 [SignData] Starting signature operation
+2025/02/05 13:21:08 [SignData] Hash length: 32 bytes
+2025/02/05 13:21:08 [SignData] Hash value (hex): 14ccbd58a1c20cf518c746fadc9ea9d354f04c27170cbf4c6ffd43f68d41b8b6
+2025/02/05 13:21:08 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:21:08 [SignData] Key attributes: 0x40072
+2025/02/05 13:21:08 [SignData] Key algorithm: RSA
+2025/02/05 13:21:08 [SignData] Signing scheme: RSASSA
+2025/02/05 13:21:08 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:21:08 [SignData] Signature length: 256 bytes
+2025/02/05 13:21:08 [SignData] Signature created successfully
+2025/02/05 13:21:08 Encryption Stats - Size: 1.00 MB, Duration: 102.398658ms, Throughput: 9.77 MB/s
+2025/02/05 13:21:08 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:21:09 Realizando get de operações
+2025/02/05 13:21:14 [Encrypt] Encrypted Symmetric Key (Hex): 0199304f7d143e08363e28df8a9d2ba9edaefa3a803dec9a364333b6075dee9843ed5ad2eab2c176304238b850e7675eb2dcfadffd451aadf660c58f23d8241335846d222febb071d82f0b4c117964b8c9ff2071a864e1d9b880dd35e1ec1480708c450ee7681f4ffd52b33237b280f75429d293dfd0a05d03ec61d2a2eaa92bee35a4e6ad9f4c574b27207756db1ccac7e731e0ca4f285045c80665c04e2a5bae5e8f58486a8afef77c63386972b6650d5ddc1b38370ce5ccc34f814c0dbacf602105ed71f10ae2ced997c10a0af49c034a841cfe58dfcdcb5b272e1e3f3452b5744039c7a8e923f3b03db8dfe291ade3d51ad95b194c96fdcdcbe9b70abf88
+2025/02/05 13:21:14 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:21:14 [SignData] Starting signature operation
+2025/02/05 13:21:14 [SignData] Hash length: 32 bytes
+2025/02/05 13:21:14 [SignData] Hash value (hex): b5a5908b9c9c2c616ee8293782e42878da4384dfe0a1d3a49078074cb73ab010
+2025/02/05 13:21:14 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:21:14 [SignData] Key attributes: 0x40072
+2025/02/05 13:21:14 [SignData] Key algorithm: RSA
+2025/02/05 13:21:14 [SignData] Signing scheme: RSASSA
+2025/02/05 13:21:14 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:21:14 [SignData] Signature length: 256 bytes
+2025/02/05 13:21:14 [SignData] Signature created successfully
+2025/02/05 13:21:14 Encryption Stats - Size: 1.00 MB, Duration: 108.527927ms, Throughput: 9.21 MB/s
+2025/02/05 13:21:14 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:21:14 Realizando get de operações
+2025/02/05 13:21:19 [Encrypt] Encrypted Symmetric Key (Hex): 568d63abe83799b2d0191684de750526deaeb2f2a953540ed31c8bbd4cb7af41d1ae8f14996620febb3f476f8c7f3a154fd78655793e0c31dc396a629bfd10eaef49331b34705657ca092177fe97ba63cccbda3d65ce31ba794547b674cdb94f148e186f534ff7b5bd7dca69656bf1052d87423365755a619a758637f919bb338647acabdc90ce5d9c4775ff157714dfebc40b5f119947822809944d8b148b652a968a16f46292a96cb548115d6a3b85801712d5806f3312475805eabc9fa86abcc47753df535851c9d535ee95cbeaf26765c401f3e392df21ed47a035d2def3811c525de9b85e1faf3e48b9d7fa2cfc1ca5e8b697b5654c15db9c9eb1247da3
+2025/02/05 13:21:19 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:21:19 [SignData] Starting signature operation
+2025/02/05 13:21:19 [SignData] Hash length: 32 bytes
+2025/02/05 13:21:19 [SignData] Hash value (hex): eb48aaaf865aadfba000808ca37941a50fa276d74485adb7f50efe3c549f2159
+2025/02/05 13:21:19 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:21:20 [SignData] Key attributes: 0x40072
+2025/02/05 13:21:20 [SignData] Key algorithm: RSA
+2025/02/05 13:21:20 [SignData] Signing scheme: RSASSA
+2025/02/05 13:21:20 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:21:20 [SignData] Signature length: 256 bytes
+2025/02/05 13:21:20 [SignData] Signature created successfully
+2025/02/05 13:21:20 Encryption Stats - Size: 1.00 MB, Duration: 102.625478ms, Throughput: 9.74 MB/s
+2025/02/05 13:21:20 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:21:20 Realizando get de operações
+2025/02/05 13:21:25 [Encrypt] Encrypted Symmetric Key (Hex): bb00940da4fd7a09ab4a9d9a42c28137ea1cc34ca8a956d8649c01a94c3588169beca7a1a65e50a57a65719ecf764c1971f4ef23032bcacfc255f632bed01870bf9e53ac7fdabe9b3c3e566b529358ed6fdfa7bd2fe9754deb2fb16012911ad909ac927d0a93701889df673b05f203a3bede44671e4559d5d8fed952ac26d89270edba6df782e7ed346fc3a5cbc0407989f9e08085efedf7387dc93745319e91c9a1e51e1f5e75f144dc832106bef6a912b6c8c643da80b3f76ad07c06d9bf055ab9bc9c2d4639db4e4806c8d985b904bfb90df9877547d6747342aded4c79d3cca719590d010a6be3e58a22811a50ed86fe93565f233cc98345be5f4b0e54d4
+2025/02/05 13:21:25 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:21:25 [SignData] Starting signature operation
+2025/02/05 13:21:25 [SignData] Hash length: 32 bytes
+2025/02/05 13:21:25 [SignData] Hash value (hex): 44f350cf9d34daa04cf506525891019ecf3d1ef2da3feadf4548cf1d27e67ab5
+2025/02/05 13:21:25 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:21:25 [SignData] Key attributes: 0x40072
+2025/02/05 13:21:25 [SignData] Key algorithm: RSA
+2025/02/05 13:21:25 [SignData] Signing scheme: RSASSA
+2025/02/05 13:21:25 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:21:25 [SignData] Signature length: 256 bytes
+2025/02/05 13:21:25 [SignData] Signature created successfully
+2025/02/05 13:21:25 Encryption Stats - Size: 10.00 MB, Duration: 136.802127ms, Throughput: 73.10 MB/s
+2025/02/05 13:21:25 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:21:26 Realizando get de operações
+2025/02/05 13:21:30 [Encrypt] Encrypted Symmetric Key (Hex): 0f47842e57fa847c165ba67a04fe2c7f9cdbbbb80b9547e45e111646f80b84c2450b4fc763b55ccf861a53204b88e627a4a025c03449ccf1dd13a85f79fb47b634a7b19ce7e71a82fdda3e72c367897c5651c892c933dde141c5d9f2f08cdba52ecd64549abc0c1f1b5d59cef3f4f1614a29f6e4b571b396a91964f8d291dada13923311992852e8e6fb02147e17f1bde6ef942bb56d07eb98db349d38d814d6866f4c3ef13c2c83f06f204d90fe768322159776fbf8644c7b0beed1e876716c50f6eb228070f4f631a48665f881edd5fa5ca47b96d459f532cd60daefa803e015d2427fd12dff186c96a21bcea06425738c39d29bac906f010af9a95b52491f
+2025/02/05 13:21:30 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:21:30 [SignData] Starting signature operation
+2025/02/05 13:21:30 [SignData] Hash length: 32 bytes
+2025/02/05 13:21:30 [SignData] Hash value (hex): c9f14ca8c3841d784096f3d913f4ee66f3f9910b32d21f72f2c871455f1e5810
+2025/02/05 13:21:30 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:21:30 [SignData] Key attributes: 0x40072
+2025/02/05 13:21:30 [SignData] Key algorithm: RSA
+2025/02/05 13:21:30 [SignData] Signing scheme: RSASSA
+2025/02/05 13:21:30 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:21:30 [SignData] Signature length: 256 bytes
+2025/02/05 13:21:30 [SignData] Signature created successfully
+2025/02/05 13:21:30 Encryption Stats - Size: 10.00 MB, Duration: 127.871735ms, Throughput: 78.20 MB/s
+2025/02/05 13:21:30 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:21:30 Realizando get de operações
+2025/02/05 13:21:37 [Encrypt] Encrypted Symmetric Key (Hex): 1cd8592ca063e7cb6b6e8dac43f4cec453edf9a7257377cffa89d9f6d45578d8fa478372b28a385ced70fd08d06c7e9796a3a1aa5816e1ea1fa86dfd0eaac13dfef349d486443036c7c5795036a6a647f575fa024507ec6191c6013878bed9419d9097212dd45593de01461d028b040843bb14cbee22442af7cd0e65c2a4ba7b5d380ac612e18ac8eae36dbe549d1f438b845cc59ca4d69bb3b5fa83785487b99dfac74f2332f521eb1b9223bdce6c786e403f551a298bb0357ef77fab2bca81656c4a53d5dd70a29d8c6ec112dded15ff8a55abd7913997f5186a123e407b1b2b534deb3e580aa5a288ec524b16e86a429f5e607c25a5d5480b5b5e70d70671
+2025/02/05 13:21:37 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:21:37 [SignData] Starting signature operation
+2025/02/05 13:21:37 [SignData] Hash length: 32 bytes
+2025/02/05 13:21:37 [SignData] Hash value (hex): d5f2e067054c35dc98fc1621f84c633ed82ba790a7ee73dd739452d44c4caad3
+2025/02/05 13:21:37 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:21:37 [SignData] Key attributes: 0x40072
+2025/02/05 13:21:37 [SignData] Key algorithm: RSA
+2025/02/05 13:21:37 [SignData] Signing scheme: RSASSA
+2025/02/05 13:21:37 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:21:37 [SignData] Signature length: 256 bytes
+2025/02/05 13:21:37 [SignData] Signature created successfully
+2025/02/05 13:21:37 Encryption Stats - Size: 10.00 MB, Duration: 130.287799ms, Throughput: 76.75 MB/s
+2025/02/05 13:21:37 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:21:37 Realizando get de operações
+2025/02/05 13:21:52 [Encrypt] Encrypted Symmetric Key (Hex): 6de4efc0f4e1b877ea8202fd8fe006dc9500bc3871d13c9cf4844920d5ca7ce8761c17240de6025e1d45d0bc5dc4be7a1e34a32bd09af23670dce7fe284cf67510738b18fcd2e9bbf187a0df8e8c38ced6b27a42827c8788a6a921412fecd522af4076472b3549f83f5fbd702b3e7f84ee751eaf9250198322273148a24d1ae2a9de03c191c4baa0599b0ffbf468ec4a08574456d85a4c9a947be495ae25e1285153f993c908a4413eadfc8762d8fc9be6e02d32944af3d970627d0d3fb5f31f4cf84b5575cd696c1d7c1cf40eae8ce8718d834ef47a5757a5609e93f513e54be08349ccd33a8ddaae30a3772f57938aaddcb988308c3afc0e985da99e823bcc
+2025/02/05 13:21:52 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:21:52 [SignData] Starting signature operation
+2025/02/05 13:21:52 [SignData] Hash length: 32 bytes
+2025/02/05 13:21:52 [SignData] Hash value (hex): 0c89cdbb1964026317dff0e9f1120821de13fb869a8146e65ca23583a203519f
+2025/02/05 13:21:52 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:21:52 [SignData] Key attributes: 0x40072
+2025/02/05 13:21:52 [SignData] Key algorithm: RSA
+2025/02/05 13:21:52 [SignData] Signing scheme: RSASSA
+2025/02/05 13:21:53 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:21:53 [SignData] Signature length: 256 bytes
+2025/02/05 13:21:53 [SignData] Signature created successfully
+2025/02/05 13:21:53 Encryption Stats - Size: 10.00 MB, Duration: 138.757152ms, Throughput: 72.07 MB/s
+2025/02/05 13:21:53 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:21:53 Realizando get de operações
+2025/02/05 13:22:00 [Encrypt] Encrypted Symmetric Key (Hex): 66249ccdbce604745579bb3690f2b558735619580781beabb438f4e3312a2bdbdae4bce8111e62f403a380b978074caa6c5adf1621a31160e61f26db6c96bce1d2343a9b5d8f4ae7fb92071b71ea7383cc58c8e1923f167d36e9ad5ba96594ca82080c687e6025399131b494cb6215829047c86b7809f8ecfc68291279f4ffb3cf0bf021935954bd6930e7a22559169d2d1513895e77ef55d4ecb7674c25063300dd9c17ce08cf1c5f5d8e609a02d7169bb37774e9ed3f8fb9f9cae767f90bff7bb10ac7d439a96d12747880482226674ed7007b8c379ae2ea006bf621978e3ba26b7f00843d5a1fc2c545dac3a7a9e8a255f00245d987e0326f6e1c1ce664ab
+2025/02/05 13:22:00 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:22:00 [SignData] Starting signature operation
+2025/02/05 13:22:00 [SignData] Hash length: 32 bytes
+2025/02/05 13:22:00 [SignData] Hash value (hex): 10af060190adfb83625ffb38cf971d3a1112f8c39a6c3ab56cc809992ca1baf9
+2025/02/05 13:22:00 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:22:00 [SignData] Key attributes: 0x40072
+2025/02/05 13:22:00 [SignData] Key algorithm: RSA
+2025/02/05 13:22:00 [SignData] Signing scheme: RSASSA
+2025/02/05 13:22:00 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:22:00 [SignData] Signature length: 256 bytes
+2025/02/05 13:22:00 [SignData] Signature created successfully
+2025/02/05 13:22:00 Encryption Stats - Size: 50.00 MB, Duration: 310.987362ms, Throughput: 160.78 MB/s
+2025/02/05 13:22:00 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:22:01 Realizando get de operações
+2025/02/05 13:22:01 Verificando conexão com API em: http://localhost:8003/api/v1/
+2025/02/05 13:22:01 Conexão com API estabelecida com sucesso
+API connection successful
+2025/02/05 13:22:06 [Encrypt] Encrypted Symmetric Key (Hex): 8232ee782ad6f9f77081a701eeefabb6aeb10c15e2216309b94f3f1fad75114244f45bdd1528c945aa74e2bff129128b058c63255caa26ef14bc1b084b4b6c8264b0d8f6f3da2976d7e74e05938e8cf551bd42439c6898ee99ed9cae4b7f2f09984576c6ffb5ad44ea350b4e7688bcc1af12c5c366dcae7c12a40e60b90e80ca2516fed5659ad6fe1376a92b89955c65540bdee95076c07ebc93ec9960f4c1b13377553c39bf96297e7481243e00c67fde06bd3fe1f42b9bb832c70213736f7dc9eb22cc20f4feb60e6e412445f0481e4432cbc8bbd190bfddad642a90074c7608bbffbca2f5f7ab8f2f4e25038a1823d79511e60713590c95b4ca549d43f669
+2025/02/05 13:22:06 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:22:06 [SignData] Starting signature operation
+2025/02/05 13:22:06 [SignData] Hash length: 32 bytes
+2025/02/05 13:22:06 [SignData] Hash value (hex): 2bcc812fe9c58fe383f2f0cbd0a09306dd345b9c664b0d272d04d7fb583c876d
+2025/02/05 13:22:06 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:22:06 [SignData] Key attributes: 0x40072
+2025/02/05 13:22:06 [SignData] Key algorithm: RSA
+2025/02/05 13:22:06 [SignData] Signing scheme: RSASSA
+2025/02/05 13:22:06 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:22:06 [SignData] Signature length: 256 bytes
+2025/02/05 13:22:06 [SignData] Signature created successfully
+2025/02/05 13:22:06 Encryption Stats - Size: 50.00 MB, Duration: 248.824898ms, Throughput: 200.94 MB/s
+2025/02/05 13:22:06 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:22:06 Realizando get de operações
+2025/02/05 13:22:17 [Encrypt] Encrypted Symmetric Key (Hex): c902b13962d6b37f1aa9307d6941c89a828fb9149b98ceedbe51009d5cf2de4a82ad15a8c735723f20d8d9973438cfcd93bc9401970818875403e28f3422deb413ee14380337d1c254821d66a2765c39b76220df735bc4d87ec674f6956bcd880dee2e208e48fb4fd4691a868c42a08c2c32fa9bf1f454972dd1eb37d00324ea03a1f4045910d396e61b7e461c644cc698428e10fe3bda3618233ac0b292c78101ec549e04f2f667aed2b3a4148a66754cb9f0cd78222fd0aa98f8e816583edc05171c2690240555ddf66fd1063fac7a91cf3f159b1f73758b2f8bd9a503010de50cc9aae6a3fda38309ddeb9f1ce2da81ae1a69f0257d5a904c044dd981c006
+2025/02/05 13:22:17 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:22:17 [SignData] Starting signature operation
+2025/02/05 13:22:17 [SignData] Hash length: 32 bytes
+2025/02/05 13:22:17 [SignData] Hash value (hex): f5c9afe2c3d10e44c1e937dbd8edf68e792a520d7b69c0c13c22be774a75b006
+2025/02/05 13:22:17 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:22:17 [SignData] Key attributes: 0x40072
+2025/02/05 13:22:17 [SignData] Key algorithm: RSA
+2025/02/05 13:22:17 [SignData] Signing scheme: RSASSA
+2025/02/05 13:22:17 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:22:17 [SignData] Signature length: 256 bytes
+2025/02/05 13:22:17 [SignData] Signature created successfully
+2025/02/05 13:22:17 Encryption Stats - Size: 50.00 MB, Duration: 266.648888ms, Throughput: 187.51 MB/s
+2025/02/05 13:22:17 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:22:17 Realizando get de operações
+2025/02/05 13:22:24 [Encrypt] Encrypted Symmetric Key (Hex): 787a9ae8790870a7ccf617ba876d828f65e643f3a1cfb06f06aa074f684e42bf63d09005e69bd3ac7aa988656f1fae5ccd8dfed621e3b02207cc74bb5a4fa7783607922f1ce0947f5af4c3b820ccf06ab7471aab754d19974667bc0c01f4b8c883567223101b371f438293517651c4108bcf952ea4d0d1444bdb69509c99895c3370a2c5ef2e9d001581b85e0f798058d5450c35333cff83de9092d8bd4885adb86fa1199d33c7f5b13ab551daa40ffae86ed594cdc9539dc90919fb73d0c91a42a9b2df0ab258062954ce72cbf46c36cffe8399914558326b4657e00f39a19cddbe12c66c16be3badab1f5da7db1ad5a1b147c20b2dd4f9df02453d1419dff5
+2025/02/05 13:22:25 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:22:25 [SignData] Starting signature operation
+2025/02/05 13:22:25 [SignData] Hash length: 32 bytes
+2025/02/05 13:22:25 [SignData] Hash value (hex): 9a85b13bb5f8477580546ea3f5bd7f55a79da60d60469bb38faa1e56be1bff48
+2025/02/05 13:22:25 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:22:25 [SignData] Key attributes: 0x40072
+2025/02/05 13:22:25 [SignData] Key algorithm: RSA
+2025/02/05 13:22:25 [SignData] Signing scheme: RSASSA
+2025/02/05 13:22:25 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:22:25 [SignData] Signature length: 256 bytes
+2025/02/05 13:22:25 [SignData] Signature created successfully
+2025/02/05 13:22:25 Encryption Stats - Size: 50.00 MB, Duration: 267.750663ms, Throughput: 186.74 MB/s
+2025/02/05 13:22:25 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:22:25 Realizando get de operações
+2025/02/05 13:22:37 [Encrypt] Encrypted Symmetric Key (Hex): a5f9abf57262c4b29b1053389bbbb3f6b2ffa91aa82d274a57a13a375c8f763ebfc56c08d85b3519c09d23af3a6567aac62e4dcdf8d644657001e6e0598c51ef3e6f9d2ec4ef30c0ec8c049841f371a3514fb17f55637d7cb173820f8b2db97528fa1d1e8ee8e281968bb61f0b0179381fbf373fa6f1ba819bb5e89484df921a0b120c21e1e2f2ceb7181646bfb883589ea132d402f1169975c9c91848f84c6a6d270d3a84d08a440345cd20271bf84096d937ffc9414fc9dd0c404ae7b6db2e119b1a3d68ce7a8465f96881732675b08b0701e7fcf24d06a4da4b012c479507f8280156b73179df10c1f586e78bb37cc3958ab6aff37b364adaa9208b23c357
+2025/02/05 13:22:38 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:22:38 [SignData] Starting signature operation
+2025/02/05 13:22:38 [SignData] Hash length: 32 bytes
+2025/02/05 13:22:38 [SignData] Hash value (hex): 72dbe92209d91bd4113f7c4694ac2bee7fadd5ca2cdb8ae2341611b70a204cb8
+2025/02/05 13:22:38 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:22:38 [SignData] Key attributes: 0x40072
+2025/02/05 13:22:38 [SignData] Key algorithm: RSA
+2025/02/05 13:22:38 [SignData] Signing scheme: RSASSA
+2025/02/05 13:22:38 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:22:38 [SignData] Signature length: 256 bytes
+2025/02/05 13:22:38 [SignData] Signature created successfully
+2025/02/05 13:22:38 Encryption Stats - Size: 100.00 MB, Duration: 464.953286ms, Throughput: 215.08 MB/s
+2025/02/05 13:22:38 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:22:38 Realizando get de operações
+2025/02/05 13:22:49 [Encrypt] Encrypted Symmetric Key (Hex): ad08e1034a793f2b6901b53418f5770ff596006c30fc8e8e070de07e32aa0c5f5dd59305a98ba91da46eb44b675c9bee8e562c0c54356daac155273352ddc81e299ce9f841235787df4be0494aa5fc19a942a39a8e3241f9be562bc0685afe0b9b90ef919dd1c51f813da6950620819a7dcb7ac1b0ffaca945011c5a7c839f7d55cf96a899790309d1760457a474bee7b830889d90711f875e71e7e71a5030f90acd1195d35586812ca1f5b73165becaf7c97c5a9a322637c3cd9633e5bf270bfc369f948b6dc488e0e288d00692617cedcd612dbd6c5de7ca25d44b5cdc1802ffabff0c514b0be2234ca03e987a1257a503968b92144687af68c84af498fbbd
+2025/02/05 13:22:49 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:22:49 [SignData] Starting signature operation
+2025/02/05 13:22:49 [SignData] Hash length: 32 bytes
+2025/02/05 13:22:49 [SignData] Hash value (hex): 4c5efd164faa1ca71966615c1e5d7fc1b9b843607800054411bede465714f2a0
+2025/02/05 13:22:49 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:22:49 [SignData] Key attributes: 0x40072
+2025/02/05 13:22:49 [SignData] Key algorithm: RSA
+2025/02/05 13:22:49 [SignData] Signing scheme: RSASSA
+2025/02/05 13:22:49 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:22:49 [SignData] Signature length: 256 bytes
+2025/02/05 13:22:49 [SignData] Signature created successfully
+2025/02/05 13:22:49 Encryption Stats - Size: 100.00 MB, Duration: 412.878734ms, Throughput: 242.20 MB/s
+2025/02/05 13:22:49 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:22:50 Realizando get de operações
+2025/02/05 13:23:03 [Encrypt] Encrypted Symmetric Key (Hex): 8ca476ad0b0bda8586daca75afdbbb176063c35519b976b05f2f398d9e1ce4f3c5e526a7c71c771c71acbd3d7d708306e0b881c1d9eacd6edb1d3801ba02110f53bbf6bd17f1c7b1c679e40bdc4d94977077ec3934d1df2bb3ece506cc124a75fe8b60cd6c25e48e7b4d274046c6ebbdc03aec7f49731009e7dc9db16f804263c0e82553ad07f658592441cd1dd25343f964cc83587a37d109bd18090589971ecf82ab47caac1f020682988a9818ec866a05576fe363430c4346455b95b0484bf5cba8c6141e1826da818b5224da63316546da0b5b35aacd94a9e6e25b8f3e1229130199f47e93e8f0e7876bd6eec65a300ca32b23d83f5e69034b7daf9e31cd
+2025/02/05 13:23:03 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:23:03 [SignData] Starting signature operation
+2025/02/05 13:23:03 [SignData] Hash length: 32 bytes
+2025/02/05 13:23:03 [SignData] Hash value (hex): cf809248cd996f068a462b9cf9399bd0dd04ad402d53de71c06bd5cfc557c3ba
+2025/02/05 13:23:03 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:23:03 [SignData] Key attributes: 0x40072
+2025/02/05 13:23:03 [SignData] Key algorithm: RSA
+2025/02/05 13:23:03 [SignData] Signing scheme: RSASSA
+2025/02/05 13:23:03 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:23:03 [SignData] Signature length: 256 bytes
+2025/02/05 13:23:03 [SignData] Signature created successfully
+2025/02/05 13:23:03 Encryption Stats - Size: 100.00 MB, Duration: 417.231112ms, Throughput: 239.68 MB/s
+2025/02/05 13:23:03 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:23:03 Realizando get de operações
+2025/02/05 13:23:21 [Encrypt] Encrypted Symmetric Key (Hex): 92d2e1b04a6fd824f2e6d923d94359684edd9179312fc253adac5667195df58fa444bf9628a1299da1c3e0b67aab7d9f614f4b5aaec2dc27f7a64474ac4ec8ff71385220734469c24b5ebce382edf7abf1e325a2196adb2e99e534eccc16cb8ecb1cb0eef0d1480e5d7d8cc45e2f370e5bcc0de730a2d359e501a16f22d357c9e5e0d66c924731a5f8c4b5ae8dbc1e09642ca7d6f5650133e2bc238f2a115fc0303d864b4b6bc093451414efd12a01cfb761b876b943c73da44da86cc059e30ff5daeb3c07b2750487a1ddf6821d9a54229fefa321cc2185cf410d9d5c819be94d4f0f496f013c24f7ea7dd5f1ff60d368004e214c0591c8f5cf68fc570c7b84
+2025/02/05 13:23:22 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:23:22 [SignData] Starting signature operation
+2025/02/05 13:23:22 [SignData] Hash length: 32 bytes
+2025/02/05 13:23:22 [SignData] Hash value (hex): 0350d1283069379e75fa741dce79153162a774f6690277a6f87961ac5c832432
+2025/02/05 13:23:22 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:23:22 [SignData] Key attributes: 0x40072
+2025/02/05 13:23:22 [SignData] Key algorithm: RSA
+2025/02/05 13:23:22 [SignData] Signing scheme: RSASSA
+2025/02/05 13:23:22 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:23:22 [SignData] Signature length: 256 bytes
+2025/02/05 13:23:22 [SignData] Signature created successfully
+2025/02/05 13:23:22 Encryption Stats - Size: 100.00 MB, Duration: 433.847671ms, Throughput: 230.50 MB/s
+2025/02/05 13:23:22 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:23:22 Realizando get de operações
+2025/02/05 13:23:33 [Encrypt] Encrypted Symmetric Key (Hex): 0c3be58eeab1eef8f90fb2b16714aa483d9715e0608e5bc06f7d32d4eac9915764ac74f86566a36003c5f32daba6dcb4dc8baa7394682305a5d912bc11300be0b274f198dfee853807a5e40042dccb1e8fb0c817d7ff46d5c9f7b00b61ceb769ba3066355e933d671099fa5d9091ca505d9065351262d35b4a49327f25dd31b407194bc7821b140c3ab4642e9e50bd4f7e3e927fe1efc6059763b81a0dc245545dfe8665908cb39caf0b16d64c3ed1860d8eff5cd8a89c9261c4cca2c069d8ef9bb9be1567e7541a3cf1416b33ff11b39033f7d59478f99de78aeafe4d2b2c422b9fe785aabd613a516e5a6e8fd3fc8e2b018bfb74e2b9537634bd1de0286279
+2025/02/05 13:23:33 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:23:33 [SignData] Starting signature operation
+2025/02/05 13:23:33 [SignData] Hash length: 32 bytes
+2025/02/05 13:23:33 [SignData] Hash value (hex): 6243f7e427353433cab29fff9588a79664fac7c7a345979d63691489a21fc060
+2025/02/05 13:23:33 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:23:33 [SignData] Key attributes: 0x40072
+2025/02/05 13:23:33 [SignData] Key algorithm: RSA
+2025/02/05 13:23:33 [SignData] Signing scheme: RSASSA
+2025/02/05 13:23:33 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:23:33 [SignData] Signature length: 256 bytes
+2025/02/05 13:23:33 [SignData] Signature created successfully
+2025/02/05 13:23:33 Encryption Stats - Size: 100.00 MB, Duration: 410.958716ms, Throughput: 243.33 MB/s
+2025/02/05 13:23:33 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:23:33 Realizando get de operações
+2025/02/05 13:24:14 Encryption Stats - Size: 250.00 MB, Duration: 1.030648958s, Throughput: 242.57 MB/s
+2025/02/05 13:24:14 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:24:15 Realizando get de operações
+2025/02/05 13:24:25 [Encrypt] Encrypted Symmetric Key (Hex): 2f7707b241c67cd954b97f37757abd729a6075951b5dffd71f0ce94cd35fa80838c54ec756758982dda1fb9518e1cf020645e0710d5d0432766a35dae3f4359e15108cd2d9df6111c8dc8c11a9cd39be9575be34a28128623ca6e225ac8dde447af0c82b5dbe146edf421d8840c6003ee44f857356bca18d03f4bff68cd375d3a2c9d08ef0dc48f6f2e456afddba796ccc96eb4b3baee1949e62be34151bfcf2509af2441e3f7fb6c07a4085f30ec20462c74a76219b96f9fe6940e46ce11ae28af57e2552ea4d1039ab89f6cd4610c351dc6527dd2f36b3d111b4a57d950331f551685dde90ba6d5c9f269d13ebc783692d94cece074f8aa5b2041130731bff
+2025/02/05 13:24:26 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:24:26 [SignData] Starting signature operation
+2025/02/05 13:24:26 [SignData] Hash length: 32 bytes
+2025/02/05 13:24:26 [SignData] Hash value (hex): 1ffefbcd58c88c00a37dd1230d9717c2ac5e8fc066e67e5db463595cf13596d8
+2025/02/05 13:24:26 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:24:26 [SignData] Key attributes: 0x40072
+2025/02/05 13:24:26 [SignData] Key algorithm: RSA
+2025/02/05 13:24:26 [SignData] Signing scheme: RSASSA
+2025/02/05 13:24:26 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:24:26 [SignData] Signature length: 256 bytes
+2025/02/05 13:24:26 [SignData] Signature created successfully
+2025/02/05 13:24:26 Encryption Stats - Size: 250.00 MB, Duration: 897.705478ms, Throughput: 278.49 MB/s
+2025/02/05 13:24:26 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:24:27 Realizando get de operações
+2025/02/05 13:24:36 [Encrypt] Encrypted Symmetric Key (Hex): ac2a574ef7b98a9169c58c42bf147a97ddec57766d8c392e6a2a06440e3fa491ecebb4b93e9a9ce5aff24cd387028dd293efb37d252fc61eb3e2aa52bb0ff9953cbd698989f6bbc4c597b5c08a8e555f33d4dc656c595d3468d5f0738119e3d5dd063ea58a9f509ae38229f04fe148a101b287efd9816d65efc27e8a6504e25ff982e9bf74a4a75a3d24a1a0fa8dd303c471b3842918a7553912336d395dbb13c09f533fc2841406f9bae52c993c87548427b63dc05b856d339e1166690417a15928dc0875a243984aac66ae7ad29f1214d678c9c7e1860f096c701572e57d41bb3440f03f57e25a995128ff52874a116e69dcb9a4993d28d0d78d8289ebe266
+2025/02/05 13:24:37 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:24:37 [SignData] Starting signature operation
+2025/02/05 13:24:37 [SignData] Hash length: 32 bytes
+2025/02/05 13:24:37 [SignData] Hash value (hex): 94083a94790759ea991f44b25e3fd5aa8b0cedd38fe81c04a4946b21aee4040d
+2025/02/05 13:24:37 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:24:37 [SignData] Key attributes: 0x40072
+2025/02/05 13:24:37 [SignData] Key algorithm: RSA
+2025/02/05 13:24:37 [SignData] Signing scheme: RSASSA
+2025/02/05 13:24:37 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:24:37 [SignData] Signature length: 256 bytes
+2025/02/05 13:24:37 [SignData] Signature created successfully
+2025/02/05 13:24:37 Encryption Stats - Size: 250.00 MB, Duration: 1.020012705s, Throughput: 245.09 MB/s
+2025/02/05 13:24:37 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:24:38 Realizando get de operações
+2025/02/05 13:24:51 [Encrypt] Encrypted Symmetric Key (Hex): a8a82aae9225f978e87f5732cd7a119405ee43c08a37a5cac9becaa173f144e0b5f3bdb9f2a70de9ca2246a796de0c3ffa69b1fead643400a2c4ca3142d993a8584c0f30520e4c058a494be9d61df07bc62336e3a0540fae0ef9de3bdfccf53196259a386a572bd2b5d6ea3c6412e8f365408bde664679ecb1a37d8d458cec506e5a76416d69b1d9b92bcf338002ab4a8ad415f1bb99e2e32407299061bf33676e9306338753b4044b034810166048a6b1bb77e5cdbac94aa935deafcc72c34f6948e5a435895c1f1cacdddb50403ada2699c642773ba8a92792b34a7aedce43f3c4dbe57620667e52b195391b525fc40666307c61310517198b85a1a99c8122
+2025/02/05 13:24:52 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:24:52 [SignData] Starting signature operation
+2025/02/05 13:24:52 [SignData] Hash length: 32 bytes
+2025/02/05 13:24:52 [SignData] Hash value (hex): e4d4b902a01c379865b91f8f74904c95c7741fb7a8febe7710f3e3378a34efb0
+2025/02/05 13:24:52 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:24:52 [SignData] Key attributes: 0x40072
+2025/02/05 13:24:52 [SignData] Key algorithm: RSA
+2025/02/05 13:24:52 [SignData] Signing scheme: RSASSA
+2025/02/05 13:24:52 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:24:52 [SignData] Signature length: 256 bytes
+2025/02/05 13:24:52 [SignData] Signature created successfully
+2025/02/05 13:24:52 Encryption Stats - Size: 250.00 MB, Duration: 931.689473ms, Throughput: 268.33 MB/s
+2025/02/05 13:24:52 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:24:53 Realizando get de operações
+2025/02/05 13:25:44 Encryption Stats - Size: 500.00 MB, Duration: 2.191119538s, Throughput: 228.19 MB/s
+2025/02/05 13:25:44 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:25:47 Realizando get de operações
+2025/02/05 13:26:01 Verificando conexão com API em: http://localhost:8003/api/v1/
+2025/02/05 13:26:01 Conexão com API estabelecida com sucesso
+API connection successful
+2025/02/05 13:26:01 [Encrypt] Encrypted Symmetric Key (Hex): 501d0b755e649f22d396e9f4598165cb48b8601faf4f604b3dd87164367ba240252f414debf27d710313e633cb298017d999809fb1a6e323b304ebce286fe694fd41318f1ec912977e9ecc25340a3172b228d7f757a135078506037b21bb750519717e3b4ade3f7f4658c5c74f2b2abdf4b971a1870ccf46b9f1d5970ba176b061730224bc909b0a1cbc127b6e9a666d93108abaf21389fd5b14d658623c15d7ba05c4ca46a4ad943497885719b74b88437707f29a9e4c4f281ae0f00ab5ece43a4f0782bcfa19d79c8642489e6cc68dace4b8ba2a81098cf97013349b28bf4b7bc6c3ca6ad20ec1d89a04028684a638578e2dac8c3a2120c22e9b9535e829ed
+2025/02/05 13:26:03 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:26:03 [SignData] Starting signature operation
+2025/02/05 13:26:03 [SignData] Hash length: 32 bytes
+2025/02/05 13:26:03 [SignData] Hash value (hex): 2d3663da949ae9e8d784e4440ce47a4fafee53957d68fa18a9e5522a0cf83579
+2025/02/05 13:26:03 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:26:03 [SignData] Key attributes: 0x40072
+2025/02/05 13:26:03 [SignData] Key algorithm: RSA
+2025/02/05 13:26:03 [SignData] Signing scheme: RSASSA
+2025/02/05 13:26:03 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:26:03 [SignData] Signature length: 256 bytes
+2025/02/05 13:26:03 [SignData] Signature created successfully
+2025/02/05 13:26:03 Encryption Stats - Size: 500.00 MB, Duration: 2.132594505s, Throughput: 234.46 MB/s
+2025/02/05 13:26:03 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:26:07 Realizando get de operações
+2025/02/05 13:26:19 [Encrypt] Encrypted Symmetric Key (Hex): 0b05d80713b7522dd917c411e450d28cef601aa1700032c85a47d4bb3bec925c3de7bac3bf22b870c31777bbe3c6b5c6c01f813d78a1195ffb3516916897f65465a2c5f19cbbd9432f583c37b641c63c8c2b6a1b2f4a58048cbe9567e913e8c2938d929822b1ee3da4228038305710b79e841d6241fee1864555be55d48c357a112e30237f33ddf6ffa51e163848c2645e1371bd2b17f564bec5cd5249c5e2b882b003d2ef1eb8e2909d4177339887092ce867614249ef7f3fdd7a3835a542936578a29d051dba4f8b3c10e43bd03cd5c641af33f7a4d325c8aeee06104079a56ad1357d3e54975edb6bb3de4ba141076b524b24d8490ef574bfae6e706c09f3
+2025/02/05 13:26:21 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:26:21 [SignData] Starting signature operation
+2025/02/05 13:26:21 [SignData] Hash length: 32 bytes
+2025/02/05 13:26:21 [SignData] Hash value (hex): e80258d8904fea52e6de678b1f38fa2dea3910e13140faedaa12ff3279659c39
+2025/02/05 13:26:21 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:26:21 [SignData] Key attributes: 0x40072
+2025/02/05 13:26:21 [SignData] Key algorithm: RSA
+2025/02/05 13:26:21 [SignData] Signing scheme: RSASSA
+2025/02/05 13:26:21 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:26:21 [SignData] Signature length: 256 bytes
+2025/02/05 13:26:21 [SignData] Signature created successfully
+2025/02/05 13:26:21 Encryption Stats - Size: 500.00 MB, Duration: 3.171240887s, Throughput: 157.67 MB/s
+2025/02/05 13:26:21 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:26:24 Realizando get de operações
+2025/02/05 13:26:32 [Encrypt] Encrypted Symmetric Key (Hex): 75871a27c5ab844cced4daf78acc843ac000d3b4fd31e3d72f6010defdb3b1b5cb85aa17e36112e80e9b4f3d1b74988458ad1cd1fd4df5e670869d24a4f8b57e97d02a3ef6f7a900e8dbfe31cea603f4a3f4017e24134108a93b38c2876942351924ed0072c1128c15abf5d5665ab59c03ae5d91233e3b1f33c95636d4da3781bc96347870d8d990db5874ced5adb06b5d94af3a9e25b6d180b41f196dde5c032748a06b4631ba6ced030b6d32d578745f402c9b3be359eb0ef11fa4972a2012299ee6e34f2bf071e8a2cc546f7909bd8fd34b2b1e604eb07c040b182ccf396954dd3141d8eb31c744136ce591bfddd3da8ed64ff65a5b42e1b9d05389a365a1
+2025/02/05 13:26:35 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:26:35 [SignData] Starting signature operation
+2025/02/05 13:26:35 [SignData] Hash length: 32 bytes
+2025/02/05 13:26:35 [SignData] Hash value (hex): 1e1ae2de34a86eb0e08451674ad57f0e345ba3a9adc0e89970f20f6a3be30f41
+2025/02/05 13:26:35 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:26:35 [SignData] Key attributes: 0x40072
+2025/02/05 13:26:35 [SignData] Key algorithm: RSA
+2025/02/05 13:26:35 [SignData] Signing scheme: RSASSA
+2025/02/05 13:26:35 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:26:35 [SignData] Signature length: 256 bytes
+2025/02/05 13:26:35 [SignData] Signature created successfully
+2025/02/05 13:26:35 Encryption Stats - Size: 500.00 MB, Duration: 3.146389137s, Throughput: 158.91 MB/s
+2025/02/05 13:26:35 API KEY: NBAiue4zD5xFURqqwmDaLychoZykR6sAyp13gcvW6jY
+2025/02/05 13:26:40 Realizando get de operações
+2025/02/05 13:37:22 Encryption Stats - Size: 1024.00 MB, Duration: 5.094769217s, Throughput: 200.99 MB/s
+2025/02/05 13:37:23 API KEY: lJ9lb-dCnmZOvubVRjE-chAvjkZbOe1tufwkLKYAlfg
+2025/02/05 13:37:30 Realizando get de operações
+2025/02/05 13:37:42 [Encrypt] Encrypted Symmetric Key (Hex): 22718a5126d9784dfa6f8f8cd054bdfec4cd06273fda91686d66cc2f6fe905442ebbd4806b19d93413f5b0d7adb3e414140252a936b891dbd661591ab2705c8d6ea1e0070c47f3742d65ade55f27e5fa88fd6e1279991d3cb8cacbcca3f7642dc833bd7ac53754b8fb078add03be309b8b624a2eeab282960c2974ac36c1cae416d7cfa3f62b61e775ed9e030c5d9891f593b0468cb46f14875479a48a8dba3f5bb117db3969e0415d2dd7073698468f96cd50bca6761f2b59597c88c63faf4fe61b2c141c74670d6b000d47ee84673934ecc83efcbb249a4f17fe25a73905afce77d99567e4361335ad725d7064894a87ed582989a39fd8e210d6d438557612
+2025/02/05 13:37:46 [SignData] Algoritmos suportados pelo TPM: [{RSA 9} {SHA1 4} {HMAC 260} {AES 2} {Alg?<7> 1028} {KeyedHash 780} {XOR 6} {SHA256 4} {SHA384 4} {RSASSA 257} {RSAES 513} {RSAPSS 257} {OAEP 513} {ECDSA 1281} {ECDH 1025} {ECDAA 257} {Alg?<28> 257} {Alg?<32> 1028} {Alg?<34> 1028} {ECC 9} {SymCipher 2} {CTR 514} {OFB 514} {CFB 514}]
+2025/02/05 13:37:46 [SignData] Starting signature operation
+2025/02/05 13:37:46 [SignData] Hash length: 32 bytes
+2025/02/05 13:37:46 [SignData] Hash value (hex): 3879e127dcdf4f02cfa7aa9798d1804d4b9358af617a73934f153ea11a5815bf
+2025/02/05 13:37:46 [SignData] Using sign handle: 0x81008f02
+2025/02/05 13:37:46 [SignData] Key attributes: 0x40072
+2025/02/05 13:37:46 [SignData] Key algorithm: RSA
+2025/02/05 13:37:46 [SignData] Signing scheme: RSASSA
+2025/02/05 13:37:46 [SignData] Key scheme: &{RSASSA SHA256 0}
+2025/02/05 13:37:46 [SignData] Signature length: 256 bytes
+2025/02/05 13:37:46 [SignData] Signature created successfully
+2025/02/05 13:37:46 Encryption Stats - Size: 1024.00 MB, Duration: 5.687481243s, Throughput: 180.04 MB/s
+2025/02/05 13:38:43 Encryption Stats - Size: 1024.00 MB, Duration: 6.478979156s, Throughput: 158.05 MB/s
