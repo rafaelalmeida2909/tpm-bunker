@@ -1,0 +1,86 @@
+Encriptação:
+2025/02/05 13:00:02 Encryption Stats - Size: 1.00 MB, Duration: 104.783524ms, Throughput: 9.54 MB/s
+2025/02/05 13:21:03 Encryption Stats - Size: 1.00 MB, Duration: 138.66917ms, Throughput: 7.21 MB/s
+2025/02/05 13:21:08 Encryption Stats - Size: 1.00 MB, Duration: 102.398658ms, Throughput: 9.77 MB/s
+2025/02/05 13:21:14 Encryption Stats - Size: 1.00 MB, Duration: 108.527927ms, Throughput: 9.21 MB/s
+2025/02/05 13:21:20 Encryption Stats - Size: 1.00 MB, Duration: 102.625478ms, Throughput: 9.74 MB/s
+
+2025/02/05 13:00:07 Encryption Stats - Size: 10.00 MB, Duration: 200.275524ms, Throughput: 49.93 MB/s
+2025/02/05 13:21:25 Encryption Stats - Size: 10.00 MB, Duration: 136.802127ms, Throughput: 73.10 MB/s
+2025/02/05 13:21:30 Encryption Stats - Size: 10.00 MB, Duration: 127.871735ms, Throughput: 78.20 MB/s
+2025/02/05 13:21:37 Encryption Stats - Size: 10.00 MB, Duration: 130.287799ms, Throughput: 76.75 MB/s
+2025/02/05 13:21:53 Encryption Stats - Size: 10.00 MB, Duration: 138.757152ms, Throughput: 72.07 MB/s
+
+2025/02/05 13:00:12 Encryption Stats - Size: 50.00 MB, Duration: 385.664717ms, Throughput: 129.65 MB/s
+2025/02/05 13:22:00 Encryption Stats - Size: 50.00 MB, Duration: 310.987362ms, Throughput: 160.78 MB/s
+2025/02/05 13:22:06 Encryption Stats - Size: 50.00 MB, Duration: 248.824898ms, Throughput: 200.94 MB/s
+2025/02/05 13:22:17 Encryption Stats - Size: 50.00 MB, Duration: 266.648888ms, Throughput: 187.51 MB/s
+2025/02/05 13:22:25 Encryption Stats - Size: 50.00 MB, Duration: 267.750663ms, Throughput: 186.74 MB/s
+
+2025/02/05 13:00:18 Encryption Stats - Size: 100.00 MB, Duration: 428.9423ms, Throughput: 233.13 MB/s
+2025/02/05 13:22:38 Encryption Stats - Size: 100.00 MB, Duration: 464.953286ms, Throughput: 215.08 MB/s
+2025/02/05 13:22:49 Encryption Stats - Size: 100.00 MB, Duration: 412.878734ms, Throughput: 242.20 MB/s
+2025/02/05 13:23:03 Encryption Stats - Size: 100.00 MB, Duration: 417.231112ms, Throughput: 239.68 MB/s
+2025/02/05 13:23:22 Encryption Stats - Size: 100.00 MB, Duration: 433.847671ms, Throughput: 230.50 MB/s
+
+2025/02/05 13:00:25 Encryption Stats - Size: 250.00 MB, Duration: 1.019984784s, Throughput: 245.10 MB/s
+2025/02/05 13:24:14 Encryption Stats - Size: 250.00 MB, Duration: 1.030648958s, Throughput: 242.57 MB/s
+2025/02/05 13:24:26 Encryption Stats - Size: 250.00 MB, Duration: 897.705478ms, Throughput: 278.49 MB/s
+2025/02/05 13:24:37 Encryption Stats - Size: 250.00 MB, Duration: 1.020012705s, Throughput: 245.09 MB/s
+2025/02/05 13:24:52 Encryption Stats - Size: 250.00 MB, Duration: 931.689473ms, Throughput: 268.33 MB/s
+
+2025/02/05 13:00:35 Encryption Stats - Size: 500.00 MB, Duration: 1.888713317s, Throughput: 264.73 MB/s
+2025/02/05 13:25:44 Encryption Stats - Size: 500.00 MB, Duration: 2.191119538s, Throughput: 228.19 MB/s
+2025/02/05 13:26:03 Encryption Stats - Size: 500.00 MB, Duration: 2.132594505s, Throughput: 234.46 MB/s
+2025/02/05 13:26:21 Encryption Stats - Size: 500.00 MB, Duration: 3.171240887s, Throughput: 157.67 MB/s
+2025/02/05 13:26:35 Encryption Stats - Size: 500.00 MB, Duration: 3.146389137s, Throughput: 158.91 MB/s
+
+2025/02/05 13:00:49 Encryption Stats - Size: 1024.00 MB, Duration: 4.013832702s, Throughput: 255.12 MB/s
+2025/02/05 13:12:36 Encryption Stats - Size: 1024.00 MB, Duration: 4.121849911s, Throughput: 248.43 MB/s
+2025/02/05 13:37:22 Encryption Stats - Size: 1024.00 MB, Duration: 5.094769217s, Throughput: 200.99 MB/s
+2025/02/05 13:37:46 Encryption Stats - Size: 1024.00 MB, Duration: 5.687481243s, Throughput: 180.04 MB/s
+2025/02/05 13:38:43 Encryption Stats - Size: 1024.00 MB, Duration: 6.478979156s, Throughput: 158.05 MB/s
+
+
+Decriptação:
+2025/02/05 13:01:44 Decryption Stats - Size: 1.00 MB, Duration: 104.716486ms, Throughput: 9.55 MB/s
+2025/02/05 13:01:45 Decryption Stats - Size: 1.00 MB, Duration: 104.840865ms, Throughput: 9.54 MB/s
+2025/02/05 13:01:46 Decryption Stats - Size: 1.00 MB, Duration: 104.595898ms, Throughput: 9.56 MB/s
+2025/02/05 13:01:47 Decryption Stats - Size: 1.00 MB, Duration: 106.598525ms, Throughput: 9.38 MB/s
+2025/02/05 13:01:48 Decryption Stats - Size: 1.00 MB, Duration: 105.841896ms, Throughput: 9.45 MB/s
+
+2025/02/05 13:01:49 Decryption Stats - Size: 10.00 MB, Duration: 142.958467ms, Throughput: 69.95 MB/s
+2025/02/05 13:01:50 Decryption Stats - Size: 10.00 MB, Duration: 153.322945ms, Throughput: 65.22 MB/s
+2025/02/05 13:01:51 Decryption Stats - Size: 10.00 MB, Duration: 153.197715ms, Throughput: 65.28 MB/s
+2025/02/05 13:01:52 Decryption Stats - Size: 10.00 MB, Duration: 148.624944ms, Throughput: 67.28 MB/s
+2025/02/05 13:01:53 Decryption Stats - Size: 10.00 MB, Duration: 143.651383ms, Throughput: 69.61 MB/s
+
+2025/02/05 13:01:54 Decryption Stats - Size: 50.00 MB, Duration: 242.08553ms, Throughput: 206.54 MB/s
+2025/02/05 13:01:56 Decryption Stats - Size: 50.00 MB, Duration: 232.437869ms, Throughput: 215.11 MB/s
+2025/02/05 13:01:57 Decryption Stats - Size: 50.00 MB, Duration: 223.671804ms, Throughput: 223.54 MB/s
+2025/02/05 13:01:58 Decryption Stats - Size: 50.00 MB, Duration: 213.586307ms, Throughput: 234.10 MB/s
+2025/02/05 13:01:59 Decryption Stats - Size: 50.00 MB, Duration: 211.14917ms, Throughput: 236.80 MB/s
+
+2025/02/05 13:02:13 Decryption Stats - Size: 100.00 MB, Duration: 340.125859ms, Throughput: 294.01 MB/s
+2025/02/05 13:02:15 Decryption Stats - Size: 100.00 MB, Duration: 312.281717ms, Throughput: 320.22 MB/s
+2025/02/05 13:02:17 Decryption Stats - Size: 100.00 MB, Duration: 319.787106ms, Throughput: 312.71 MB/s
+2025/02/05 13:02:18 Decryption Stats - Size: 100.00 MB, Duration: 325.66879ms, Throughput: 307.06 MB/s
+2025/02/05 13:02:19 Decryption Stats - Size: 100.00 MB, Duration: 321.907803ms, Throughput: 310.65 MB/s
+
+2025/02/05 13:02:29 Decryption Stats - Size: 250.00 MB, Duration: 701.063054ms, Throughput: 356.60 MB/s
+2025/02/05 13:02:31 Decryption Stats - Size: 250.00 MB, Duration: 631.700425ms, Throughput: 395.76 MB/s
+2025/02/05 13:02:35 Decryption Stats - Size: 250.00 MB, Duration: 634.004116ms, Throughput: 394.32 MB/s
+2025/02/05 13:02:37 Decryption Stats - Size: 250.00 MB, Duration: 651.698221ms, Throughput: 383.61 MB/s
+2025/02/05 13:02:40 Decryption Stats - Size: 250.00 MB, Duration: 653.50448ms, Throughput: 382.55 MB/s
+
+2025/02/05 13:03:18 Decryption Stats - Size: 500.00 MB, Duration: 1.187921218s, Throughput: 420.90 MB/s
+2025/02/05 13:03:25 Decryption Stats - Size: 500.00 MB, Duration: 1.212042463s, Throughput: 412.53 MB/s
+2025/02/05 13:03:43 Decryption Stats - Size: 500.00 MB, Duration: 1.32494671s, Throughput: 377.37 MB/s
+2025/02/05 13:03:43 Decryption Stats - Size: 500.00 MB, Duration: 1.22494671s, Throughput: 400.37 MB/s
+2025/02/05 13:04:17 Decryption Stats - Size: 500.00 MB, Duration: 1.32244751s, Throughput: 378.09 MB/s
+
+2025/02/05 13:08:03 Decryption Stats - Size: 1024.00 MB, Duration: 2.485513882s, Throughput: 411.99 MB/s
+2025/02/05 13:12:57 Decryption Stats - Size: 1024.00 MB, Duration: 2.326438481s, Throughput: 440.16 MB/s
+2025/02/05 13:13:17 Decryption Stats - Size: 1024.00 MB, Duration: 2.309255393s, Throughput: 443.43 MB/s
+2025/02/05 13:14:37 Decryption Stats - Size: 1024.00 MB, Duration: 2.316215738s, Throughput: 442.10 MB/s
+2025/02/05 13:18:22 Decryption Stats - Size: 1024.00 MB, Duration: 2.483303102s, Throughput: 412.35 MB/s
