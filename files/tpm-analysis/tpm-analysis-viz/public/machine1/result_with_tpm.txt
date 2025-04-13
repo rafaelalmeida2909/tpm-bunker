@@ -23,6 +23,12 @@ Encriptação:
 2025/02/05 00:58:06 Encryption Stats - Size: 100.00 MB, Duration: 398.975735ms, Throughput: 250.64 MB/s
 2025/02/05 00:58:12 Encryption Stats - Size: 100.00 MB, Duration: 393.983783ms, Throughput: 253.82 MB/s
 
+2025/02/05 09:43:47 Encryption Stats - Size: 250.00 MB, Duration: 822.823696ms, Throughput: 345.87 MB/s
+2025/02/05 09:44:05 Encryption Stats - Size: 250.00 MB, Duration: 810.751637ms, Throughput: 409.33 MB/s
+2025/02/05 09:44:13 Encryption Stats - Size: 250.00 MB, Duration: 871.096448ms, Throughput: 437.75 MB/s
+2025/02/05 09:44:20 Encryption Stats - Size: 250.00 MB, Duration: 858.455381ms, Throughput: 379.68 MB/s
+2025/02/05 09:44:34 Encryption Stats - Size: 250.00 MB, Duration: 827.730257ms, Throughput: 343.53 MB/s
+
 2025/02/05 00:58:48 Encryption Stats - Size: 500.00 MB, Duration: 1.971921252s, Throughput: 52.79 MB/s
 2025/02/05 00:59:08 Encryption Stats - Size: 500.00 MB, Duration: 1.818018608s, Throughput: 275.02 MB/s
 2025/02/05 00:59:28 Encryption Stats - Size: 500.00 MB, Duration: 1.807929804s, Throughput: 276.56 MB/s
