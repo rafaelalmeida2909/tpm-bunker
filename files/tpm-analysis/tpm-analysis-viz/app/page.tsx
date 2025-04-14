@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-export default function TPMGraphs() {
+export default function TPMBarGraphs() {
   const [data, setData] = useState({});
   // Refs for each chart container
   const chartRefs = useRef({});
@@ -126,7 +126,7 @@ export default function TPMGraphs() {
     }
   };
   
-  // Function to render encryption chart for a machine
+  // Function to render encryption chart for a machine with Bar chart
   const renderEncryptionChart = (machineData, machineName, machineKey) => {
     if (!machineData.withTPM || !machineData.withoutTPM) return null;
     
@@ -135,11 +135,15 @@ export default function TPMGraphs() {
       ...machineData.withoutTPM.encryption.map(d => d.size)
     ])].sort((a, b) => a - b);
 
+    // Transform data for bar chart
     const chartData = allSizes.map(size => {
+      const withTPM = machineData.withTPM.encryption.find(d => d.size === size)?.duration || 0;
+      const withoutTPM = machineData.withoutTPM.encryption.find(d => d.size === size)?.duration || 0;
+      
       return {
-        size,
-        'With TPM': machineData.withTPM.encryption.find(d => d.size === size)?.duration,
-        'Without TPM': machineData.withoutTPM.encryption.find(d => d.size === size)?.duration
+        size: `${size} MB`,
+        'With TPM': withTPM,
+        'Without TPM': withoutTPM
       };
     });
 
@@ -150,7 +154,7 @@ export default function TPMGraphs() {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">{machineName} - Encryption Performance Comparison</h2>
           <button 
-            onClick={() => exportChart(chartId, `${machineKey.replace('machine', 'm')}_cripto.png`)}
+            onClick={() => exportChart(chartId, `${machineKey.replace('machine', 'm')}_cripto_bar.png`)}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
           >
             Export Image
@@ -161,15 +165,25 @@ export default function TPMGraphs() {
           ref={el => chartRefs.current[chartId] = el}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData}>
+            <BarChart 
+              data={chartData}
+              margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
+            >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="size" label={{ value: 'Size (MB)', position: 'insideBottom', offset: -5, fill: '#000' }} tick={{ fill: '#000' }} />
-              <YAxis label={{ value: 'Duration (ms)', angle: -90, position: 'insideLeft', offset: 5, fill: '#000' }} tick={{ fill: '#000' }} />
-              <Tooltip formatter={(value) => [`${value?.toFixed(2)}ms`, null]} />
+              <XAxis 
+                dataKey="size" 
+                label={{ value: 'Size (MB)', position: 'insideBottom', offset: -5, fill: '#000' }} 
+                tick={{ fill: '#000' }}
+              />
+              <YAxis 
+                label={{ value: 'Duration (ms)', angle: -90, position: 'insideLeft', offset: 5, fill: '#000' }} 
+                tick={{ fill: '#000' }} 
+              />
+              <Tooltip formatter={(value) => [`${value.toFixed(2)}ms`, null]} />
               <Legend align="left" verticalAlign="top" height={36} />
-              <Line type="monotone" dataKey="With TPM" stroke="#286be6" strokeWidth={3} dot={{ r: 4 }} />
-              <Line type="monotone" dataKey="Without TPM" stroke="#23a353" strokeWidth={3} dot={{ r: 4 }} />
-            </LineChart>
+              <Bar dataKey="With TPM" fill="#286be6" barSize={40} />
+              <Bar dataKey="Without TPM" fill="#23a353" barSize={40} />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
@@ -185,11 +199,15 @@ export default function TPMGraphs() {
       ...machineData.withoutTPM.decryption.map(d => d.size)
     ])].sort((a, b) => a - b);
 
+    // Transform data for bar chart
     const chartData = allSizes.map(size => {
+      const withTPM = machineData.withTPM.decryption.find(d => d.size === size)?.duration || 0;
+      const withoutTPM = machineData.withoutTPM.decryption.find(d => d.size === size)?.duration || 0;
+      
       return {
-        size,
-        'With TPM': machineData.withTPM.decryption.find(d => d.size === size)?.duration,
-        'Without TPM': machineData.withoutTPM.decryption.find(d => d.size === size)?.duration
+        size: `${size} MB`,
+        'With TPM': withTPM,
+        'Without TPM': withoutTPM
       };
     });
 
@@ -200,7 +218,7 @@ export default function TPMGraphs() {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">{machineName} - Decryption Performance Comparison</h2>
           <button 
-            onClick={() => exportChart(chartId, `${machineKey.replace('machine', 'm')}_descripto.png`)}
+            onClick={() => exportChart(chartId, `${machineKey.replace('machine', 'm')}_descripto_bar.png`)}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
           >
             Export Image
@@ -211,15 +229,25 @@ export default function TPMGraphs() {
           ref={el => chartRefs.current[chartId] = el}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData}>
+            <BarChart 
+              data={chartData}
+              margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
+            >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="size" label={{ value: 'Size (MB)', position: 'insideBottom', offset: -5, fill: '#000' }} tick={{ fill: '#000' }} />
-              <YAxis label={{ value: 'Duration (ms)', angle: -90, position: 'insideLeft', offset: 5, fill: '#000' }} tick={{ fill: '#000' }} />
-              <Tooltip formatter={(value) => [`${value?.toFixed(2)}ms`, null]} />
+              <XAxis 
+                dataKey="size" 
+                label={{ value: 'Size (MB)', position: 'insideBottom', offset: -5, fill: '#000' }} 
+                tick={{ fill: '#000' }}
+              />
+              <YAxis 
+                label={{ value: 'Duration (ms)', angle: -90, position: 'insideLeft', offset: 5, fill: '#000' }} 
+                tick={{ fill: '#000' }} 
+              />
+              <Tooltip formatter={(value) => [`${value.toFixed(2)}ms`, null]} />
               <Legend align="left" verticalAlign="top" height={36} />
-              <Line type="monotone" dataKey="With TPM" stroke="#286be6" strokeWidth={3} dot={{ r: 4 }} />
-              <Line type="monotone" dataKey="Without TPM" stroke="#23a353" strokeWidth={3} dot={{ r: 4 }} />
-            </LineChart>
+              <Bar dataKey="With TPM" fill="#286be6" barSize={40} />
+              <Bar dataKey="Without TPM" fill="#23a353" barSize={40} />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
